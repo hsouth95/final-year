@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+    <meta name="author" content="Harrison South">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="styles/view.css" />
+</head>
+
+<body>
+    <header>
+        <nav class="light-blue">
+            <div class="wrapper">
+                <a href="#" class="brand-logo">Royal Bournemouth and Christchurch Hospital</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="#">View Patients</a></li>
+                    <li><a href="#">Sign Out</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="input-field inline">
+            <input id="patient_number" type="text" class="validate">
+            <label for="patient_number">Patient Number</label>
+        </div>
+        <button class="btn inline" id="find_patient">Find</button>
+
+        <div class="container" id="patient-container">
+
+        </div>
+    </main>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+    <script src="scripts/view.js"></script>
+</body>
+
+</html>

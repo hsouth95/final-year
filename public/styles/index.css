@@ -1,4 +1,4 @@
-.page-flexbox-wrapper {
+body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -6,12 +6,18 @@
 
 main {
   flex: 1 1 auto;
+  padding: 50px;
 }
 nav {
     color: #e1f5fe;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right:10px;
 }
 
 .brand-logo {
     margin-left: 10px;
+}
+
+footer {
+  padding: 10px;
 }

@@ -7,136 +7,132 @@
   <title>Demo</title>
   <meta name="author" content="Harrison South">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" />
+  <link rel="stylesheet" href="styles/index.css" />
 </head>
 
 <body>
-  <div class="page-flexbox-wrapper">
-    <header>
-      <nav class="light-blue">
-        <div class="wrapper">
-          <a href="#" class="brand-logo">Royal Bournemouth and Christchurch Hospital</a>
-          <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="#">View Patients</a></li>
-            <li><a href="#">Sign Out</a></li>
-          </ul>
-        </div>
-      </nav>
-    </header>
-    <main>
-      <form class="col s12">
+  <header>
+    <nav class="light-blue">
+      <div class="wrapper">
+        <a href="#" class="brand-logo">Royal Bournemouth and Christchurch Hospital</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="/view">View Patients</a></li>
+          <li><a href="#">Sign Out</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <form class="col s12">
+      <div class="row">
         <div class="row">
-          <div class="row">
-            <div class="input-field inline">
-              <input id="hospital_number" type="text" class="validate" required>
-              <label for="hospital_number">Hospital Number</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s6">
-              <input id="patient_surname" type="text" class="validate">
-              <label for="patient_surname">Patient Surname</label>
-            </div>
-            <div class="input-field col s6">
-              <input id="patient_firstname" type="text" class="validate">
-              <label for="patient_firstname">Patient First Name</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s8">
-              <div class="card blue-grey">
-                <div class="card-content white-text">
-                  <span class="card-title">Address</span>
-                  <div class="input-field">
-                    <input id="address_firstline" type="text" class="validate">
-                    <label for="address_firstline">First Line</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="address_secondline" type="text" class="validate">
-                    <label for="address_secondline">Second Line</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="address_city" type="text" class="validate">
-                    <label for="address_city">City</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="address_county" type="text" class="validate">
-                    <label for="address_county">County</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="address_postcode" type="text" class="validate">
-                    <label for="address_postcode">Post-code</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col s4">
-              <div class="input-field">
-                <label for="patient_dateofbirth">Date of Birth</label>
-                <input id="patient_dateofbirth" type="date" class="datepicker">
-              </div>
-              <div class="input-field">
-                <select>
-              <option value="" selected>Choose Gender</option>
-              <option value="1">Male</option>
-              <option value="2">Female</option> 
-            </select>
-                <label>Gender</label>
-              </div>
-              <div class="input-field">
-                <input id="patient_telephone" type="text" class="validate">
-                <label for="patient_telephone">Telephone</label>
-              </div>
-            </div>
-          </div>
-          <div class="input-field">
-            <input id="gp" type="text" class="validate">
-            <label for="gp">General Practitioner</label>
-          </div>
-          <div class="row">
-            <div class="col s8">
-              <div class="card blue-grey">
-                <div class="card-content white-text">
-                  <span class="card-title">GP Address</span>
-                  <div class="input-field">
-                    <input id="gp_firstline" type="text" class="validate">
-                    <label for="gp_firstline">First Line</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="gp_secondline" type="text" class="validate">
-                    <label for="gp_secondline">Second Line</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="gp_city" type="text" class="validate">
-                    <label for="gp_city">City</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="gp_county" type="text" class="validate">
-                    <label for="gp_county">County</label>
-                  </div>
-                  <div class="input-field">
-                    <input id="gp_postcode" type="text" class="validate">
-                    <label for="gp_postcode">Post-code</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="input-field">
-            <input id="gp_telephone" type="text" class="validate">
-            <label for="gp_telephone">Telephone</label>
+          <div class="input-field inline">
+            <input id="hospital_number" type="text" class="validate" required>
+            <label for="hospital_number">Hospital Number</label>
           </div>
         </div>
-      </form>
-    </main>
-    <footer class="page-footer">
-      <div class="container">
-        <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+        <div class="row">
+          <div class="input-field col s6">
+            <input id="patient_surname" type="text" class="validate">
+            <label for="patient_surname">Patient Surname</label>
+          </div>
+          <div class="input-field col s6">
+            <input id="patient_firstname" type="text" class="validate">
+            <label for="patient_firstname">Patient First Name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s8">
+            <div class="card blue-grey">
+              <div class="card-content white-text">
+                <span class="card-title">Address</span>
+                <div class="input-field">
+                  <input id="address_firstline" type="text" class="validate">
+                  <label for="address_firstline">First Line</label>
+                </div>
+                <div class="input-field">
+                  <input id="address_secondline" type="text" class="validate">
+                  <label for="address_secondline">Second Line</label>
+                </div>
+                <div class="input-field">
+                  <input id="address_city" type="text" class="validate">
+                  <label for="address_city">City</label>
+                </div>
+                <div class="input-field">
+                  <input id="address_county" type="text" class="validate">
+                  <label for="address_county">County</label>
+                </div>
+                <div class="input-field">
+                  <input id="address_postcode" type="text" class="validate">
+                  <label for="address_postcode">Post-code</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col s4">
+            <div class="input-field">
+              <label for="patient_dateofbirth">Date of Birth</label>
+              <input id="patient_dateofbirth" type="date" class="datepicker">
+            </div>
+            <div class="input-field">
+              <select id="patient_gender">
+                <option value="" selected>Choose Gender</option>
+                <option value="1">Male</option>
+                <option value="2">Female</option> 
+              </select>
+              <label>Gender</label>
+            </div>
+            <div class="input-field">
+              <input id="patient_telephone" type="text" class="validate">
+              <label for="patient_telephone">Telephone</label>
+            </div>
+          </div>
+        </div>
+        <div class="input-field">
+          <input id="gp" type="text" class="validate">
+          <label for="gp">General Practitioner</label>
+        </div>
+        <div class="row">
+          <div class="col s8">
+            <div class="card blue-grey">
+              <div class="card-content white-text">
+                <span class="card-title">GP Address</span>
+                <div class="input-field">
+                  <input id="gp_firstline" type="text" class="validate">
+                  <label for="gp_firstline">First Line</label>
+                </div>
+                <div class="input-field">
+                  <input id="gp_secondline" type="text" class="validate">
+                  <label for="gp_secondline">Second Line</label>
+                </div>
+                <div class="input-field">
+                  <input id="gp_city" type="text" class="validate">
+                  <label for="gp_city">City</label>
+                </div>
+                <div class="input-field">
+                  <input id="gp_county" type="text" class="validate">
+                  <label for="gp_county">County</label>
+                </div>
+                <div class="input-field">
+                  <input id="gp_postcode" type="text" class="validate">
+                  <label for="gp_postcode">Post-code</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="input-field">
+          <input id="gp_telephone" type="text" class="validate">
+          <label for="gp_telephone">Telephone</label>
+        </div>
       </div>
-      <div class="footer-copyright">
-        Hello
-      </div>
-    </footer>
-  </div>
+    </form>
+  </main>
+  <footer class="page-footer light-blue darken-1">
+    <div class="container">
+      <button class="btn waves-effect waves-light right" id="add-patient" type="submit" name="action">Submit</button>
+    </div>
+  </footer>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
   <script src="scripts/index.js"></script>
