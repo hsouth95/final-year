@@ -1,0 +1,17 @@
+.page-flexbox-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 1 auto;
+}
+nav {
+    color: #e1f5fe;
+    padding: 10px;
+}
+
+.brand-logo {
+    margin-left: 10px;
+}
