@@ -7,19 +7,19 @@ $(document).ready(function () {
     });
 
 
-    $("#add-patient").click(function(event){
+    $("#add-patient").click(function (event) {
         event.preventDefault();
 
         var patientData = {},
             address = {};
-        
+
         patientData.patientId = "PATIENT";
         patientData.surname = $("#patient_surname").val();
         patientData.firstname = $("#patient_firstname").val();
         patientData.dateofbirth = $("#patient_dateofbirth").val();
         patientData.gender = $("#patient_gender").val();
         patientData.telephone = $("#patient_telephone").val();
-        
+
         address.firstline = $("#address_firstline").val();
         address.secondline = $("#address_secondline").val();
         address.city = $("#address_city").val();
@@ -33,12 +33,28 @@ $(document).ready(function () {
             data: JSON.stringify(patientData),
             type: "POST",
             contentType: "application/json",
-            success: function(data) {
+            success: function (data) {
                 console.log(data);
             },
-            error: function(data){
+            error: function (data) {
                 console.log(JSON.stringify(data));
             }
         })
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:3000/hospital",
+        success: function (data) {
+            var convertedData = {};
+
+            for (var i = 0; i < data.length; i++) {
+                convertedData[data[i].name] = null;
+            }
+
+            $("input#hospital_number").autocomplete({
+                data: convertedData
+            });
+        }
     });
 });

@@ -43,8 +43,19 @@ app.post("/patient", function (req, response) {
         });
 });
 
+
+app.get("/hospital", function(req, response) {
+    connection.query("SELECT * FROM hospital", function(err, res){
+        if(err) throw err;
+
+        response.json(res);
+    });
+});
+
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/public/views/index.html");
 });
 
-app.listen(3000);
+app.listen(3000, "0.0.0.0", function(){
+    console.log("Listening to port: 3000");
+});

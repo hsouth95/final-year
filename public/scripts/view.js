@@ -8,7 +8,7 @@ $(document).ready(function () {
                 console.log(data);
                 populatePatientInformation(data);
             },
-            error: function(){
+            error: function () {
                 $("#patient-container").html("Cannot find patient");
             }
         });
