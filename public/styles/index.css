@@ -1,23 +1,21 @@
-body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-main {
-  flex: 1 1 auto;
-  padding: 50px;
-}
 nav {
     color: #e1f5fe;
     padding-left: 10px;
     padding-right:10px;
+    margin-bottom: 10px;
 }
 
-.brand-logo {
-    margin-left: 10px;
+.tabs .indicator {
+  background-color: #03a9f4 !important;
+}
+.tab a {
+  color: #03a9f4 !important;
 }
 
-footer {
-  padding: 10px;
+.card-content label {
+  color: #e1f5fe;
+}
+
+.card-content input {
+  border-bottom-color: #e1f5fe;
 }

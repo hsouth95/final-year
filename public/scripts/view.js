@@ -3,7 +3,7 @@ $(document).ready(function () {
 
         var patientId = $("#patient_number").val();
         $.ajax({
-            url: "http://localhost:3000/patient/" + patientId,
+            url: "http://localhost/patient/" + patientId,
             success: function (data) {
                 console.log(data);
                 populatePatientInformation(data);

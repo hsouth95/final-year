@@ -29,7 +29,7 @@ $(document).ready(function () {
         patientData.address = address;
 
         $.ajax({
-            url: "http://localhost:3000/patient",
+            url: "http://localhost/patient",
             data: JSON.stringify(patientData),
             type: "POST",
             contentType: "application/json",
@@ -44,7 +44,7 @@ $(document).ready(function () {
 
     $.ajax({
         type: "GET",
-        url: "http://localhost:3000/hospital",
+        url: "http://localhost/hospital",
         success: function (data) {
             var convertedData = {};
 
@@ -52,9 +52,15 @@ $(document).ready(function () {
                 convertedData[data[i].name] = null;
             }
 
-            $("input#hospital_number").autocomplete({
-                data: convertedData
-            });
+            //$("input#hospital_number").autocomplete({
+              //  data: convertedData
+            //});
         }
+    });
+
+    $(".tab a").click(function(){
+        $("#form-container form").hide();
+
+        $("#" + this.dataset.formId).show();
     });
 });
