@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.6.5.2
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 01, 2017 at 09:49 PM
--- Server version: 10.1.19-MariaDB
--- PHP Version: 5.6.28
+-- Generation Time: Mar 02, 2017 at 08:51 PM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 7.1.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -89,9 +89,17 @@ CREATE TABLE `history` (
 --
 
 CREATE TABLE `hospital` (
-  `hospital_id` varchar(255) NOT NULL,
+  `hospital_id` int(12) NOT NULL,
   `name` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `hospital`
+--
+
+INSERT INTO `hospital` (`hospital_id`, `name`) VALUES
+(1, 'Royal Bournemouth Hospital'),
+(4, 'Royal Christchurch Hospital');
 
 -- --------------------------------------------------------
 
@@ -144,6 +152,14 @@ CREATE TABLE `patient` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Dumping data for table `patient`
+--
+
+INSERT INTO `patient` (`patient_id`, `surname`, `firstname`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_country`, `address_postcode`, `date_of_birth`, `telephone`, `mobile`, `gender`) VALUES
+('', 'South', 'Harrison', 'Flat 1', 'agag', 'gagag', 'gagag', '', 'aggag', '0000-00-00', '', '', ''),
+('PATIENT', 'South', 'Harrison', '111', '1111', '111', '111', '', '11', '0000-00-00', '', '', '');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -164,6 +180,12 @@ ALTER TABLE `current_medication`
 --
 ALTER TABLE `history`
   ADD PRIMARY KEY (`history_id`);
+
+--
+-- Indexes for table `hospital`
+--
+ALTER TABLE `hospital`
+  ADD PRIMARY KEY (`hospital_id`);
 
 --
 -- Indexes for table `medication`
@@ -197,6 +219,11 @@ ALTER TABLE `clinical_episode`
 --
 ALTER TABLE `history`
   MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hospital`
+--
+ALTER TABLE `hospital`
+  MODIFY `hospital_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `medication`
 --
