@@ -1,0 +1,112 @@
+
+        <div class="row">
+          <div class="row">
+            <div class="input-field col s4">
+              <input id="hospital_number" type="text" class="awesomplete" data-list="RBH, RBCH, RCH, SMH" required>
+              <label for="hospital_number">Hospital</label>
+            </div>
+            <div class="input-field col s4">
+              <input id="patient_number" type="text" class="validate">
+              <label for="patient_number">Patient Number</label>
+            </div>
+            <div class="col s2">
+              <button class="btn waves-effect waves-light right" id="save-patient" type="submit" name="action">Save</button>
+            </div>
+            <div class="col s2">
+              <button class="btn waves-effect waves-light right" id="add-patient" type="submit" name="action">Submit</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6">
+              <input id="patient_surname" type="text" class="validate">
+              <label for="patient_surname">Patient Surname</label>
+            </div>
+            <div class="input-field col s6">
+              <input id="patient_firstname" type="text" class="validate">
+              <label for="patient_firstname">Patient First Name</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s8">
+              <div class="card blue-grey">
+                <div class="card-content white-text light-blue darken-4">
+                  <span class="card-title">Address</span>
+                  <div class="input-field">
+                    <input id="address_firstline" type="text" class="validate">
+                    <label for="address_firstline">First Line</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="address_secondline" type="text" class="validate">
+                    <label for="address_secondline">Second Line</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="address_city" type="text" class="validate">
+                    <label for="address_city">City</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="address_county" type="text" class="validate">
+                    <label for="address_county">County</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="address_postcode" type="text" class="validate">
+                    <label for="address_postcode">Post-code</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col s4">
+              <div class="input-field">
+                <label for="patient_dateofbirth">Date of Birth</label>
+                <input id="patient_dateofbirth" type="date" class="datepicker">
+              </div>
+              <div class="input-field">
+                <select id="patient_gender" class="browser-default">
+                  <option value="" selected>Choose Gender</option>
+                  <option value="1">Male</option>
+                  <option value="2">Female</option> 
+                </select>
+              </div>
+              <div class="input-field">
+                <input id="patient_telephone" type="text" class="validate">
+                <label for="patient_telephone">Telephone</label>
+              </div>
+            </div>
+          </div>
+          <div class="input-field">
+            <input id="gp" type="text" class="validate">
+            <label for="gp">General Practitioner</label>
+          </div>
+          <div class="row">
+            <div class="col s8">
+              <div class="card blue-grey">
+                <div class="card-content white-text light-blue darken-4">
+                  <span class="card-title">GP Address</span>
+                  <div class="input-field">
+                    <input id="gp_firstline" type="text" class="validate">
+                    <label for="gp_firstline">First Line</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="gp_secondline" type="text" class="validate">
+                    <label for="gp_secondline">Second Line</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="gp_city" type="text" class="validate">
+                    <label for="gp_city">City</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="gp_county" type="text" class="validate">
+                    <label for="gp_county">County</label>
+                  </div>
+                  <div class="input-field">
+                    <input id="gp_postcode" type="text" class="validate">
+                    <label for="gp_postcode">Post-code</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="input-field">
+            <input id="gp_telephone" type="text" class="validate">
+            <label for="gp_telephone">Telephone</label>
+          </div>
+        </div>

@@ -43,6 +43,13 @@ app.post("/patient", function (req, response) {
         });
 });
 
+app.get("/view/patient", function(req, res){
+    res.sendFile(__dirname + "/public/views/patient.html");
+});
+app.get("/view/observations", function(req, res) {
+    res.sendFile(__dirname + "/public/views/observations.html");
+});
+
 
 app.get("/hospital", function(req, response) {
     connection.query("SELECT * FROM hospital", function(err, res){

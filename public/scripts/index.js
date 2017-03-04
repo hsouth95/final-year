@@ -1,4 +1,10 @@
 $(document).ready(function () {
+    
+    // Set the base url
+    if(!location.origin){
+        location.origin = location.protocol + "//" + location.host;
+    }
+
     $('select').material_select();
 
     $('.datepicker').pickadate({
@@ -29,7 +35,7 @@ $(document).ready(function () {
         patientData.address = address;
 
         $.ajax({
-            url: "http://localhost/patient",
+            url: location.origin + "/patient",
             data: JSON.stringify(patientData),
             type: "POST",
             contentType: "application/json",
@@ -42,9 +48,32 @@ $(document).ready(function () {
         })
     });
 
-    $.ajax({
+    $(".tab a").click(function(){
+        $("#form-container form").hide();
+
+        var link = this;
+
+        getFormHtml(this.dataset.html).done(function(data){
+            $("#" + link.dataset.formId).append(data);      
+            $("#" + link.dataset.formId).show();  
+        });
+
+    });
+
+
+    getFormHtml = function(entityName) {
+        return $.get(location.origin + "/view/" + entityName);
+    }
+
+    getFormHtml("patient").done(function(data){
+        $("#patient-form").append(data);
+        populateHospitals();
+    });
+
+    populateHospitals = function(){
+        $.ajax({
         type: "GET",
-        url: "http://localhost/hospital",
+        url: location.origin + "/hospital",
         success: function (data) {
             var convertedData = {};
 
@@ -52,15 +81,10 @@ $(document).ready(function () {
                 convertedData[data[i].name] = null;
             }
 
-            //$("input#hospital_number").autocomplete({
-              //  data: convertedData
-            //});
+            $("input#hospital_number").autocomplete({
+                data: convertedData
+            });
         }
     });
-
-    $(".tab a").click(function(){
-        $("#form-container form").hide();
-
-        $("#" + this.dataset.formId).show();
-    });
+    }
 });
