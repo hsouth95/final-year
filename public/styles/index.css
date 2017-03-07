@@ -19,3 +19,12 @@ nav {
 .card-content input {
   border-bottom-color: #e1f5fe;
 }
+
+.patient-card:hover {
+  background-color: #42a5f5 !important;
+  cursor: pointer;
+}
+
+.patient-active {
+  background-color: #42a5f5 !important;
+}

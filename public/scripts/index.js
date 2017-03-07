@@ -28,7 +28,11 @@ $(document).ready(function () {
             url: location.origin + "/view/observations",
             loaded: false,
             onload: function () {
-
+                $('.datepicker').pickadate({
+                    selectMonths: true,
+                    selectYears: 200
+                });
+                $("select").material_select();
             }
         },
         {
@@ -36,7 +40,11 @@ $(document).ready(function () {
             loaded: false,
             url: location.origin + "/view/history",
             onload: function () {
-
+                $('.datepicker').pickadate({
+                    selectMonths: true,
+                    selectYears: 200
+                });
+                $("select").material_select();
             }
         },
         {
@@ -44,11 +52,17 @@ $(document).ready(function () {
             loaded: false,
             url: location.origin + "/view/medication",
             onload: function () {
+                $('.datepicker').pickadate({
+                    selectMonths: true,
+                    selectYears: 200
+                });
+                $("select").material_select();
                 populateDrugs();
             }
         }
     ],
-        EPISODE_ID = null;
+        EPISODE_ID = null,
+        selectedPatient = null;
 
     findPatient = function () {
         var patientNumber = $("#patient_number").val();
@@ -58,22 +72,43 @@ $(document).ready(function () {
 
     fillPatientModal = function (data) {
         var episodeId = null;
-        $("#modal-info").append("<div class='card-panel teal'>" +
-            "<h4>" + data.surname + ", " + data.firstname + "</h4>" +
-            "</div>");
 
-        $.getJSON(location.origin + "/patient/" + data.patient_id + "/latestepisodeid").done(function (data) {
-            if (data && data.length > 0) {
-                episodeId = data.episode_id;
-                $("#modal-info .card-panel").append("<span>An Episode is in progress</span>");
+        $.getJSON(location.origin + "/patient/" + data.patient_id + "/latestepisodeid").done(function (results) {
+            debugger;
+            var panel = document.createElement("div");
+            panel.className = "patient-card card-panel blue lighten-4";
+            panel.dataset.patientId = data.patient_id;
+
+            panel.addEventListener("click", selectPatient);
+
+            var nameElement = document.createElement("h4");
+            nameElement.innerHTML = data.surname + ", " + data.firstname;
+
+            panel.appendChild(nameElement);
+
+            if (results && results.length > 0) {
+                episodeId = results.episode_id;
+                panel.dataset.episodeId = results.episode_id;
             }
+
+            document.getElementById("modal-info").appendChild(panel);
         });
+
+
+        populatePatient(data);
 
         $("#find-patient-modal").modal("open");
     }
 
-    selectPatient = function(){
-        
+    selectPatient = function () {
+        selectedPatient = this.dataset.patient_id;
+        selectedEpisode = this.dataset.episode_id;
+
+        this.className = "patient-card card-panel blue lighten-1";
+    }
+
+    acceptPatient = function () {
+
     }
 
     changeTab = function () {
@@ -95,7 +130,7 @@ $(document).ready(function () {
                 getFormHtml(tab.url).done(function (data) {
                     $("#" + tabClicked.dataset.formId).append(data);
                     if (tab.onload) {
-                        tab.onload();
+                        setTimeout(tab.onload, 100);
                         TABS[tab.index].loaded = true;
                     }
                 });

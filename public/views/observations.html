@@ -1,58 +1,82 @@
 <div class="row">
-          <div class="input-field col s6">
-            <input id="observations_date_seen" type="date">
-            <label for="observations_date_seen">Date Seen</label>
-          </div>
-          <div class="input-field col s6">
-            <input id="observations_time_seen" type="time">
-            <label for="observations_time_seen">Date Seen</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s6">
-            <!-- Should be a select box for ED, GP, AMU, Other -->
-            <input id="observations_referral_source" type="text">
-            <label for="observations_referral_source">Source of Referral</label>
-          </div>
-          <div class="input-field col s6">
-            <input id="observations_referral_reason" type="text">
-            <label for="observations_referral_reason">Reason for AEC Referral</label>
-          </div>
-        </div>
-        <div class="row">
-          <h2>Observations</h2>
-          <!-- Need to think of something here -->
-          <div class="input-field col">
-            <input id="observations_time" type="time">
-            <label for="observations_time">Time</label>
-          </div>
-          <div class="input-field col">
-            <input id="observations_bp_systolic" type="number">
-            <label for="observations_bp_systolic">BP Systolic</label>
-          </div>
-          <div class="input-field col">
-            <input id="observations_bp_diastolic" type="number">
-            <label for="observations_bp_diastolic">BP Diastolic</label>
-          </div>
-          <div class="input-field col">
-            <input id="observations_pulse" type="number">
-            <label for="observations_pulse">Pulse</label>
-          </div>
-          <div class="input-field col">
-            <input id="observations_temperature" type="number">
-            <label for="observations_temperature">Temperature</label>
-          </div>
-          <div class="input-field col">
-            <input id="observations_respiratory_rate" type="number">
-            <label for="observations_respiratory_rate">Respiratory Rate</label>
-          </div>
-          <div class="input-field col">
-            <!-- Seems like a tickbox? Alert, voice, pain, unresponsive -->
-            <input id="observations_avpu" type="number">
-            <label for="observations_avpu">AVPU</label>
-          </div>
-          <div class="input-field col">
-            <input id="observations_news_score" type="number">
-            <label for="observations_news_score">NEWS Score</label>
-          </div>
-        </div>
+  <div class="col s6">
+    <label for="observations_source_referral">Source of Referral</label>
+    <select id="observations_source_referral" class="browser-default" selected> 
+      <option value="" selected>Choose Source</option>
+      <option value="ED">ED</option>
+      <option value="GP">GP</option>
+      <option value="Speciality Clinic">Speciality Clinic</option>
+      <option value="Other">Other</option>
+    </select>
+
+  </div>
+  <div class="input-field col s6">
+    <input id="observations_referral_reason" type="text">
+    <label for="observations_referral_reason">Reason for AEC Referral</label>
+  </div>
+</div>
+<div class="row">
+  <h2>Observations</h2>
+  <table>
+    <thead>
+      <th data-field="name">Name</th>
+      <th data-field="value">Value</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          BP Systolic
+        </td>
+        <td>
+          <input id="observations_bp_systolic" type="number">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          BP Diastolic
+        </td>
+        <td>
+          <input id="observations_bp_systolic" type="number">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Pulse
+        </td>
+        <td>
+          <input id="observations_pulse" type="number">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Temperature
+        </td>
+        <td>
+          <input id="observations_temperature" type="number">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Respiratory Rate
+        </td>
+        <td>
+          <input id="observations_respiratory_rate" type="number">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          AVPU
+        </td>
+        <td>
+          <input id="observations_avpu" type="number">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          NEWS Score
+        </td>
+        <td>
+          <input id="observations_news_score" type="number">
+        </td>
+  </table>
+</div>
