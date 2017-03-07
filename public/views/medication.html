@@ -1,0 +1,42 @@
+<div class="row">
+    <table>
+        <thead>
+            <tr>
+                <th data-field="drug-name">Drug Name</th>
+                <th data-field="dose">Dose</th>
+                <th data-field="route">Route</th>
+                <th data-field="frequency">Frequency</th>
+                <th data-field="details">Details</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input id="drug-name" type="text" class="autocomplete" required>
+                </td>
+                <td>
+                    <input type="number" id="dose">
+                </td>
+                <td>
+                    <input type="text" id="route">
+                </td>
+                <td>
+                    <input type="text" id="frequency">
+                </td>
+                <td>
+                    <input type="text" id="details">
+                </td>
+                <td>
+                    <button type="button" class="btn waves-effect waves-light" id="add-medication">Add</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <textarea id="allergies" class="materialize-textarea"></textarea>
+        <label for="allergies">Allergies</label>
+    </div>
+</div>
