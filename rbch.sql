@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.6.5.2
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2017 at 02:44 PM
--- Server version: 10.1.19-MariaDB
--- PHP Version: 5.6.28
+-- Generation Time: Mar 07, 2017 at 11:22 PM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 7.1.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -28,11 +28,20 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `clinical_episode` (
   `episode_id` int(9) NOT NULL,
+  `patient_id` int(9) NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL,
   `source_referral` varchar(255) NOT NULL,
-  `reason_referral` varchar(512) NOT NULL
+  `reason_referral` varchar(512) NOT NULL,
+  `completed` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `clinical_episode`
+--
+
+INSERT INTO `clinical_episode` (`episode_id`, `patient_id`, `date`, `time`, `source_referral`, `reason_referral`, `completed`) VALUES
+(3, 111111111, '2017-03-06', '04:00:00', 'ED', 'Fall', 0);
 
 -- --------------------------------------------------------
 
@@ -134,6 +143,18 @@ CREATE TABLE `medication` (
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `medication`
+--
+
+INSERT INTO `medication` (`medication_id`, `name`) VALUES
+(1, 'Ibuprofen'),
+(2, 'Adderall'),
+(3, 'Codeine'),
+(4, 'Hydrochlorothiazide'),
+(5, 'Paracetamol'),
+(6, 'Benadryl');
+
 -- --------------------------------------------------------
 
 --
@@ -178,7 +199,8 @@ CREATE TABLE `patient` (
 --
 
 INSERT INTO `patient` (`patient_id`, `surname`, `firstname`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_country`, `address_postcode`, `date_of_birth`, `telephone`, `mobile`, `gender`) VALUES
-(0, 'South', 'Harrison', 'Flat 1 Heron Court', '', 'Bournemouth', 'Dorset', 'England', 'BH89EP', '1995-01-16', '01983529181', '07860631551', 0);
+(0, 'South', 'Harrison', 'Flat 1 Heron Court', '', 'Bournemouth', 'Dorset', 'England', 'BH89EP', '1995-01-16', '01983529181', '07860631551', 0),
+(111111111, 'Nolan', 'Maya', '39 Aldershort Road', '', 'Guildford', 'Surrey', 'England', 'GU28AE', '1995-04-20', '', '', 1);
 
 --
 -- Indexes for dumped tables
@@ -188,7 +210,8 @@ INSERT INTO `patient` (`patient_id`, `surname`, `firstname`, `address_line_1`, `
 -- Indexes for table `clinical_episode`
 --
 ALTER TABLE `clinical_episode`
-  ADD PRIMARY KEY (`episode_id`);
+  ADD PRIMARY KEY (`episode_id`),
+  ADD KEY `patient_id` (`patient_id`);
 
 --
 -- Indexes for table `current_medication`
@@ -240,7 +263,7 @@ ALTER TABLE `patient`
 -- AUTO_INCREMENT for table `clinical_episode`
 --
 ALTER TABLE `clinical_episode`
-  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT;
+  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `diagnosis`
 --
@@ -260,7 +283,7 @@ ALTER TABLE `hospital`
 -- AUTO_INCREMENT for table `medication`
 --
 ALTER TABLE `medication`
-  MODIFY `medication_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `medication_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `observations`
 --
