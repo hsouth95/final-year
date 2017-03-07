@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2017 at 08:51 PM
--- Server version: 10.1.21-MariaDB
--- PHP Version: 7.1.1
+-- Generation Time: Mar 07, 2017 at 02:44 PM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 5.6.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -52,6 +52,28 @@ CREATE TABLE `current_medication` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `diagnosis`
+--
+
+CREATE TABLE `diagnosis` (
+  `diagnosis_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `episode_diagnosis`
+--
+
+CREATE TABLE `episode_diagnosis` (
+  `episode_diagnosis_id` int(11) NOT NULL,
+  `working_diagnosis` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `gp`
 --
 
@@ -89,7 +111,7 @@ CREATE TABLE `history` (
 --
 
 CREATE TABLE `hospital` (
-  `hospital_id` int(12) NOT NULL,
+  `hospital_id` int(8) NOT NULL,
   `name` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -99,7 +121,7 @@ CREATE TABLE `hospital` (
 
 INSERT INTO `hospital` (`hospital_id`, `name`) VALUES
 (1, 'Royal Bournemouth Hospital'),
-(4, 'Royal Christchurch Hospital');
+(2, 'Royal Christchurch');
 
 -- --------------------------------------------------------
 
@@ -136,7 +158,7 @@ CREATE TABLE `observations` (
 --
 
 CREATE TABLE `patient` (
-  `patient_id` varchar(255) NOT NULL,
+  `patient_id` int(9) NOT NULL,
   `surname` varchar(255) NOT NULL,
   `firstname` varchar(255) NOT NULL,
   `address_line_1` varchar(512) NOT NULL,
@@ -148,7 +170,7 @@ CREATE TABLE `patient` (
   `date_of_birth` date NOT NULL,
   `telephone` varchar(12) NOT NULL,
   `mobile` varchar(12) NOT NULL,
-  `gender` varchar(255) NOT NULL
+  `gender` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -156,8 +178,7 @@ CREATE TABLE `patient` (
 --
 
 INSERT INTO `patient` (`patient_id`, `surname`, `firstname`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_country`, `address_postcode`, `date_of_birth`, `telephone`, `mobile`, `gender`) VALUES
-('', 'South', 'Harrison', 'Flat 1', 'agag', 'gagag', 'gagag', '', 'aggag', '0000-00-00', '', '', ''),
-('PATIENT', 'South', 'Harrison', '111', '1111', '111', '111', '', '11', '0000-00-00', '', '', '');
+(0, 'South', 'Harrison', 'Flat 1 Heron Court', '', 'Bournemouth', 'Dorset', 'England', 'BH89EP', '1995-01-16', '01983529181', '07860631551', 0);
 
 --
 -- Indexes for dumped tables
@@ -174,6 +195,12 @@ ALTER TABLE `clinical_episode`
 --
 ALTER TABLE `current_medication`
   ADD PRIMARY KEY (`episode_id`,`medication_id`);
+
+--
+-- Indexes for table `diagnosis`
+--
+ALTER TABLE `diagnosis`
+  ADD PRIMARY KEY (`diagnosis_id`);
 
 --
 -- Indexes for table `history`
@@ -215,6 +242,11 @@ ALTER TABLE `patient`
 ALTER TABLE `clinical_episode`
   MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `diagnosis`
+--
+ALTER TABLE `diagnosis`
+  MODIFY `diagnosis_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
@@ -223,7 +255,7 @@ ALTER TABLE `history`
 -- AUTO_INCREMENT for table `hospital`
 --
 ALTER TABLE `hospital`
-  MODIFY `hospital_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `hospital_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `medication`
 --

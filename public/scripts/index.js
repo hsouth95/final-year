@@ -1,7 +1,6 @@
 $(document).ready(function () {
-    
     // Set the base url
-    if(!location.origin){
+    if (!location.origin) {
         location.origin = location.protocol + "//" + location.host;
     }
 
@@ -19,7 +18,6 @@ $(document).ready(function () {
         var patientData = {},
             address = {};
 
-        patientData.patientId = "PATIENT";
         patientData.surname = $("#patient_surname").val();
         patientData.firstname = $("#patient_firstname").val();
         patientData.dateofbirth = $("#patient_dateofbirth").val();
@@ -45,46 +43,73 @@ $(document).ready(function () {
             error: function (data) {
                 console.log(JSON.stringify(data));
             }
-        })
+        });
     });
 
-    $(".tab a").click(function(){
+    $(".tab a").click(function () {
         $("#form-container form").hide();
-
         var link = this;
 
-        getFormHtml(this.dataset.html).done(function(data){
-            $("#" + link.dataset.formId).append(data);      
-            $("#" + link.dataset.formId).show();  
+        getFormHtml(this.dataset.html).done(function (data) {
+            $("#" + link.dataset.formId).append(data);
+            $("#" + link.dataset.formId).show();
         });
-
     });
 
 
-    getFormHtml = function(entityName) {
+    getFormHtml = function (entityName) {
         return $.get(location.origin + "/view/" + entityName);
-    }
+    };
 
-    getFormHtml("patient").done(function(data){
+    getFormHtml("patient").done(function (data) {
         $("#patient-form").append(data);
         populateHospitals();
-    });
 
-    populateHospitals = function(){
-        $.ajax({
-        type: "GET",
-        url: location.origin + "/hospital",
-        success: function (data) {
-            var convertedData = {};
+        $("#find-patient").click(function (event) {
+            var patientNumber = $("#patient_number").val();
 
-            for (var i = 0; i < data.length; i++) {
-                convertedData[data[i].name] = null;
-            }
-
-            $("input#hospital_number").autocomplete({
-                data: convertedData
+            getPatient(patientNumber).done(function (data) {
+                populatePatient(data);
             });
-        }
+        });
     });
+
+    populatePatient = function (data) {
+        for (var attribute in data) {
+            if (data.hasOwnProperty(attribute)) {
+                if (attribute === "address") {
+                    for (var addressAttribute in data.address) {
+                        if (data.address.hasOwnProperty(addressAttribute)) {
+                            $("#" + addressAttribute).val(data.address[addressAttribute]);
+                        }
+                    }
+                } else {
+                    $("#patient_" + attribute).val(data[attribute]);
+                }
+            }
+        }
+        Materialize.updateTextFields();
+    }
+
+    populateHospitals = function () {
+        $.ajax({
+            type: "GET",
+            url: location.origin + "/hospital",
+            success: function (data) {
+                var convertedData = {};
+
+                for (var i = 0; i < data.length; i++) {
+                    convertedData[data[i].name] = null;
+                }
+
+                $("input#hospital_number").autocomplete({
+                    data: convertedData
+                });
+            }
+        });
+    };
+
+    getPatient = function (patientId) {
+        return $.getJSON(location.origin + "/patient/" + patientId);
     }
 });
