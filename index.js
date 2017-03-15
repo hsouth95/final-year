@@ -2,7 +2,8 @@ var express = require("express"),
     mysql = require("mysql"),
     path = require("path"),
     bodyParser = require("body-parser"),
-    fs = require("fs");
+    fs = require("fs"),
+    routes = require("./routes");
 
 var connection = mysql.createConnection({
     connectionLimit: 100,
@@ -12,12 +13,13 @@ var connection = mysql.createConnection({
     database: "rbch"
 });
 
-var app = express();
+var app = express(),
+    mainDirectory = __dirname;
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 
-
+app.use("/", routes);
 
 app.get("/view", function (req, res) {
     res.sendFile(__dirname + "/public/views/view.html");
@@ -74,15 +76,6 @@ app.get("/medication", function (req, res) {
 
         res.json(results);
     });
-});
-
-app.get("/view/:viewName", function (req, res) {
-    console.log(__dirname + "/public/views/" + req.params.viewName + ".html");
-    if (fs.existsSync(__dirname + "/public/views/" + req.params.viewName + ".html")) {
-        res.sendFile(__dirname + "/public/views/" + req.params.viewName + ".html");
-    } else {
-        res.status(404).send("No view found.");
-    }
 });
 
 app.get("/hospital", function (req, res) {
