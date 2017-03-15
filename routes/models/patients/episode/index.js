@@ -36,3 +36,5 @@ routes.get("/latest", function (req, res) {
 routes.post("/", function (req, res) {
 
 });
+
+module.exports = routes;
