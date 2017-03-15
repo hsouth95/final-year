@@ -73,7 +73,7 @@ $(document).ready(function () {
     fillPatientModal = function (data) {
         var episodeId = null;
 
-        $.getJSON(location.origin + "/patient/" + data.patient_id + "/latestepisodeid").done(function (results) {
+        $.getJSON(location.origin + "/models/patients/" + data.patient_id + "/latestepisodeid").done(function (results) {
             debugger;
             var panel = document.createElement("div");
             panel.className = "patient-card card-panel blue lighten-4";
@@ -168,7 +168,7 @@ $(document).ready(function () {
     populateHospitals = function () {
         $.ajax({
             type: "GET",
-            url: location.origin + "/hospital",
+            url: location.origin + "/models/hospitals",
             success: function (data) {
                 $("input#hospital_number").autocomplete({
                     data: convertJSONArrayToAutocomplete(data, "name")
@@ -178,7 +178,7 @@ $(document).ready(function () {
     };
 
     populateDrugs = function () {
-        $.getJSON(location.origin + "/medication").done(function (data) {
+        $.getJSON(location.origin + "/models/medication").done(function (data) {
             var apples = convertJSONArrayToAutocomplete(data, "name");
             $("input#drug-name").autocomplete({
                 data: apples
@@ -200,7 +200,7 @@ $(document).ready(function () {
     }
 
     getPatient = function (patientId) {
-        return $.getJSON(location.origin + "/patient/" + patientId);
+        return $.getJSON(location.origin + "/modles/patient/" + patientId);
     }
 
     $('select').material_select();
