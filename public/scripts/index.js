@@ -59,6 +59,33 @@ $(document).ready(function () {
                 $("select").material_select();
                 populateDrugs();
             }
+        },
+        {
+            name: "treatment",
+            loaded: false,
+            url: location.origin + "/view/treatment",
+            onload: function () {
+                $("select").material_select();
+
+                populateDrugs();
+            }
+        },
+        {
+            name: "results",
+            loaded: false,
+            url: location.origin + "/view/results",
+            onload: function () {
+                $("select").material_select();
+            }
+        },
+        {
+            name: "diagnosis",
+            loaded: false,
+            url: location.origin + "/view/diagnosis",
+            onload: function(){
+                // populate diagnosis list
+                populateDiagnosis();
+            }
         }
     ],
         EPISODE_ID = null,
@@ -74,7 +101,6 @@ $(document).ready(function () {
         var episodeId = null;
 
         $.getJSON(location.origin + "/models/patients/" + data.patient_id + "/latestepisodeid").done(function (results) {
-            debugger;
             var panel = document.createElement("div");
             panel.className = "patient-card card-panel blue lighten-4";
             panel.dataset.patientId = data.patient_id;
@@ -135,6 +161,8 @@ $(document).ready(function () {
                     }
                 });
             }
+        } else {
+            console.error("Tab is not set.");
         }
     }
 
@@ -179,9 +207,21 @@ $(document).ready(function () {
 
     populateDrugs = function () {
         $.getJSON(location.origin + "/models/medication").done(function (data) {
-            var apples = convertJSONArrayToAutocomplete(data, "name");
+            var drugData = convertJSONArrayToAutocomplete(data, "name");
             $("input#drug-name").autocomplete({
-                data: apples
+                data: drugData
+            });
+        });
+    };
+
+    populateDiagnosis = function(){
+        $.getJSON(location.origin + "/models/diagnosis").done(function(data){
+            var diagnosisData = convertJSONArrayToAutocomplete(data, "name");
+            $("input#problemlist").autocomplete({
+                data: diagnosisData,
+                multiple: {
+                    enable: true
+                }
             });
         });
     }
