@@ -4,7 +4,6 @@ $(document).ready(function () {
         location.origin = location.protocol + "//" + location.host;
     }
 
-
     var TABS = [
         {
             name: "patient",
@@ -33,6 +32,7 @@ $(document).ready(function () {
                     selectYears: 200
                 });
                 $("select").material_select();
+                $("#start-episode").click(startEpisode);
             }
         },
         {
@@ -82,13 +82,13 @@ $(document).ready(function () {
             name: "diagnosis",
             loaded: false,
             url: location.origin + "/view/diagnosis",
-            onload: function(){
+            onload: function () {
                 // populate diagnosis list
                 populateDiagnosis();
             }
         }
     ],
-        EPISODE_ID = null,
+        episode = {},
         selectedPatient = null;
 
     findPatient = function () {
@@ -98,9 +98,7 @@ $(document).ready(function () {
     }
 
     fillPatientModal = function (data) {
-        var episodeId = null;
-
-        $.getJSON(location.origin + "/models/patients/" + data.patient_id + "/latestepisodeid").done(function (results) {
+        $.getJSON(location.origin + "/models/patients/" + data.patient_id).done(function (results) {
             var panel = document.createElement("div");
             panel.className = "patient-card card-panel blue lighten-4";
             panel.dataset.patientId = data.patient_id;
@@ -112,11 +110,6 @@ $(document).ready(function () {
 
             panel.appendChild(nameElement);
 
-            if (results && results.length > 0) {
-                episodeId = results.episode_id;
-                panel.dataset.episodeId = results.episode_id;
-            }
-
             document.getElementById("modal-info").appendChild(panel);
         });
 
@@ -127,8 +120,7 @@ $(document).ready(function () {
     }
 
     selectPatient = function () {
-        selectedPatient = this.dataset.patient_id;
-        selectedEpisode = this.dataset.episode_id;
+        episode.patient_id = this.dataset.patient_id;
 
         this.className = "patient-card card-panel blue lighten-1";
     }
@@ -214,8 +206,8 @@ $(document).ready(function () {
         });
     };
 
-    populateDiagnosis = function(){
-        $.getJSON(location.origin + "/models/diagnosis").done(function(data){
+    populateDiagnosis = function () {
+        $.getJSON(location.origin + "/models/diagnosis").done(function (data) {
             var diagnosisData = convertJSONArrayToAutocomplete(data, "name");
             $("input#problemlist").autocomplete({
                 data: diagnosisData,
@@ -240,8 +232,25 @@ $(document).ready(function () {
     }
 
     getPatient = function (patientId) {
-        return $.getJSON(location.origin + "/modles/patient/" + patientId);
+        return $.getJSON(location.origin + "/models/patient/" + patientId);
     }
+
+    startEpisode = function () {
+        var source = $("#observations_source_referral").val(),
+            reason = $("#observations_referral_reason").val();
+
+        episode.source_referral = source;
+        episode.reason_referral = reason;
+        episode.date = moment().format("YYYY-MM-DD");
+
+        $.post(
+            location.origin + "/models/patient/" + episode.patient_id + "/episode",
+            episode,
+            function () {
+                
+            });
+    }
+
 
     $('select').material_select();
 
