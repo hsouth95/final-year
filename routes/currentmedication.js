@@ -1,9 +1,9 @@
 var routes = require("express").Router({ mergeParams: true }),
-    db = require("../../../../../database.js");
+    db = require("../database.js");
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
-    db.query("SELECT * FROM drug_treatment dt INNER JOIN medication m ON m.medication_id = dt.medication_id WHERE episode_id = ?", [episodeId], function (err, results) {
+    db.query("SELECT * FROM current_medication cm INNER JOIN medication m ON m.medication_id = cm.medication_id WHERE episode_id = ?", [episodeId], function (err, results) {
         if (err) throw err;
 
         res.json(results);

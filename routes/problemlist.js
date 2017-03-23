@@ -1,5 +1,5 @@
 var routes = require("express").Router({ mergeParams: true }),
-    db = require("../../../../../database.js");
+    db = require("../database.js");
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;

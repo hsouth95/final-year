@@ -1,6 +1,6 @@
 var routes = require("express").Router(),
-    db = require("../../../database.js"),
-    episode = require("./episode");
+    db = require("../database.js"),
+    episode = require("./episode.js");
 
 routes.use("/:patientId/episodes", episode);
 

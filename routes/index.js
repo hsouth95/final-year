@@ -1,9 +1,16 @@
 var routes = require("express").Router(),
-    models = require("./models"),
-    views = require("./views");
+    views = require("./views"),
+    patients = require("./patient.js"),
+    hospitals = require("./hospitals.js"),
+    medications = require("./medication.js"),
+    gp = require("./gp.js"),
+    diagnosis = require("./diagnosis.js");
 
-routes.use("/models", models);
 routes.use("/view", views);
-
+routes.use("/hospitals", hospitals);
+routes.use("/medication", medications);
+routes.use("/patients", patients);
+routes.use("/gp", gp);
+routes.use("/diagnosis", diagnosis);
 
 module.exports = routes;

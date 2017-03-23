@@ -1,6 +1,6 @@
 var routes = require("express").Router({ mergeParams: true }),
-    urineresults = require("./urineresults"),
-    db = require("../../../../database.js");
+    urineresults = require("./urineresults.js"),
+    db = require("../database.js");
 
 routes.get("/", function (req, res) {
     var patientId = req.params.patientId;
@@ -35,7 +35,9 @@ routes.get("/latest", function (req, res) {
 });
 
 routes.post("/", function (req, res) {
+    var patientId = req.params.patientId;
 
+    db.query("INSERT INTO clinical_episode SET ?")
 });
 
 routes.use("/:episodeId/urineresults", urineresults);

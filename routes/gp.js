@@ -1,5 +1,5 @@
 var routes = require("express").Router(),
-    db = require("../../../database.js");
+    db = require("../database.js");
 
 
 // Uses query parameters
