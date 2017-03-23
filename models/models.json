@@ -1,0 +1,183 @@
+{
+    "clinical_episode": {
+        "episode_id": {
+            "type": "i",
+            "requiredCreation": false
+        },
+        "patient_id": {
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 9,
+            "maxLength": 9
+        },
+        "gp_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
+        "hospital_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
+        "date": {
+            "type": "d",
+            "requiredCreation": true,
+            "dateFormat": "YYYY-MM-DD",
+            "dateAllowed": "{}<=(NOW)"
+        },
+        "time": {
+            "type": "ti",
+            "requiredCreation": true
+        },
+        "source_referral": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "reason_referral": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "completed": {
+            "type": "i",
+            "requiredCreation": false,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        }
+    },
+    "history": {
+        "history_id": {
+            "type": "i",
+            "requiredCreation": false
+        },
+        "episode_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
+        "presenting_complaint": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "history_presenting_complaint": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "ihd": {
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "epilepsy": {
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "asthma": {
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "notes": {
+            "type": "t",
+            "requiredCreation": false
+        },
+        "dm":{
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "copd":{
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        
+        "mi":{
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        
+        "dvt":{
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        
+        "pe":{
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        
+        "tia":{
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        
+        "cva":{
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "family_history": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "social_history": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "alcohol_history": {
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1
+        },
+        "smoking_history": {
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1
+        },
+        "smoking_pack_years": {
+            "type": "i",
+            "requiredCreation": true,
+            "maxLength": 3 
+        },
+        "allergies": {
+            "type": "t",
+            "requiredCreation": true
+        }
+    },
+    "observations": {
+        "observation_id": {
+            "type": "i",
+            "requiredCreation": false,
+            "bp_systolic": {
+               "type": "i",
+               "maxLength": 3 
+            }
+        }
+    }
+}

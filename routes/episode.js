@@ -35,9 +35,14 @@ routes.get("/latest", function (req, res) {
 });
 
 routes.post("/", function (req, res) {
-    var patientId = req.params.patientId;
+    var patientId = req.params.patientId,
+        episode = req.body;
+    
+    episode.patient_id = patientId;
 
-    db.query("INSERT INTO clinical_episode SET ?")
+    db.query("INSERT INTO clinical_episode SET ?", episode, function(err, result) {
+        req.json(result.insertId);
+    });
 });
 
 routes.use("/:episodeId/urineresults", urineresults);

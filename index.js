@@ -8,19 +8,10 @@ var express = require("express"),
 var app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/", routes);
-
-app.get("/patient/:patientId/latestepisodeid", function (req, res) {
-    var patientId = req.params.patientId;
-
-    connection.query("SELECT episode_id FROM clinical_episode WHERE patient_id = ?", [patientId], function (err, results) {
-        if (err) throw console.log(err);
-
-        res.json(results);
-    });
-});
 
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/public/views/index.html");
