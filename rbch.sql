@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 15, 2017 at 02:43 AM
+-- Generation Time: Mar 23, 2017 at 11:30 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -71,19 +71,13 @@ CREATE TABLE `clinical_episode` (
   `episode_id` int(9) NOT NULL,
   `patient_id` int(9) NOT NULL,
   `gp_id` int(11) NOT NULL,
+  `hospital_id` int(9) NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL,
   `source_referral` varchar(255) NOT NULL,
   `reason_referral` varchar(512) NOT NULL,
   `completed` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `clinical_episode`
---
-
-INSERT INTO `clinical_episode` (`episode_id`, `patient_id`, `gp_id`, `date`, `time`, `source_referral`, `reason_referral`, `completed`) VALUES
-(3, 111111111, 0, '2017-03-06', '04:00:00', 'ED', 'Fall', 0);
 
 -- --------------------------------------------------------
 
@@ -109,6 +103,16 @@ CREATE TABLE `diagnosis` (
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `diagnosis`
+--
+
+INSERT INTO `diagnosis` (`diagnosis_id`, `name`) VALUES
+(1, 'Asthma'),
+(2, 'Anaemia'),
+(3, 'Diabetes'),
+(4, 'Flu');
+
 -- --------------------------------------------------------
 
 --
@@ -120,6 +124,17 @@ CREATE TABLE `drug_treatment` (
   `medication_id` int(9) NOT NULL,
   `frequency` int(4) NOT NULL,
   `details` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `episode_diagnosis`
+--
+
+CREATE TABLE `episode_diagnosis` (
+  `episode_id` int(11) NOT NULL,
+  `diagnosis_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -165,7 +180,8 @@ CREATE TABLE `examination` (
 
 CREATE TABLE `gp` (
   `gp_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `surname` varchar(255) NOT NULL,
   `address_line_1` varchar(512) NOT NULL,
   `address_line_2` varchar(512) NOT NULL,
   `address_city` varchar(255) NOT NULL,
@@ -177,8 +193,8 @@ CREATE TABLE `gp` (
 -- Dumping data for table `gp`
 --
 
-INSERT INTO `gp` (`gp_id`, `name`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_postcode`) VALUES
-(1, 'agagg', 'aggaga', 'agagga', 'aggag', 'agga', 'agga');
+INSERT INTO `gp` (`gp_id`, `firstname`, `surname`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_postcode`) VALUES
+(1, 'agagg', 'a', 'aggaga', 'agagga', 'aggag', 'agga', 'agga');
 
 -- --------------------------------------------------------
 
@@ -381,11 +397,20 @@ CREATE TABLE `urine_results` (
 --
 
 --
+-- Indexes for table `blood_results`
+--
+ALTER TABLE `blood_results`
+  ADD PRIMARY KEY (`blood_results_id`),
+  ADD KEY `episode_id` (`episode_id`);
+
+--
 -- Indexes for table `clinical_episode`
 --
 ALTER TABLE `clinical_episode`
   ADD PRIMARY KEY (`episode_id`),
-  ADD KEY `patient_id` (`patient_id`);
+  ADD KEY `patient_id` (`patient_id`),
+  ADD KEY `gp_id` (`gp_id`),
+  ADD KEY `hospital_id` (`hospital_id`);
 
 --
 -- Indexes for table `current_medication`
@@ -404,7 +429,15 @@ ALTER TABLE `diagnosis`
 -- Indexes for table `drug_treatment`
 --
 ALTER TABLE `drug_treatment`
-  ADD PRIMARY KEY (`treatment_id`,`medication_id`);
+  ADD PRIMARY KEY (`treatment_id`,`medication_id`),
+  ADD KEY `medication_id` (`medication_id`);
+
+--
+-- Indexes for table `episode_diagnosis`
+--
+ALTER TABLE `episode_diagnosis`
+  ADD PRIMARY KEY (`episode_id`,`diagnosis_id`),
+  ADD KEY `diagnosis_id` (`diagnosis_id`);
 
 --
 -- Indexes for table `episode_observations`
@@ -443,7 +476,8 @@ ALTER TABLE `hospital`
 -- Indexes for table `imaging_results`
 --
 ALTER TABLE `imaging_results`
-  ADD PRIMARY KEY (`imaging_results_id`);
+  ADD PRIMARY KEY (`imaging_results_id`),
+  ADD KEY `episode_id` (`episode_id`);
 
 --
 -- Indexes for table `medication`
@@ -464,16 +498,25 @@ ALTER TABLE `patient`
   ADD PRIMARY KEY (`patient_id`);
 
 --
+-- Indexes for table `problem_list`
+--
+ALTER TABLE `problem_list`
+  ADD PRIMARY KEY (`problem_list_id`),
+  ADD KEY `episode_id` (`episode_id`);
+
+--
 -- Indexes for table `treatment`
 --
 ALTER TABLE `treatment`
-  ADD PRIMARY KEY (`treatment_id`);
+  ADD PRIMARY KEY (`treatment_id`),
+  ADD KEY `episode_id` (`episode_id`);
 
 --
 -- Indexes for table `urine_results`
 --
 ALTER TABLE `urine_results`
-  ADD PRIMARY KEY (`urine_results_id`);
+  ADD PRIMARY KEY (`urine_results_id`),
+  ADD KEY `episode_id` (`episode_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -483,12 +526,12 @@ ALTER TABLE `urine_results`
 -- AUTO_INCREMENT for table `clinical_episode`
 --
 ALTER TABLE `clinical_episode`
-  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `diagnosis`
 --
 ALTER TABLE `diagnosis`
-  MODIFY `diagnosis_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `diagnosis_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `examination`
 --
@@ -539,10 +582,38 @@ ALTER TABLE `urine_results`
 --
 
 --
+-- Constraints for table `blood_results`
+--
+ALTER TABLE `blood_results`
+  ADD CONSTRAINT `blood_results_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `clinical_episode`
+--
+ALTER TABLE `clinical_episode`
+  ADD CONSTRAINT `clinical_episode_ibfk_1` FOREIGN KEY (`gp_id`) REFERENCES `gp` (`gp_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `clinical_episode_ibfk_2` FOREIGN KEY (`hospital_id`) REFERENCES `hospital` (`hospital_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Constraints for table `current_medication`
 --
 ALTER TABLE `current_medication`
+  ADD CONSTRAINT `current_medication_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `medication_id` FOREIGN KEY (`medication_id`) REFERENCES `medication` (`medication_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `drug_treatment`
+--
+ALTER TABLE `drug_treatment`
+  ADD CONSTRAINT `drug_treatment_ibfk_1` FOREIGN KEY (`medication_id`) REFERENCES `medication` (`medication_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `drug_treatment_ibfk_2` FOREIGN KEY (`treatment_id`) REFERENCES `treatment` (`treatment_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `episode_diagnosis`
+--
+ALTER TABLE `episode_diagnosis`
+  ADD CONSTRAINT `episode_diagnosis_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `episode_diagnosis_ibfk_2` FOREIGN KEY (`diagnosis_id`) REFERENCES `diagnosis` (`diagnosis_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `episode_observations`
@@ -550,6 +621,42 @@ ALTER TABLE `current_medication`
 ALTER TABLE `episode_observations`
   ADD CONSTRAINT `episode_id` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `observation_id` FOREIGN KEY (`observation_id`) REFERENCES `observations` (`observation_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `examination`
+--
+ALTER TABLE `examination`
+  ADD CONSTRAINT `examination_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `history`
+--
+ALTER TABLE `history`
+  ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `imaging_results`
+--
+ALTER TABLE `imaging_results`
+  ADD CONSTRAINT `imaging_results_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `problem_list`
+--
+ALTER TABLE `problem_list`
+  ADD CONSTRAINT `problem_list_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `treatment`
+--
+ALTER TABLE `treatment`
+  ADD CONSTRAINT `treatment_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `urine_results`
+--
+ALTER TABLE `urine_results`
+  ADD CONSTRAINT `urine_results_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
