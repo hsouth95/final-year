@@ -1,10 +1,10 @@
 var express = require("express"),
-    mysql = require("mysql"),
     path = require("path"),
     bodyParser = require("body-parser"),
     fs = require("fs"),
     routes = require("./routes");
 
+global.mysql = require("mysql");
 var app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -20,3 +20,5 @@ app.get("/", function (req, res) {
 app.listen(8000, "0.0.0.0", function () {
     console.log("Listening to port: 8000");
 });
+
+module.exports = app;

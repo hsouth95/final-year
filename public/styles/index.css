@@ -28,3 +28,11 @@ nav {
 .patient-active {
   background-color: #42a5f5 !important;
 }
+
+.tab-in-progress {
+  background-color: #ffb74d !important;
+}
+.tab-completed {
+  background-color: #81c784 !important;
+  color: #b9f6ca !important;
+}

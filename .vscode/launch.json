@@ -16,6 +16,16 @@
             "name": "Attach to Process",
             "address": "localhost",
             "port": 5858
+        },
+        {
+            "name": "Run Mocha",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": ["test/**/*.js", "--no-timeouts"],
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": null
         }
     ]
 }

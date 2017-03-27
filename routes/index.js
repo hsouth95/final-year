@@ -14,7 +14,6 @@ routes.use("/patients", patients);
 routes.use("/gp", gp);
 routes.use("/diagnosis", diagnosis);
 
-
 routes.post("/validate", function (req, res) {
     models("clinical_episode", req.body,
         function (errorMessage) {

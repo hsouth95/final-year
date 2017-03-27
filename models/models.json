@@ -86,54 +86,49 @@
             "type": "t",
             "requiredCreation": false
         },
-        "dm":{
+        "dm": {
             "type": "i",
             "requiredCreation": true,
             "minLength": 1,
             "maxLength": 1,
             "range": "0-1"
         },
-        "copd":{
+        "copd": {
             "type": "i",
             "requiredCreation": true,
             "minLength": 1,
             "maxLength": 1,
             "range": "0-1"
         },
-        
-        "mi":{
+        "mi": {
             "type": "i",
             "requiredCreation": true,
             "minLength": 1,
             "maxLength": 1,
             "range": "0-1"
         },
-        
-        "dvt":{
+        "dvt": {
             "type": "i",
             "requiredCreation": true,
             "minLength": 1,
             "maxLength": 1,
             "range": "0-1"
         },
-        
-        "pe":{
+        "pe": {
             "type": "i",
             "requiredCreation": true,
             "minLength": 1,
             "maxLength": 1,
             "range": "0-1"
         },
-        
-        "tia":{
+        "tia": {
             "type": "i",
             "requiredCreation": true,
             "minLength": 1,
             "maxLength": 1,
             "range": "0-1"
         },
-        
-        "cva":{
+        "cva": {
             "type": "i",
             "requiredCreation": true,
             "minLength": 1,
@@ -163,7 +158,7 @@
         "smoking_pack_years": {
             "type": "i",
             "requiredCreation": true,
-            "maxLength": 3 
+            "maxLength": 3
         },
         "allergies": {
             "type": "t",
@@ -173,11 +168,131 @@
     "observations": {
         "observation_id": {
             "type": "i",
-            "requiredCreation": false,
-            "bp_systolic": {
-               "type": "i",
-               "maxLength": 3 
-            }
+            "requiredCreation": false
+        },
+        "bp_systolic": {
+            "type": "i",
+            "requiredCreation": true,
+            "maxLength": 3
+        },
+        "bp_diastolic": {
+            "type": "i",
+            "requiredCreation": true,
+            "maxLength": 3
+        },
+        "pulse": {
+            "type": "i",
+            "requiredCreation": true,
+            "maxLength": 3
+        },
+        "temperature": {
+            "requiredCreation": true
+        },
+        "respiratory_rate": {
+            "type": "i",
+            "requiredCreation": true,
+            "maxLength": 2
+        },
+        "avpu": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "news_score": {
+            "type": "i",
+            "requiredCreation": true
+        }
+    },
+    "patient": {
+        "patient_id": {
+            "type": "i",
+            "requiredCreation": false
+        },
+        "surname": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "firstname": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_line_1": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_line_2": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_city": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_county": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_country": {
+            "type": "t",
+            "requiredCreation": false
+        },
+        "address_postcode": {
+            "type": "t",
+            "requiredCreation": true,
+            "regex": "(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX]][0-9][A-HJKPSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY])))) [0-9][A-Z-[CIKMOV]]{2})"
+        },
+        "date_of_birth": {
+            "type": "d",
+            "requiredCreation": true,
+            "dateAllowed": "{}<=(NOW)"
+        },
+        "telephone": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "mobile": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "gender": {
+            "type": "i",
+            "requiredCreation": true,
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        }
+    },
+    "gp": {
+        "gp_id": {
+            "type": "i",
+            "requiredCreation": false
+        },
+        "firstname": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "surname": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_line_1": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_line_2": {
+            "type": "t",
+            "requiredCreation": false
+        },
+        "address_city": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_county": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "address_postcode": {
+            "type": "t",
+            "requiredCreation": true
         }
     }
 }

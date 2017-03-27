@@ -7,7 +7,6 @@
   <title>Demo</title>
   <meta name="author" content="Harrison South">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.1/awesomplete.min.css" />
   <link rel="stylesheet" href="styles/index.css" />
 </head>
 
@@ -23,13 +22,13 @@
     <div class="row">
       <div class="col s12">
         <ul class="tabs tabs-fixed-width z-depth-1">
-          <li class="tab col s2"><a href="#" data-form-id="patient-form" data-html="patient">Patient</a></li>
-          <li class="tab col s2"><a href="#" data-form-id="observations-form" data-html="observations">Observations + Examinations</a></li>
-          <li class="tab col s2"><a href="#" data-form-id="history-form" data-html="history">History</a></li>
-          <li class="tab col s2"><a href="#" data-form-id="medication-form" data-html="medication">Medication</a></li>
-          <li class="tab col s2"><a href="#" data-form-id="treatment-form" data-html="treatment">Treatment</a></li>
-          <li class="tab col s2"><a href="#" data-form-id="results-form" data-html="results">Results</a></li>
-          <li class="tab col s2"><a href="#" data-form-id="diagnosis-form" data-html="diagnosis">Diagnosis + Tests</a></li>
+          <li id="patient-tab" class="tab col s2"><a href="#" data-form-id="patient-form" data-html="patient">Patient</a></li>
+          <li id="observations-tab" class="tab col s2"><a href="#" data-form-id="observations-form" data-html="observations">Observations + Examinations</a></li>
+          <li id="history-tab" class="tab col s2"><a href="#" data-form-id="history-form" data-html="history">History</a></li>
+          <li id="medication-tab" class="tab col s2"><a href="#" data-form-id="medication-form" data-html="medication">Medication</a></li>
+          <li id="treatment-tab" class="tab col s2"><a href="#" data-form-id="treatment-form" data-html="treatment">Treatment</a></li>
+          <li id="result-tab" class="tab col s2"><a href="#" data-form-id="results-form" data-html="results">Results</a></li>
+          <li id="diagnosis-tab" class="tab col s2"><a href="#" data-form-id="diagnosis-form" data-html="diagnosis">Diagnosis + Tests</a></li>
         </ul>
       </div>
     </div>
@@ -48,6 +47,15 @@
       </form>
       <form id="diagnosis-form" style="display:none;" autocomplete="off">
       </form>
+      <div class="modal" id="shared-modal">
+        <div class="modal-content">
+          <h4 class="modal-title"></h4>
+          <div class="modal-main"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn waves-effect waves-light" type="button" id="modal-select" name="action">Select</button>
+        </div>
+      </div>
     </div>
   </main>
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

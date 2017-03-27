@@ -9,21 +9,7 @@ routes.get("/:patientId", function (req, res) {
     db.query("SELECT * FROM patient WHERE patient_id = ? LIMIT 1", [patientId], function (err, results) {
         if (err) throw err;
 
-        var patient = results[0],
-            data = {};
-        data.address = {};
-
-        for (var attribute in patient) {
-            if (patient.hasOwnProperty(attribute)) {
-                if (attribute.indexOf("address") !== -1) {
-                    data.address[attribute] = patient[attribute];
-                } else {
-                    data[attribute] = patient[attribute];
-                }
-            }
-        }
-
-        res.json(data);
+        res.json(results[0]);
     });
 });
 
