@@ -14,11 +14,11 @@
   </div>
   <div class="row">
     <div class="input-field col s6">
-      <input id="patient_surname" type="text" data-entity="patient" data-field="surname" class="validate">
+      <input id="patient_surname" type="text" data-entity="patient" data-field="surname" disabled>
       <label for="patient_surname">Patient Surname</label>
     </div>
     <div class="input-field col s6">
-      <input id="patient_firstname" data-entity="patient" data-field="firstname" type="text" class="validate">
+      <input id="patient_firstname" data-entity="patient" data-field="firstname" type="text" disabled>
       <label for="patient_firstname">Patient First Name</label>
     </div>
   </div>
@@ -28,23 +28,23 @@
         <div class="card-content white-text light-blue darken-4">
           <span class="card-title">Address</span>
           <div class="input-field">
-            <input id="address_line_1" data-entity="patient" data-field="address_line_1" type="text" class="validate">
+            <input id="address_line_1" data-entity="patient" data-field="address_line_1" type="text" disabled>
             <label for="address_line_1">First Line</label>
           </div>
           <div class="input-field">
-            <input id="address_line_2" data-entity="patient" data-field="address_line_2" type="text" class="validate">
+            <input id="address_line_2" data-entity="patient" data-field="address_line_2" type="text" disabled>
             <label for="address_line_2">Second Line</label>
           </div>
           <div class="input-field">
-            <input id="address_city" data-entity="patient" data-field="address_city" type="text" class="validate">
+            <input id="address_city" data-entity="patient" data-field="address_city" type="text" disabled>
             <label for="address_city">City</label>
           </div>
           <div class="input-field">
-            <input id="address_county" data-entity="patient" data-field="address_county" type="text" class="validate">
+            <input id="address_county" data-entity="patient" data-field="address_county" type="text" disabled>
             <label for="address_county">County</label>
           </div>
           <div class="input-field">
-            <input id="address_postcode" data-entity="patient" data-field="address_postcode" type="text" class="validate">
+            <input id="address_postcode" data-entity="patient" data-field="address_postcode" type="text" disabled>
             <label for="address_postcode">Post-code</label>
           </div>
         </div>
@@ -53,17 +53,17 @@
     <div class="col s4">
       <div class="input-field">
         <label for="patient_dateofbirth">Date of Birth</label>
-        <input id="patient_dateofbirth" data-entity="patient" data-field="data_of_birth" type="date" class="datepicker">
+        <input id="patient_dateofbirth" data-entity="patient" data-field="date_of_birth" type="date" class="datepicker" disabled>
       </div>
       <div class="input-field">
-        <select id="patient_gender" data-entity="patient" data-field="gender" class="browser-default">
-                  <option value="" selected>Choose Gender</option>
-                  <option value="0">Male</option>
-                  <option value="1">Female</option> 
-                </select>
+        <select id="patient_gender" data-entity="patient" data-field="gender" class="browser-default" disabled>
+          <option value="" selected>Choose Gender</option>
+          <option value="0">Male</option>
+          <option value="1">Female</option> 
+        </select>
       </div>
       <div class="input-field">
-        <input id="patient_telephone" data-entity="patient" data-field="telephone" type="text" class="validate">
+        <input id="patient_telephone" data-entity="patient" data-field="telephone" type="text" disabled>
         <label for="patient_telephone">Telephone</label>
       </div>
     </div>
@@ -71,11 +71,11 @@
   <h4>General Practioner</h4>
   <div class="row">
     <div class="input-field col s5">
-      <input id="gp_firstname" data-entity="gp" data-field="firstname" type="text" class="validate">
+      <input id="gp_firstname" data-entity="gp" data-field="firstname" type="text">
       <label for="gp_firstname">Firstname</label>
     </div>
     <div class="input-field col s5">
-      <input id="gp_surname" data-entity="gp" data-field="surname" type="text" class="validate">
+      <input id="gp_surname" data-entity="gp" data-field="surname" type="text">
       <label for="gp_surname">Surname</label>
     </div>
     <div class="col s2">

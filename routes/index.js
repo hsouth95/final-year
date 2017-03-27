@@ -14,15 +14,4 @@ routes.use("/patients", patients);
 routes.use("/gp", gp);
 routes.use("/diagnosis", diagnosis);
 
-routes.post("/validate", function (req, res) {
-    models("clinical_episode", req.body,
-        function (errorMessage) {
-            console.log(errorMessage);
-            res.status(500).send(errorMessage);
-        },
-        function () {
-            res.send("Success!");
-        });
-});
-
 module.exports = routes;

@@ -39,7 +39,10 @@ $(document).ready(function () {
                 });
                 $("select").material_select();
                 $("#start-episode").click(startEpisode);
-            }
+            },
+            completedAttributes: [
+                "episode_id"
+            ]
         },
         {
             name: "history",
@@ -94,6 +97,7 @@ $(document).ready(function () {
             }
         }
     ],
+        HOSPITALS = ["hello"],
         FormAPI = {},
         episode = {},
         selectedPatient = null;
@@ -164,10 +168,12 @@ $(document).ready(function () {
             type: "GET",
             url: location.origin + "/hospitals",
             success: function (data) {
+                HOSPITALS = data;
                 $("input#hospital_name").autocomplete({
                     data: convertJSONArrayToAutocomplete(data, "name"),
                     onAutocomplete: function (val) {
-                        episode.hospital_id = val;
+                        var selectedHospital = $.grep(HOSPITALS, function(e){ return e.name === val});
+                        episode.hospital_id = selectedHospital[0].hospital_id;
                         FormAPI.tabs.updateCompletion();
                     }
                 });
@@ -208,20 +214,26 @@ $(document).ready(function () {
 
         return convertedData;
     }
-    
+
     startEpisode = function () {
         var source = $("#observations_source_referral").val(),
             reason = $("#observations_referral_reason").val();
 
+
+        if (!episode || !episode.patient_id || !episode.hospital_id || !episode.gp_id) {
+            alert("cant create episode");
+        }
+
         episode.source_referral = source;
         episode.reason_referral = reason;
         episode.date = moment().format("YYYY-MM-DD");
+        episode.time = moment().format("HH:MM:SS");
 
         $.post(
-            location.origin + "/patient/" + episode.patient_id + "/episode",
+            location.origin + "/patients/" + episode.patient_id + "/episodes",
             episode,
-            function () {
-
+            function (data) {
+                alert(data);
             });
     }
 
@@ -318,9 +330,13 @@ $(document).ready(function () {
     FormAPI.data = {};
 
     FormAPI.data.populate = function (data, entityName) {
-        var selectedFields = $.grep($("input"), function (e) {
+        var selectedInputFields = $.grep($("input"), function (e) {
             return e.dataset.entity === entityName;
-        });
+        }),
+            selectedSelectionFields = $.grep($("select"), function (e) {
+                return e.dataset.entity === entityName;
+            }),
+            selectedFields = selectedInputFields.concat(selectedSelectionFields);
 
         for (var attribute in data) {
             if (data.hasOwnProperty(attribute)) {
@@ -330,11 +346,12 @@ $(document).ready(function () {
 
                 if (relatedField && relatedField.length >= 1) {
                     $.each(relatedField, function () {
-                        if (relatedField.type === "date") {
-                            var dataInput = $("#" + relatedField.id).pickadate(),
-                                picker = dataInput.packadate("picker");
+                        if (this.type === "date") {
+                            var dataInput = $("#" + this.id).pickadate(),
+                                picker = dataInput.packadate("picker"),
+                                formattedDate = moment(data[attribute]).format("YYYY-MM-DD");
 
-                            picker.set("select", data[attribute], { format: "yyyy-mm-dd" });
+                            picker.set("select", formattedDate, { format: "yyyy-mm-dd" });
                         } else {
                             this.value = data[attribute];
                         }

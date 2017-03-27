@@ -4,16 +4,17 @@ var fs = require("fs"),
 var models = {};
 
 models.validate = function (modelName, data, errorCallback, successCallback) {
-    fs.readFile(__dirname + "/models.json", "utf8", function (err, models) {
+    fs.readFile(__dirname + "/models.json", "utf8", function (err, dataModels) {
         if (err) errorCallback(err.message);
 
-        obj = JSON.parse(models);
+        obj = JSON.parse(dataModels);
 
         if (obj.hasOwnProperty(modelName)) {
-            if (validateFields(data, obj[modelName])) {
-                successCallback();
+            var validateFieldResponse = models.validateFields(data, obj[modelName]);
+            if (validateFieldResponse.status) {
+                successCallback(models.trimObject(data, obj[modelName]));
             } else {
-                errorCallback("failed validation");
+                errorCallback(validateFieldResponse.message);
             }
         } else {
             errorCallback("Cannot find model to validate against.");
@@ -22,21 +23,21 @@ models.validate = function (modelName, data, errorCallback, successCallback) {
     });
 }
 
-models.validateFields = function (data, model) {
-    for (var attribute in model) {
-        if (model.hasOwnProperty(attribute)) {
+models.validateFields = function (data, dataModel) {
+    for (var attribute in dataModel) {
+        if (dataModel.hasOwnProperty(attribute)) {
             var dataAttribute = data[attribute];
             if (dataAttribute) {
                 var validField = false;
-                switch (model[attribute].type) {
+                switch (dataModel[attribute].type) {
                     case "i":
-                        validField = validateInteger(model[attribute], parseInt(dataAttribute));
+                        validField = models.validateInteger(dataModel[attribute], parseInt(dataAttribute));
                         break;
                     case "t":
                         validField = true;
                         break;
                     case "d":
-                        validField = validateDate(model[attribute], dataAttribute);
+                        validField = models.validateDate(dataModel[attribute], dataAttribute);
                         break;
                     case "ti":
                         validField = true;
@@ -46,16 +47,16 @@ models.validateFields = function (data, model) {
                 }
 
                 if (!validField) {
-                    return false;
+                    return { status: false, message: attribute + " failed validation" };
                 }
-            } else if (model[attribute].requiredCreation) {
+            } else if (dataModel[attribute].requiredCreation) {
                 // This was a required field
-                return false;
+                return { status: false, message: attribute + " was required but not present." };
             }
         }
     }
 
-    return true;
+    return { status: true };
 }
 
 models.validateInteger = function (modelAttribute, dataAttribute) {
@@ -85,7 +86,7 @@ models.validateInteger = function (modelAttribute, dataAttribute) {
 models.validateDate = function (modelAttribute, dataAttribute) {
     if (moment(dataAttribute, "YYYY-MM-DD", true).isValid()) {
         if (modelAttribute.dateAllowed) {
-            return isDateAllowed(moment(dataAttribute), modelAttribute.dateAllowed);
+            return models.isDateAllowed(moment(dataAttribute), modelAttribute.dateAllowed);
         }
     }
 }
@@ -121,6 +122,19 @@ models.isDateAllowed = function (date, dateFormula) {
         default:
             return false;
     }
+}
+
+models.trimObject = function (data, dataModel) {
+    var returnedObject = {};
+    for (var attribute in dataModel) {
+        if (dataModel.hasOwnProperty(attribute)) {
+            if (data[attribute]) {
+                returnedObject[attribute] = data[attribute];
+            }
+        }
+    }
+
+    return returnedObject;
 }
 
 module.exports = models;

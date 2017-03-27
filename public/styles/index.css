@@ -36,3 +36,11 @@ nav {
   background-color: #81c784 !important;
   color: #b9f6ca !important;
 }
+
+.white-text input:disabled {
+  border-bottom-color: #e1f5fe !important;
+  color: #e1f5fe !important;
+}
+.white-text label {
+  color: #e1f5fe !important;
+}
