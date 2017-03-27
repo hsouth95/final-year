@@ -1,7 +1,8 @@
 <div class="row">
   <div class="col s4">
     <label for="observations_source_referral">Source of Referral</label>
-    <select id="observations_source_referral" data-entity="clinical_episode" data-field="source_referral" class="browser-default" selected> 
+    <select id="observations_source_referral" data-entity="clinical_episode" data-field="source_referral" class="browser-default"
+      selected> 
       <option value="" selected>Choose Source</option>
       <option value="ED">ED</option>
       <option value="GP">GP</option>
@@ -20,6 +21,7 @@
 </div>
 <div class="row">
   <h2>Observations</h2>
+  <button class="btn waves-effect waves-light right" type="button" id="add-observations" name="action" disabled>Add Observations</button>
   <table>
     <thead>
       <th data-field="name">Name</th>
@@ -31,7 +33,7 @@
           BP Systolic
         </td>
         <td>
-          <input id="observations_bp_systolic" type="number" disabled>
+          <input id="observations_bp_systolic" data-entity="observations" data-field="bp_systolic" type="number" disabled>
         </td>
       </tr>
       <tr>
@@ -39,7 +41,7 @@
           BP Diastolic
         </td>
         <td>
-          <input id="observations_bp_systolic" type="number" disabled>
+          <input id="observations_bp_systolic" data-entity="observations" data-field="bp_diastolic" type="number" disabled>
         </td>
       </tr>
       <tr>
@@ -47,7 +49,7 @@
           Pulse
         </td>
         <td>
-          <input id="observations_pulse" type="number" disabled>
+          <input id="observations_pulse" data-entity="observations" data-field="pulse" type="number" disabled>
         </td>
       </tr>
       <tr>
@@ -55,7 +57,7 @@
           Temperature
         </td>
         <td>
-          <input id="observations_temperature" type="number" disabled>
+          <input id="observations_temperature" data-entity="observations" data-field="temperature" type="number" disabled>
         </td>
       </tr>
       <tr>
@@ -63,7 +65,7 @@
           Respiratory Rate
         </td>
         <td>
-          <input id="observations_respiratory_rate" type="number" disabled>
+          <input id="observations_respiratory_rate" data-entity="observations" data-field="respiratory_rate" type="number" disabled>
         </td>
       </tr>
       <tr>
@@ -71,7 +73,7 @@
           AVPU
         </td>
         <td>
-          <input id="observations_avpu" type="number" disabled>
+          <input id="observations_avpu" data-entity="observations" data-field="avpu" type="number" disabled>
         </td>
       </tr>
       <tr>
@@ -79,10 +81,9 @@
           NEWS Score
         </td>
         <td>
-          <input id="observations_news_score" type="number" disabled>
+          <input id="observations_news_score" data-entity="observations" data-field="news_score" type="number" disabled>
         </td>
   </table>
-
   <hr />
 
   <div class="row">

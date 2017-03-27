@@ -1,5 +1,6 @@
 var routes = require("express").Router({ mergeParams: true }),
     urineresults = require("./urineresults.js"),
+    observations = require("./observations.js"),
     db = require("../database.js"),
     models = require("../models");
 
@@ -56,5 +57,6 @@ routes.post("/", function (req, res) {
 });
 
 routes.use("/:episodeId/urineresults", urineresults);
+routes.use("/:episodeId/observations", observations);
 
 module.exports = routes;

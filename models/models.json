@@ -172,34 +172,35 @@
         },
         "bp_systolic": {
             "type": "i",
-            "requiredCreation": true,
+            "requiredCreation": false,
             "maxLength": 3
         },
         "bp_diastolic": {
             "type": "i",
-            "requiredCreation": true,
+            "requiredCreation": false,
             "maxLength": 3
         },
         "pulse": {
             "type": "i",
-            "requiredCreation": true,
+            "requiredCreation": false,
             "maxLength": 3
         },
         "temperature": {
-            "requiredCreation": true
+            "type": "i",
+            "requiredCreation": false
         },
         "respiratory_rate": {
             "type": "i",
-            "requiredCreation": true,
+            "requiredCreation": false,
             "maxLength": 2
         },
         "avpu": {
             "type": "t",
-            "requiredCreation": true
+            "requiredCreation": false
         },
         "news_score": {
             "type": "i",
-            "requiredCreation": true
+            "requiredCreation": false
         }
     },
     "patient": {

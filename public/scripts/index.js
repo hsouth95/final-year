@@ -39,9 +39,11 @@ $(document).ready(function () {
                 });
                 $("select").material_select();
                 $("#start-episode").click(startEpisode);
+                $("#add-observations").click(addObservations);
             },
             completedAttributes: [
-                "episode_id"
+                "episode_id",
+                "observations"
             ]
         },
         {
@@ -159,6 +161,23 @@ $(document).ready(function () {
         FormAPI.modals.openSelectionModal();
     }
 
+    addObservations = function () {
+        var observations = FormAPI.data.getDataFromForm("observations");
+
+        var url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/observations";
+        $.post(url, observations, function (data) {
+            if (!episode.observations) {
+                episode.observations = [];
+            }
+
+            episode.observations.push(data.observation_id);
+            FormAPI.tabs.updateCompletion();
+            alert(data.observation_id);
+        });
+
+
+    }
+
     getFormHtml = function (url) {
         return $.get(url);
     };
@@ -172,7 +191,7 @@ $(document).ready(function () {
                 $("input#hospital_name").autocomplete({
                     data: convertJSONArrayToAutocomplete(data, "name"),
                     onAutocomplete: function (val) {
-                        var selectedHospital = $.grep(HOSPITALS, function(e){ return e.name === val});
+                        var selectedHospital = $.grep(HOSPITALS, function (e) { return e.name === val });
                         episode.hospital_id = selectedHospital[0].hospital_id;
                         FormAPI.tabs.updateCompletion();
                     }
@@ -233,7 +252,17 @@ $(document).ready(function () {
             location.origin + "/patients/" + episode.patient_id + "/episodes",
             episode,
             function (data) {
-                alert(data);
+                episode.episode_id = data.episode_id;
+                // Now that a episode has begun, the patient and episode fields are read-only
+                $("#observations-form input:disabled").prop("disabled", false);
+                $("#observations-form button:disabled").prop("disabled", false);
+                $("#patient-form input").prop("disabled", true);
+                $("#patient-form button").prop("disabled", true);
+
+                $("#observations_referral_reason").prop("disabled", true);
+                $("#observations_source_referral").prop("disabled", true);
+
+                $("#start-episode").prop("disabled", true);
             });
     }
 
@@ -330,13 +359,7 @@ $(document).ready(function () {
     FormAPI.data = {};
 
     FormAPI.data.populate = function (data, entityName) {
-        var selectedInputFields = $.grep($("input"), function (e) {
-            return e.dataset.entity === entityName;
-        }),
-            selectedSelectionFields = $.grep($("select"), function (e) {
-                return e.dataset.entity === entityName;
-            }),
-            selectedFields = selectedInputFields.concat(selectedSelectionFields);
+        var selectedFields = FormAPI.data.getRelatedEntityFields(entityName);
 
         for (var attribute in data) {
             if (data.hasOwnProperty(attribute)) {
@@ -361,6 +384,31 @@ $(document).ready(function () {
         }
 
         Materialize.updateTextFields();
+    }
+
+    FormAPI.data.getDataFromForm = function (entityName) {
+        var selectedFields = FormAPI.data.getRelatedEntityFields(entityName),
+            entityData = {};
+
+        $.each(selectedFields, function () {
+            if (this.value) {
+                entityData[this.dataset.field] = this.value;
+            }
+        });
+
+        return entityData;
+    }
+
+    FormAPI.data.getRelatedEntityFields = function (entityName) {
+        var selectedInputFields = $.grep($("input"), function (e) {
+            return e.dataset.entity === entityName;
+        }),
+            selectedSelectionFields = $.grep($("select"), function (e) {
+                return e.dataset.entity === entityName;
+            }),
+            selectedFields = selectedInputFields.concat(selectedSelectionFields);
+
+        return selectedFields;
     }
 
     FormAPI.tabs = {};
