@@ -67,11 +67,11 @@ models.validateInteger = function (modelAttribute, dataAttribute) {
             return false;
         }
         if (modelAttribute.maxLength &&
-            dataAttribute.toString().length > modelAttribute.minLength) {
+            dataAttribute.toString().length > modelAttribute.maxLength) {
             return false;
         }
         if (modelAttribute.range) {
-            var values = modelAttribute.range.split("-");
+            var values = modelAttribute.range.split("-").map(function (d) { return parseInt(d); });
             if (dataAttribute < values[0] || dataAttribute > values[1]) {
                 return false;
             }
