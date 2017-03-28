@@ -17,8 +17,8 @@ app.get("/", function (req, res) {
     res.sendFile(__dirname + "/public/views/index.html");
 });
 
-app.listen(8000, "0.0.0.0", function () {
+var server = app.listen(8000, "0.0.0.0", function () {
     console.log("Listening to port: 8000");
 });
 
-module.exports = app;
+module.exports = server;
