@@ -67,4 +67,13 @@ routes.post("/", function (req, res) {
         });
 });
 
+routes.get("/:observationId/test", function (req, res) {
+    db.list({
+        tableName: "test",
+        error: null,
+        success: null
+    });
+    res.end();
+});
+
 module.exports = routes;
