@@ -1,24 +1,33 @@
 var routes = require("express").Router({ mergeParams: true }),
-    db = require("../database.js"),
+    db = require("../database2"),
     models = require("../models");
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
-    db.query("SELECT * FROM episode_observations eo INNER JOIN " +
-        "observations o ON eo.observation_id = o.observation_id WHERE episode_id = ?",
-        [episodeId], function (err, results) {
-            if (err) throw err;
-
-            res.json(results);
-        });
+    db.customQuery({
+        query: "SELECT * FROM episode_observations eo INNER JOIN observations o ON eo.observation_id = o.observation_id WHERE episode_id = ?",
+        data: [episodeId],
+        error: function (err) {
+            res.status(400).send(err.message);
+        },
+        success: function (data) {
+            res.json(data);
+        }
+    });
 });
 
 routes.get("/:observationId", function (req, res) {
     var observationId = req.params.observationId;
-    db.query("SELECT * FROM observations WHERE observation_id = ?", [observationId], function (err, results) {
-        if (err) throw err;
-
-        res.json(results);
+    db.getById({
+        tableName: "observations",
+        attributeName: "observation_id",
+        id: observationId,
+        error: function (err) {
+            res.status(400).send(err.message);
+        },
+        success: function (data) {
+            res.json(data);
+        }
     });
 });
 
@@ -30,36 +39,30 @@ routes.post("/", function (req, res) {
         res.status(400).send(err);
     },
         function (object) {
-            db.getConnection(function (err, connection) {
-                connection.beginTransaction(function (err) {
-                    if (err) { throw err; }
-
-                    connection.query("INSERT INTO observations SET ?", object, function (err, obsResults) {
-                        if (err) {
-                            return connection.rollback(function () {
-                                throw err;
-                            });
-                        }
-
-                        connection.query("INSERT INTO episode_observations (episode_id, observation_id) VALUES (?, ?)", [episodeId, obsResults.insertId], function (err, conResult) {
-                            if (err) {
-                                return connection.rollback(function () {
-                                    throw err;
+            db.beginTrans(console.log, function () {
+                // Add observation values
+                db.add({
+                    tableName: "observations",
+                    data: observation,
+                    error: function (err) {
+                        res.status(400).send(err.message);
+                    },
+                    success: function (observation_id) {
+                        // Add look up table
+                        db.add({
+                            tableName: "episode_observations",
+                            data: { episode_id: episodeId, observation_id: observation_id },
+                            error: function (err) {
+                                res.status(400).send(err.message);
+                            },
+                            success: function () {
+                                db.endTrans(console.log, function () {
+                                    res.json({ observation_id: observation_id });
                                 });
                             }
-
-                            connection.commit(function (err) {
-                                if (err) {
-                                    return connection.rollback(function () {
-                                        throw err;
-                                    });
-                                }
-
-                                res.status(200).json({ observation_id: obsResults.insertId });
-                            })
-                        })
-                    })
-                })
+                        });
+                    }
+                });
             });
         });
 });
