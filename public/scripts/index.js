@@ -40,10 +40,12 @@ $(document).ready(function () {
                 $("select").material_select();
                 $("#start-episode").click(startEpisode);
                 $("#add-observations").click(addObservations);
+                $("#add-examination").click(addExamination);
             },
             completedAttributes: [
                 "episode_id",
-                "observations"
+                "observations",
+                "examination_id"
             ]
         },
         {
@@ -55,6 +57,7 @@ $(document).ready(function () {
                     selectMonths: true,
                     selectYears: 200
                 });
+                $("#add-history").click(addHistory);
                 $("select").material_select();
             }
         },
@@ -162,9 +165,8 @@ $(document).ready(function () {
     }
 
     addObservations = function () {
-        var observations = FormAPI.data.getDataFromForm("observations");
-
-        var url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/observations";
+        var observations = FormAPI.data.getDataFromForm("observations"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/observations";
         $.post(url, observations, function (data) {
             if (!episode.observations) {
                 episode.observations = [];
@@ -172,10 +174,27 @@ $(document).ready(function () {
 
             episode.observations.push(data.observation_id);
             FormAPI.tabs.updateCompletion();
-            alert(data.observation_id);
         });
+    }
 
+    addExamination = function () {
+        var examinations = FormAPI.data.getDataFromForm("examination"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/examinations";
 
+        $.post(url, examinations, function (data) {
+            episode.examination_id = data.examination_id;
+            FormAPI.tabs.updateCompletion();
+        });
+    }
+
+    addHistory = function () {
+        var history = FormAPI.data.getDataFromForm("history"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/history";
+
+        $.post(url, history, function (data) {
+            episode.history_id = data.history_id;
+            FromAPI.tabs.updateCompletion();
+        });
     }
 
     getFormHtml = function (url) {
@@ -263,6 +282,8 @@ $(document).ready(function () {
                 $("#observations_source_referral").prop("disabled", true);
 
                 $("#start-episode").prop("disabled", true);
+
+                FormAPI.tabs.updateCompletion();
             });
     }
 
@@ -392,7 +413,14 @@ $(document).ready(function () {
 
         $.each(selectedFields, function () {
             if (this.value) {
-                entityData[this.dataset.field] = this.value;
+                if (this.type === "checkbox") {
+                    // Convert true/false to 1/0
+                    entityData[this.dataset.field] = this.checked ? 1 : 0;
+                } else if (this.type === "radio") {
+                    entityData[this.dataset.field] = $("input[name=" + this.name + "]:checked").val();
+                } else {
+                    entityData[this.dataset.field] = this.value;
+                }
             }
         });
 
@@ -410,7 +438,6 @@ $(document).ready(function () {
 
         return selectedFields;
     }
-
     FormAPI.tabs = {};
 
     FormAPI.tabs.currentTab = "patient";
@@ -487,6 +514,7 @@ $(document).ready(function () {
                     if (tab.onload) {
                         setTimeout(tab.onload, 100);
                         TABS[tab.index].loaded = true;
+                        FormAPI.tabs.currentTab = tab.name;
                     }
                 });
             }

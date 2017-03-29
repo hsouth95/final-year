@@ -1,13 +1,13 @@
 var routes = require("express").Router({ mergeParams: true }),
-    models = require("../models"),
-    db = require("../database2");
+    db = require("../database2"),
+    models = require("../models");
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
     db.list({
-        tableName: "examination",
-        error: function (err) {
-            res.status(400).send(err.message);
+        tableName: "history",
+        error: function (message) {
+            res.status(400).send(message);
         },
         success: function (data) {
             res.json(data);
@@ -15,13 +15,12 @@ routes.get("/", function (req, res) {
     })
 });
 
-routes.get("/:examinationId", function (req, res) {
-    var examinationId = req.params.examinationId;
-
+routes.get("/:historyId", function (req, res) {
+    var historyId = req.params.historyId;
     db.getById({
-        tableName: "examination",
-        attributeName: "examination_id",
-        id: examinationId,
+        tableName: "history",
+        attributeName: "history_id",
+        id: historyId,
         error: function (err) {
             res.status(400).send(err.message);
         },
@@ -33,25 +32,23 @@ routes.get("/:examinationId", function (req, res) {
 
 routes.post("/", function (req, res) {
     var episodeId = req.params.episodeId,
-        examination = req.body;
+        history = req.body;
 
-    examination.episode_id = episodeId;
-
-    models.validate("examination", examination, function (err) {
+    models.validate("history", history, function (err) {
         res.status(400).send(err);
     },
         function (object) {
             db.add({
-                tableName: "examination",
+                tableName: "history",
                 data: object,
                 error: function (err) {
                     res.status(400).send(err.message);
                 },
-                success: function (examination_id) {
-                    res.json({ examination_id: examination_id });
+                success: function (history_id) {
+                    res.json({ history_id: history_id });
                 }
             });
         });
-})
+});
 
 module.exports = routes;

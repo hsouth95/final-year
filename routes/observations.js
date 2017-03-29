@@ -43,7 +43,7 @@ routes.post("/", function (req, res) {
                 // Add observation values
                 db.add({
                     tableName: "observations",
-                    data: observation,
+                    data: object,
                     error: function (err) {
                         res.status(400).send(err.message);
                     },

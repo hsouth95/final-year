@@ -159,10 +159,6 @@
             "type": "i",
             "requiredCreation": true,
             "maxLength": 3
-        },
-        "allergies": {
-            "type": "t",
-            "requiredCreation": true
         }
     },
     "observations": {
@@ -294,6 +290,79 @@
         "address_postcode": {
             "type": "t",
             "requiredCreation": true
+        }
+    },
+    "examination": {
+        "examination_id": {
+            "type": "i"
+        },
+        "episode_id": {
+            "type": "i",
+            "maxLength": 9,
+            "requiredCreation": true
+        },
+        "anaemia": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "jaundice": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "cyanosis": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "clubbing": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "lymphnodes": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "dehydration": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "drowsy": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "pulse": {
+            "type": "i"
+        },
+        "SOA": {
+            "type": "i",
+            "minLength": 1,
+            "maxLength": 1,
+            "range": "0-1"
+        },
+        "bp_systolic": {
+            "type": "i"
+        },
+        "bp_diastolic": {
+            "type": "i"
+        },
+        "respiratory_rate_min": {
+            "type": "i"
+        },
+        "respiratory_sats": {
+            "type": "i"
         }
     }
 }
