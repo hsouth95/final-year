@@ -10,7 +10,11 @@ var mysql = require("mysql"),
     transactionConnection = null;
 
 checkOptions = function (options) {
-    return options && options.tableName && options.success && options.error;
+    if (options && options.tableName && options.success && options.error) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 beginTrans = function (error, success) {
@@ -30,6 +34,8 @@ beginTrans = function (error, success) {
                 })
             }
         });
+    } else {
+        error(new Error("Transaction already in progress."));
     }
 }
 
@@ -44,6 +50,8 @@ endTrans = function (error, success) {
                 success();
             }
         });
+    } else {
+        error(new Error("Transaction has not been started."));
     }
 }
 
@@ -153,6 +161,7 @@ customQuery = function (options) {
 }
 
 module.exports = {
+    checkOptions: checkOptions,
     beginTrans: beginTrans,
     endTrans: endTrans,
     list: list,

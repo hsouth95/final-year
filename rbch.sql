@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2017 at 11:30 AM
+-- Generation Time: Mar 31, 2017 at 01:31 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -79,6 +79,31 @@ CREATE TABLE `clinical_episode` (
   `completed` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `clinical_episode`
+--
+
+INSERT INTO `clinical_episode` (`episode_id`, `patient_id`, `gp_id`, `hospital_id`, `date`, `time`, `source_referral`, `reason_referral`, `completed`) VALUES
+(1, 111111111, 1, 1, '2017-03-22', '10:00:00', 'GP', 'Lorem ipsum', 0),
+(2, 111111111, 1, 1, '2017-03-22', '10:00:00', 'GP', 'Lorem ipsum', 0),
+(3, 111111111, 1, 1, '2017-03-27', '00:00:00', 'GP', 'Fall', 0),
+(4, 111111111, 1, 1, '2017-03-27', '00:00:00', 'GP', 'Fall', 0),
+(5, 111111111, 1, 1, '2017-03-27', '00:00:00', 'GP', 'Fall', 0),
+(6, 111111111, 1, 1, '2017-03-27', '00:00:00', 'GP', 'test', 0),
+(7, 111111111, 1, 1, '2017-03-27', '00:00:00', 'GP', 'Heart attack', 0),
+(8, 111111111, 1, 1, '2017-03-28', '00:00:00', 'GP', 'Apples', 0),
+(9, 111111111, 1, 1, '2017-03-29', '15:03:37', 'GP', 'Fall', 0),
+(10, 111111111, 1, 1, '2017-03-29', '16:03:23', 'GP', 'fngf', 0),
+(11, 111111111, 1, 1, '2017-03-29', '00:00:00', 'Speciality Clinic', 'Bad tooth', 0),
+(12, 111111111, 1, 1, '2017-03-29', '16:03:48', 'GP', '\\hag', 0),
+(13, 111111111, 1, 1, '2017-03-29', '00:00:00', 'GP', 'aghjhgnaa', 0),
+(14, 111111111, 1, 1, '2017-03-29', '16:03:07', 'Speciality Clinic', 'Drank too much', 0),
+(15, 111111111, 1, 1, '2017-03-29', '16:03:25', 'GP', 'Hgcutduf', 0),
+(16, 111111111, 1, 1, '2017-03-29', '00:00:00', 'ED', 'aggadgag', 0),
+(17, 111111111, 1, 1, '2017-03-29', '19:03:21', 'GP', 'gffdgh', 0),
+(18, 111111111, 1, 1, '2017-03-29', '00:00:00', 'ED', 'agagga', 0),
+(19, 111111111, 1, 1, '2017-03-29', '20:03:53', 'GP', 'aggag', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -148,6 +173,20 @@ CREATE TABLE `episode_observations` (
   `observation_id` int(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `episode_observations`
+--
+
+INSERT INTO `episode_observations` (`episode_id`, `observation_id`) VALUES
+(1, 4),
+(1, 5),
+(1, 6),
+(2, 1),
+(8, 3),
+(13, 7),
+(14, 8),
+(15, 9);
+
 -- --------------------------------------------------------
 
 --
@@ -172,6 +211,17 @@ CREATE TABLE `examination` (
   `respiratory_sats` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `examination`
+--
+
+INSERT INTO `examination` (`examination_id`, `episode_id`, `anaemia`, `jaundice`, `cyanosis`, `clubbing`, `lymphnodes`, `dehydration`, `drowsy`, `pulse`, `SOA`, `bp_systolic`, `bp_diastolic`, `respiratory_rate_min`, `respiratory_sats`) VALUES
+(1, 12, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 12, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 13, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 14, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 15, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -186,15 +236,16 @@ CREATE TABLE `gp` (
   `address_line_2` varchar(512) NOT NULL,
   `address_city` varchar(255) NOT NULL,
   `address_county` varchar(255) NOT NULL,
-  `address_postcode` varchar(8) NOT NULL
+  `address_postcode` varchar(8) NOT NULL,
+  `telephone` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `gp`
 --
 
-INSERT INTO `gp` (`gp_id`, `firstname`, `surname`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_postcode`) VALUES
-(1, 'agagg', 'a', 'aggaga', 'agagga', 'aggag', 'agga', 'agga');
+INSERT INTO `gp` (`gp_id`, `firstname`, `surname`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_postcode`, `telephone`) VALUES
+(1, 'agagg', 'a', 'aggaga', 'agagga', 'aggag', 'agga', 'agga', '');
 
 -- --------------------------------------------------------
 
@@ -295,14 +346,28 @@ INSERT INTO `medication` (`medication_id`, `name`, `dose`, `measure`, `route`) V
 
 CREATE TABLE `observations` (
   `observation_id` int(9) NOT NULL,
-  `bp_systolic` int(11) NOT NULL,
-  `bp_diastolic` int(11) NOT NULL,
-  `pulse` int(11) NOT NULL,
-  `temperature` decimal(2,0) NOT NULL,
-  `respiratory_rate` int(11) NOT NULL,
-  `avpu` varchar(255) NOT NULL,
-  `news_score` int(11) NOT NULL
+  `bp_systolic` int(11) DEFAULT NULL,
+  `bp_diastolic` int(11) DEFAULT NULL,
+  `pulse` int(11) DEFAULT NULL,
+  `temperature` decimal(2,0) DEFAULT NULL,
+  `respiratory_rate` int(11) DEFAULT NULL,
+  `avpu` varchar(255) DEFAULT NULL,
+  `news_score` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `observations`
+--
+
+INSERT INTO `observations` (`observation_id`, `bp_systolic`, `bp_diastolic`, `pulse`, `temperature`, `respiratory_rate`, `avpu`, `news_score`) VALUES
+(1, NULL, NULL, 45, NULL, NULL, NULL, 5),
+(3, 1, 1, 1, '1', 1, '1', 1),
+(4, NULL, NULL, 45, NULL, NULL, NULL, 5),
+(5, NULL, NULL, 45, NULL, NULL, NULL, 5),
+(6, NULL, NULL, 45, NULL, NULL, NULL, 5),
+(7, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 45, 56, NULL, NULL, NULL, NULL, NULL),
+(9, 67, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -332,7 +397,7 @@ CREATE TABLE `patient` (
 
 INSERT INTO `patient` (`patient_id`, `surname`, `firstname`, `address_line_1`, `address_line_2`, `address_city`, `address_county`, `address_country`, `address_postcode`, `date_of_birth`, `telephone`, `mobile`, `gender`) VALUES
 (0, 'South', 'Harrison', 'Flat 1 Heron Court', '', 'Bournemouth', 'Dorset', 'England', 'BH89EP', '1995-01-16', '01983529181', '07860631551', 0),
-(111111111, 'Nolan', 'Maya', '39 Aldershort Road', '', 'Guildford', 'Surrey', 'England', 'GU28AE', '1995-04-20', '', '', 1);
+(111111111, 'Nolan', 'Maya', '39 Aldershort Road', '', 'Guildford', 'Surrey', 'England', 'GU28AE', '1995-04-20', '01983529181', '01983529181', 1);
 
 -- --------------------------------------------------------
 
@@ -526,7 +591,7 @@ ALTER TABLE `urine_results`
 -- AUTO_INCREMENT for table `clinical_episode`
 --
 ALTER TABLE `clinical_episode`
-  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT;
+  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `diagnosis`
 --
@@ -536,7 +601,7 @@ ALTER TABLE `diagnosis`
 -- AUTO_INCREMENT for table `examination`
 --
 ALTER TABLE `examination`
-  MODIFY `examination_id` int(9) NOT NULL AUTO_INCREMENT;
+  MODIFY `examination_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `gp`
 --
@@ -566,7 +631,7 @@ ALTER TABLE `medication`
 -- AUTO_INCREMENT for table `observations`
 --
 ALTER TABLE `observations`
-  MODIFY `observation_id` int(9) NOT NULL AUTO_INCREMENT;
+  MODIFY `observation_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `treatment`
 --
