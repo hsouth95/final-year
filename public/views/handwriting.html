@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+    <meta name="HandheldFriendly" content="true" />
+    <link rel="import" href="scripts/bower_components/myscript-text-web/myscript-text-web.html">
+    <script src="scripts/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+</head>
+
+<body>
+    <h1>Write something...</h1>
+    <button id="get-result">Save</button>
+    <myscript-text-web touch-action="none" inputmode="SUPERIMPOSED" applicationkey="5abdb7d6-491b-41a1-a4f9-96d4d7c81544" hmackey="8301a867-77d0-4e48-b7e4-157be12a2619"
+        language="en_US"></myscript-text-web>
+    <script>
+        var result;
+        window.addEventListener("WebComponentsReady", function () {
+            document.querySelector("myscript-text-web").addEventListener("myscript-text-web-result", function (evt) {
+                result = document.querySelector("myscript-text-web").firstcandidate;
+            });
+        });
+
+        document.getElementById("get-result").addEventListener("click", function () {
+            alert(result);
+        });
+    </script>
+</body>
+
+</html>

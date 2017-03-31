@@ -202,6 +202,4 @@ describe("endTrans", function () {
     afterEach(function () {
         mockery.disable();
     });
-
-    
 });
