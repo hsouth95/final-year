@@ -30,7 +30,7 @@ routes.get("/:episodeId", function (req, res) {
 routes.get("/latest", function (req, res) {
     var patientId = req.params.patientId;
 
-    db.query("SELECT * FROM clinical_episode WHERE patient_id = ? ORDER BY date DESC LIMIT 1", [patientId],
+    db.query("SELECT * FROM clinical_episode WHERE patient_id = ? AND completed = 0 ORDER BY date DESC LIMIT 1", [patientId],
         function (err, results) {
             if (err) throw err;
 

@@ -22,68 +22,71 @@
 <div class="row">
   <h2>Observations</h2>
   <button class="btn waves-effect waves-light right" type="button" id="add-observations" name="action" disabled>Add Observations</button>
-  <table>
-    <thead>
-      <th data-field="name">Name</th>
-      <th data-field="value">Value</th>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          BP Systolic
-        </td>
-        <td>
-          <input id="observations_bp_systolic" data-entity="observations" data-field="bp_systolic" type="number" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          BP Diastolic
-        </td>
-        <td>
-          <input id="observations_bp_systolic" data-entity="observations" data-field="bp_diastolic" type="number" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Pulse
-        </td>
-        <td>
-          <input id="observations_pulse" data-entity="observations" data-field="pulse" type="number" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Temperature
-        </td>
-        <td>
-          <input id="observations_temperature" data-entity="observations" data-field="temperature" type="number" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Respiratory Rate
-        </td>
-        <td>
-          <input id="observations_respiratory_rate" data-entity="observations" data-field="respiratory_rate" type="number" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          AVPU
-        </td>
-        <td>
-          <input id="observations_avpu" data-entity="observations" data-field="avpu" type="number" disabled>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          NEWS Score
-        </td>
-        <td>
-          <input id="observations_news_score" data-entity="observations" data-field="news_score" type="number" disabled>
-        </td>
-  </table>
+  <div class="row">
+    <table class="col s6">
+      <thead>
+        <th data-field="name">Name</th>
+        <th data-field="value">Value</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            BP Systolic
+          </td>
+          <td>
+            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_systolic" type="number" disabled>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            BP Diastolic
+          </td>
+          <td>
+            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_diastolic" type="number" disabled>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Pulse
+          </td>
+          <td>
+            <input id="observations_pulse" data-entity="observations" data-field="pulse" type="number" disabled>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Temperature
+          </td>
+          <td>
+            <input id="observations_temperature" data-entity="observations" data-field="temperature" type="number" disabled>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Respiratory Rate
+          </td>
+          <td>
+            <input id="observations_respiratory_rate" data-entity="observations" data-field="respiratory_rate" type="number" disabled>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            AVPU
+          </td>
+          <td>
+            <input id="observations_avpu" data-entity="observations" data-field="avpu" type="number" disabled>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            NEWS Score
+          </td>
+          <td>
+            <input id="observations_news_score" data-entity="observations" data-field="news_score" type="number" disabled>
+          </td>
+    </table>
+    <div class="col s6" id="observations-results"></div>
+  </div>
   <hr />
   <button class="btn waves-effect waves-light right" type="button" id="add-examination" name="action" disabled>Add Examination</button>
   <div class="row">

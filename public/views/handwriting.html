@@ -5,12 +5,17 @@
     <meta name="HandheldFriendly" content="true" />
     <link rel="import" href="scripts/bower_components/myscript-text-web/myscript-text-web.html">
     <script src="scripts/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <style>
+        body {
+            background-color: #e1f5fe;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Write something...</h1>
     <button id="get-result">Save</button>
-    <myscript-text-web touch-action="none" inputmode="SUPERIMPOSED" applicationkey="5abdb7d6-491b-41a1-a4f9-96d4d7c81544" hmackey="8301a867-77d0-4e48-b7e4-157be12a2619"
+    <myscript-text-web touch-action="none" applicationkey="5abdb7d6-491b-41a1-a4f9-96d4d7c81544" hmackey="8301a867-77d0-4e48-b7e4-157be12a2619"
         language="en_US"></myscript-text-web>
     <script>
         var result;
@@ -21,7 +26,7 @@
         });
 
         document.getElementById("get-result").addEventListener("click", function () {
-            alert(result);
+            parent.FormAPI.handwriting.recieveHandwritingValue(result);
         });
     </script>
 </body>

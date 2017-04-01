@@ -2,7 +2,6 @@ var routes = require("express").Router(),
     db = require("../database.js"),
     episode = require("./episode.js");
 
-routes.use("/:patientId/episodes", episode);
 
 routes.get("/:patientId", function (req, res) {
     var patientId = req.params.patientId;
@@ -25,5 +24,6 @@ routes.post("/", function (req, res) {
         });
 });
 
+routes.use("/:patientId/episodes", episode);
 
 module.exports = routes;

@@ -13,13 +13,24 @@
     </div>
   </div>
   <div class="row">
-    <div class="input-field col s6">
+    <div class="input-field col s3">
       <input id="patient_surname" type="text" data-entity="patient" data-field="surname" disabled>
       <label for="patient_surname">Patient Surname</label>
     </div>
-    <div class="input-field col s6">
+    <div class="input-field col s3">
       <input id="patient_firstname" data-entity="patient" data-field="firstname" type="text" disabled>
       <label for="patient_firstname">Patient First Name</label>
+    </div>
+    <div class="input-field col s3">
+      <label for="patient_dateofbirth">Date of Birth</label>
+      <input id="patient_dateofbirth" data-entity="patient" data-field="date_of_birth" type="date" class="datepicker" disabled>
+    </div>
+    <div class="input-field col s3">
+      <select id="patient_gender" data-entity="patient" data-field="gender" class="browser-default" disabled>
+          <option value="" selected>Choose Gender</option>
+          <option value="0">Male</option>
+          <option value="1">Female</option> 
+        </select>
     </div>
   </div>
   <div class="row">
@@ -52,20 +63,10 @@
     </div>
     <div class="col s4">
       <div class="input-field">
-        <label for="patient_dateofbirth">Date of Birth</label>
-        <input id="patient_dateofbirth" data-entity="patient" data-field="date_of_birth" type="date" class="datepicker" disabled>
-      </div>
-      <div class="input-field">
-        <select id="patient_gender" data-entity="patient" data-field="gender" class="browser-default" disabled>
-          <option value="" selected>Choose Gender</option>
-          <option value="0">Male</option>
-          <option value="1">Female</option> 
-        </select>
-      </div>
-      <div class="input-field">
         <input id="patient_telephone" data-entity="patient" data-field="telephone" type="text" disabled>
         <label for="patient_telephone">Telephone</label>
       </div>
+      <div id="previous-episodes" class="collection hide"></div>
     </div>
   </div>
   <h4>General Practioner</h4>

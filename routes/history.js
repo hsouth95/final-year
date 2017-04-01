@@ -34,6 +34,8 @@ routes.post("/", function (req, res) {
     var episodeId = req.params.episodeId,
         history = req.body;
 
+    history.episode_id = episodeId;
+
     models.validate("history", history, function (err) {
         res.status(400).send(err);
     },

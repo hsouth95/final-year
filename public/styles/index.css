@@ -25,6 +25,11 @@ nav {
   cursor: pointer;
 }
 
+.modal-selector:hover {
+  cursor: pointer;
+  background-color: #81c784 !important;
+}
+
 .patient-active {
   background-color: #42a5f5 !important;
 }
@@ -43,4 +48,46 @@ nav {
 }
 .white-text label {
   color: #e1f5fe !important;
+}
+
+.hidden {
+  display: none;
+}
+
+#handwriting-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 9999;
+  background-color: #e1f5fe;
+  padding: 50px;
+}
+
+.textarea-btn {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  color: #9e9e9e;
+}
+.textarea-btn:hover {
+  cursor: pointer;
+  color: #26a69a;
+}
+
+.selection-header {
+  display: block;
+  font-size: 24px;
+}
+.selection-subtext {
+  display: block;
+  font-size: 18px;
+}
+
+#previous-episodes {
+  max-height: 400px;
+  overflow: scroll;
 }

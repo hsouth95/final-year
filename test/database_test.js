@@ -179,27 +179,3 @@ describe("beginTrans", function () {
         });
     });
 });
-
-describe("endTrans", function () {
-    var mysql,
-        database,
-        databaseStub;
-
-    beforeEach(function () {
-        mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-        });
-
-        mysql = {
-        }
-
-        mysql.createPool = sinon.stub();
-        databaseStub = sinon.stub();
-    });
-
-    afterEach(function () {
-        mockery.disable();
-    });
-});

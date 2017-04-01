@@ -53,13 +53,14 @@ $(document).ready(function () {
             loaded: false,
             url: location.origin + "/view/history",
             onload: function () {
-                $('.datepicker').pickadate({
-                    selectMonths: true,
-                    selectYears: 200
-                });
                 $("#add-history").click(addHistory);
                 $("select").material_select();
-            }
+
+                setupHandwritingButtons();
+            },
+            completedAttributes: [
+                "history_id"
+            ]
         },
         {
             name: "medication",
@@ -102,7 +103,7 @@ $(document).ready(function () {
             }
         }
     ],
-        HOSPITALS = ["hello"],
+        HOSPITALS = [],
         FormAPI = {},
         episode = {},
         selectedPatient = null;
@@ -140,6 +141,7 @@ $(document).ready(function () {
                 episode.patient = data;
                 episode.patient_id = data.patient_id;
                 FormAPI.tabs.updateCompletion();
+                populateEpisodes(data.patient_id);
             }
         });
 
@@ -172,9 +174,19 @@ $(document).ready(function () {
                 episode.observations = [];
             }
 
+            displayObservations(observations);
+
             episode.observations.push(data.observation_id);
             FormAPI.tabs.updateCompletion();
+            $("input[data-entity=observations]").val("");
         });
+    }
+
+    displayObservations = function (observations) {
+        var observationsValues = document.createElement("span");
+        observationsValues.innerHTML = JSON.stringify(observations);
+
+        document.getElementById("observations-results").appendChild(observationsValues);
     }
 
     addExamination = function () {
@@ -184,6 +196,7 @@ $(document).ready(function () {
         $.post(url, examinations, function (data) {
             episode.examination_id = data.examination_id;
             FormAPI.tabs.updateCompletion();
+            $("input[data-entity=examination]").prop("disabled", true);
         });
     }
 
@@ -240,6 +253,25 @@ $(document).ready(function () {
         });
     }
 
+    populateEpisodes = function (patientId) {
+        $.getJSON(location.origin + "/patients/" + patientId + "/episodes", function (data) {
+            if (data && data.length > 0) {
+                var episodeContainer = document.getElementById("previous-episodes");
+                $.each(data, function () {
+                    var value = this.date + " - " + this.reason_referral,
+                        valueContainer = document.createElement("a");
+
+                    valueContainer.className = "collection-item";
+                    valueContainer.innerHTML = value;
+                    episodeContainer.appendChild(valueContainer);
+                });
+            } else {
+                episodeContainer.innerHTML = "No episodes for this patient.";
+            }
+            episodeContainer.className = "collection";
+        });
+    }
+
     convertJSONArrayToAutocomplete = function (data, attributeToConvert) {
         var convertedData = {};
 
@@ -251,6 +283,23 @@ $(document).ready(function () {
         }
 
         return convertedData;
+    }
+
+    setupHandwritingButtons = function () {
+        $(".textarea-btn").click(function () {
+            var inputField = $(this).parent().children("textarea");
+
+            if (inputField && inputField.length === 1) {
+                FormAPI.handwriting.openHandwritingFrame(inputField[0].id);
+            }
+        });
+
+        $("#handwriting-save").click(function () {
+            var value = document.querySelector("myscript-text-web").firstcandidate;
+            FormAPI.handwriting.recieveHandwritingValue(value);
+        });
+
+        $("#handwriting-back").click(function () { FormAPI.handwriting.closeHandwritingFrame(); });
     }
 
     startEpisode = function () {
@@ -350,11 +399,11 @@ $(document).ready(function () {
         container.addEventListener("click", FormAPI.modals.select);
 
         var headerElement = document.createElement("span");
-        headerElement.className = "header";
+        headerElement.className = "selection-header";
         headerElement.innerHTML = data[header];
 
         var subtextElement = document.createElement("span");
-        subtextElement.className = "subtext";
+        subtextElement.className = "selection-subtext";
         subtextElement.innerHTML = data[subtext];
 
         container.appendChild(headerElement);
@@ -367,7 +416,7 @@ $(document).ready(function () {
         $(".modal-selector").removeClass().addClass("modal-selector card-panel blue");
 
         $(".modal-main").data("id", this.dataset.id);
-        this.className = "modal-selector card-panel blue lighten-1";
+        this.className = "modal-selector card-panel teal";
     }
 
     FormAPI.modals.closeModal = function () {
@@ -434,7 +483,10 @@ $(document).ready(function () {
             selectedSelectionFields = $.grep($("select"), function (e) {
                 return e.dataset.entity === entityName;
             }),
-            selectedFields = selectedInputFields.concat(selectedSelectionFields);
+            selectedTextareaFields = $.grep($("textarea"), function (e) {
+                return e.dataset.entity === entityName;
+            }),
+            selectedFields = selectedInputFields.concat(selectedSelectionFields).concat(selectedTextareaFields);
 
         return selectedFields;
     }
@@ -521,6 +573,34 @@ $(document).ready(function () {
         } else {
             console.error("Tab is not set.");
         }
+    }
+
+    FormAPI.handwriting = {};
+    FormAPI.handwriting.currentInputField;
+
+    FormAPI.handwriting.openHandwritingFrame = function (inputFieldId) {
+        if (!FormAPI.handwriting.currentInputField) {
+            $("#handwriting-frame").removeClass("hidden");
+            $("main").addClass("hidden");
+
+            FormAPI.handwriting.currentInputField = inputFieldId;
+        }
+    }
+
+    FormAPI.handwriting.recieveHandwritingValue = function (val) {
+        alert(val);
+        if (FormAPI.handwriting.currentInputField) {
+            $("#" + FormAPI.handwriting.currentInputField).val(val);
+
+            FormAPI.handwriting.closeHandwritingFrame();
+        }
+    }
+
+    FormAPI.handwriting.closeHandwritingFrame = function () {
+        $("#handwriting-frame").addClass("hidden");
+        $("main").removeClass("hidden");
+
+        FormAPI.handwriting.currentInputField = null;
     }
 
     $('select').material_select();
