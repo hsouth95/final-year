@@ -4,15 +4,16 @@ var routes = require("express").Router({ mergeParams: true }),
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
-    db.list({
-        tableName: "examination",
+    db.customQuery({
+        query: "SELECT * FROM examination WHERE episode_id = ?",
+        data: [episodeId],
         error: function (err) {
             res.status(400).send(err.message);
         },
         success: function (data) {
             res.json(data);
         }
-    })
+    });
 });
 
 routes.get("/:examinationId", function (req, res) {

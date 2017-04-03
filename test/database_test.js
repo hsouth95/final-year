@@ -179,3 +179,94 @@ describe("beginTrans", function () {
         });
     });
 });
+
+describe("list", function () {
+    var mysql,
+        database,
+        databaseStub,
+        validListData = [];
+
+    beforeEach(function () {
+        mockery.enable({
+            warnOnReplace: false,
+            warnOnUnregistered: false,
+            useCleanCache: true
+        });
+
+        mysql = {
+        }
+        validListData = [
+            {
+                arg1: "test",
+                arg2: "test",
+                arg3: "test2"
+            },
+            {
+                arg1: "2test",
+                arg2: null,
+                arg3: "test3"
+            }
+        ];
+
+        mysql.createPool = sinon.stub();
+        databaseStub = sinon.stub();
+    });
+
+    afterEach(function () {
+        mockery.disable();
+    });
+
+    it("should correctly return data on a standard list", function (done) {
+        var options = {
+            tableName: "test",
+            error: function () {
+                throw new Error("shouldn't have erred");
+            },
+            success: function (data) {
+                expect(data).to.exist;
+                expect(data).to.eql(validListData);
+                expect(databaseStub.query).to.have.been.calledOnce;
+                done();
+            }
+        }
+        databaseStub.query = sinon.stub().callsFake(function (query, data, callback) {
+            expect(query).to.equal("SELECT * FROM ??");
+            expect(data).to.eql(["test"]);
+
+            callback(null, validListData);
+        });
+
+        mysql.createPool.returns(databaseStub);
+        mockery.registerMock("mysql", mysql);
+
+        database = require("../database2");
+
+        database.list(options);
+    });
+
+    it("should return an error if it occurs", function (done) {
+        var options = {
+            tableName: "test",
+            error: function (err) {
+                expect(err).to.exist;
+                done();
+            },
+            success: function () {
+                throw new Error("should've have erred");
+            }
+        }
+        databaseStub.query = sinon.stub().callsFake(function (query, data, callback) {
+            expect(query).to.equal("SELECT * FROM ??");
+            expect(data).to.eql(["test"]);
+
+            callback(new Error("test"), null);
+        });
+
+        mysql.createPool.returns(databaseStub);
+        mockery.registerMock("mysql", mysql);
+
+        database = require("../database2");
+
+        database.list(options);
+    });
+});

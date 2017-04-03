@@ -27,5 +27,15 @@ routes.get("/", function (req, res) {
     });
 });
 
+routes.get("/:gpId", function(req, res){
+    var gpId = req.params.gpId;
+
+    db.query("SELECT * FROM gp WHERE gp_id = ?", [gpId], function(err, results){
+        if(err) throw err;
+
+        res.json(results);
+    });
+})
+
 
 module.exports = routes;

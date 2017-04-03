@@ -19,7 +19,6 @@ $(document).ready(function () {
                 $("#find-patient").click(findPatient);
                 $("#find-gp").click(findGP);
 
-
                 $(".modal").modal();
             },
             completedAttributes: [
@@ -91,6 +90,8 @@ $(document).ready(function () {
             url: location.origin + "/view/results",
             onload: function () {
                 $("select").material_select();
+
+                $("#add-blood-results").click(addBloodResults);
             }
         },
         {
@@ -179,6 +180,8 @@ $(document).ready(function () {
             episode.observations.push(data.observation_id);
             FormAPI.tabs.updateCompletion();
             $("input[data-entity=observations]").val("");
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog(err.message);
         });
     }
 
@@ -197,6 +200,8 @@ $(document).ready(function () {
             episode.examination_id = data.examination_id;
             FormAPI.tabs.updateCompletion();
             $("input[data-entity=examination]").prop("disabled", true);
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog(err.message);
         });
     }
 
@@ -207,28 +212,48 @@ $(document).ready(function () {
         $.post(url, history, function (data) {
             episode.history_id = data.history_id;
             FromAPI.tabs.updateCompletion();
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog(err.message);
+        });
+    }
+
+    addMedication = function () {
+        var medicationData = FormAPI.data.getDataFromForm("medication");
+    }
+
+    addBloodResults = function () {
+        var bloodResults = FormAPI.data.getDataFromForm("blood_results"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/bloodresults";
+
+        $.post(url, bloodResults, function (data) {
+            episode.blood_results_id = data.blood_results_id;
+            FormAPI.tabs.updateCompletion();
+            $("input[data-entity=blood_results]").prop("disabled", true);
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog(err.message);
         });
     }
 
     getFormHtml = function (url) {
-        return $.get(url);
+        return $.get(url)
+            .fail(function (err) {
+                FormAPI.error.showErrorDialog(err.message);
+            });
     };
 
     populateHospitals = function () {
-        $.ajax({
-            type: "GET",
-            url: location.origin + "/hospitals",
-            success: function (data) {
-                HOSPITALS = data;
-                $("input#hospital_name").autocomplete({
-                    data: convertJSONArrayToAutocomplete(data, "name"),
-                    onAutocomplete: function (val) {
-                        var selectedHospital = $.grep(HOSPITALS, function (e) { return e.name === val });
-                        episode.hospital_id = selectedHospital[0].hospital_id;
-                        FormAPI.tabs.updateCompletion();
-                    }
-                });
-            }
+        $.getJSON(location.origin + "/hospitals", function (data) {
+            HOSPITALS = data;
+            $("input#hospital_name").autocomplete({
+                data: convertJSONArrayToAutocomplete(data, "name"),
+                onAutocomplete: function (val) {
+                    var selectedHospital = $.grep(HOSPITALS, function (e) { return e.name === val });
+                    episode.hospital_id = selectedHospital[0].hospital_id;
+                    FormAPI.tabs.updateCompletion();
+                }
+            });
+        }).fail(function () {
+            FormAPI.error.showErrorDialog("Cannot populate hospitals...");
         });
     };
 
@@ -238,7 +263,9 @@ $(document).ready(function () {
             $("input#drug-name").autocomplete({
                 data: drugData
             });
-        });
+        }).fail(function () {
+            FormAPI.error.showErrorDialog("Cannot populate the medication");
+        })
     };
 
     populateDiagnosis = function () {
@@ -250,12 +277,18 @@ $(document).ready(function () {
                     enable: true
                 }
             });
+        }).fail(function () {
+            FormAPI.error.showErrorDialog("Cannot populate the diagnosis list");
         });
     }
 
     populateEpisodes = function (patientId) {
         $.getJSON(location.origin + "/patients/" + patientId + "/episodes", function (data) {
             if (data && data.length > 0) {
+                if (!data[data.length - 1].completed) {
+                    populateCurrentEpisode(data[data.length - 1]);
+                }
+
                 var episodeContainer = document.getElementById("previous-episodes");
                 $.each(data, function () {
                     var value = this.date + " - " + this.reason_referral,
@@ -269,7 +302,43 @@ $(document).ready(function () {
                 episodeContainer.innerHTML = "No episodes for this patient.";
             }
             episodeContainer.className = "collection";
+        }).fail(function () {
+            FormAPI.error.showErrorDialog("Unable to populate the patient's latest episodes.");
         });
+    }
+
+    populateCurrentEpisode = function (episode) {
+        if (episode && episode.episode_id && episode.patient_id && episode.gp_id) {
+            var episodeUrl = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id;
+
+            FormAPI.data.populate(episode, "clinical_episode");
+
+            $.getJSON(location.origin + "/gp/" + episode.gp_id, function (data) {
+                FormAPI.data.populate(data, "gp");
+            });
+
+            $.getJSON(episodeUrl + "/observations", function (data) {
+                if (data) {
+                    episode.observations = data;
+                }
+                FormAPI.data.populate(data, "observations");
+            });
+
+            $.getJSON(episodeUrl + "/examinations", function (data) {
+                if (data) {
+                    episode.examination_id = data[0].examination_id;
+                }
+
+                FormAPI.data.populate(data, "examination");
+            });
+
+            $.getJSON(episodeUrl + "/history", function (data) {
+                if (data && data.length === 1) {
+                    episode.history_id = data[0].history_id;
+                    FormAPI.data.populate(data, "history");
+                }
+            });
+        }
     }
 
     convertJSONArrayToAutocomplete = function (data, attributeToConvert) {
@@ -308,7 +377,7 @@ $(document).ready(function () {
 
 
         if (!episode || !episode.patient_id || !episode.hospital_id || !episode.gp_id) {
-            alert("cant create episode");
+            FormAPI.error.showErrorDialog("All required fields to create an episode are not present.");
         }
 
         episode.source_referral = source;
@@ -333,6 +402,8 @@ $(document).ready(function () {
                 $("#start-episode").prop("disabled", true);
 
                 FormAPI.tabs.updateCompletion();
+            }).fail(function () {
+                FormAPI.error.showErrorDialog("Failed to create the clinical episode, please try again.");
             });
     }
 
@@ -431,6 +502,12 @@ $(document).ready(function () {
     FormAPI.data.populate = function (data, entityName) {
         var selectedFields = FormAPI.data.getRelatedEntityFields(entityName);
 
+        if (data instanceof Array && data.length === 1) {
+            data = data[0];
+        } else {
+            console.log("Data contains more than one value.");
+        }
+
         for (var attribute in data) {
             if (data.hasOwnProperty(attribute)) {
                 var relatedField = $.grep(selectedFields, function (e) {
@@ -439,21 +516,32 @@ $(document).ready(function () {
 
                 if (relatedField && relatedField.length >= 1) {
                     $.each(relatedField, function () {
-                        if (this.type === "date") {
-                            var dataInput = $("#" + this.id).pickadate(),
-                                picker = dataInput.packadate("picker"),
-                                formattedDate = moment(data[attribute]).format("YYYY-MM-DD");
-
-                            picker.set("select", formattedDate, { format: "yyyy-mm-dd" });
-                        } else {
-                            this.value = data[attribute];
-                        }
+                        FormAPI.data.populateField(this, data[attribute]);
                     });
                 }
             }
         }
 
         Materialize.updateTextFields();
+    }
+
+    FormAPI.data.populateField = function (element, value) {
+        switch (element.type) {
+            case "date":
+                var dataInput = $("#" + element.id).pickadate(),
+                    picker = dataInput.packadate("picker"),
+                    formattedDate = moment(value).format("YYYY-MM-DD");
+
+                picker.set("select", formattedDate, { format: "yyyy-mm-dd" });
+
+                break;
+            case "checkbox":
+                element.checked = value;
+                break;
+            default:
+                element.value = value;
+                break;
+        }
     }
 
     FormAPI.data.getDataFromForm = function (entityName) {
@@ -490,6 +578,7 @@ $(document).ready(function () {
 
         return selectedFields;
     }
+
     FormAPI.tabs = {};
 
     FormAPI.tabs.currentTab = "patient";
@@ -588,10 +677,9 @@ $(document).ready(function () {
     }
 
     FormAPI.handwriting.recieveHandwritingValue = function (val) {
-        alert(val);
         if (FormAPI.handwriting.currentInputField) {
             $("#" + FormAPI.handwriting.currentInputField).val(val);
-
+            Materialize.updateTextFields();
             FormAPI.handwriting.closeHandwritingFrame();
         }
     }
@@ -603,12 +691,24 @@ $(document).ready(function () {
         FormAPI.handwriting.currentInputField = null;
     }
 
+    FormAPI.error = {};
+
+    FormAPI.error.showErrorDialog = function (errorMessage) {
+        alertify.error(errorMessage);
+    }
+
     $('select').material_select();
 
     $(".tab a").click(FormAPI.tabs.changeTab);
 
-    getFormHtml(TABS[0].url).done(function (data) {
-        $("#patient-form").append(data);
-        TABS[0].onload();
+
+    $.each(TABS, function (i, e) {
+        var tab = e;
+        getFormHtml(tab.url).done(function (data) {
+            $("#" + tab.name + "-form").append(data);
+            tab.onload();
+            TABS[i].loaded = true;
+        });
     });
+
 });

@@ -19,4 +19,10 @@ routes.get("/:bloodResultsId", function (req, res) {
     });
 });
 
+routes.post("/", function(req, res){
+    var episodeId = req.params.episodeId;
+
+    
+})
+
 module.exports = routes;

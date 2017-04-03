@@ -4,7 +4,6 @@ var express = require("express"),
     fs = require("fs"),
     routes = require("./routes");
 
-global.mysql = require("mysql");
 var app = express();
 
 app.use(express.static(path.join(__dirname, "public")));

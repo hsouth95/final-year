@@ -59,14 +59,12 @@ list = function (options) {
     if (!checkOptions(options)) {
         throw new Error("Options not provided.");
     }
-    var query = "SELECT * FROM ?";
+    var query = "SELECT * FROM ??";
 
     if (isTransactionPending) {
         transactionConnection.query(query, [options.tableName], function (err, result) {
             if (err) {
-                return transactionConnection.rollback(function () {
-                    options.error(err)
-                });
+                options.error(err.message);
             }
 
             options.success(result);
@@ -150,7 +148,7 @@ customQuery = function (options) {
             options.success(results);
         });
     } else {
-        database.query(options.query, data, function (err, results) {
+        database.query(options.query, options.data, function (err, results) {
             if (err) {
                 options.error(err);
             } else {
@@ -164,6 +162,7 @@ module.exports = {
     checkOptions: checkOptions,
     beginTrans: beginTrans,
     endTrans: endTrans,
+    customQuery: customQuery,
     list: list,
     add: add,
     getById: getById
