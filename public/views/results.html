@@ -188,6 +188,7 @@
     </div>
     <div class="col s6">
         <h4>Urine Results</h4>
+        <button class="btn waves-effect waves-light" type="button" id="add-urine-results">Save Urine Results</button>
         <table>
             <thead>
                 <th data-field="name">Name</th>
@@ -197,7 +198,7 @@
                 <tr>
                     <td>Protein</td>
                     <td>
-                        <select id="results_protein" class="browser-default">
+                        <select id="results_protein" data-entity="urine_results" data-field="protein" class="browser-default">
                             <option value=""></option>
                             <option value="0">0</option>
                             <option value="1">+</option>
@@ -210,7 +211,7 @@
                 <tr>
                     <td>Blood</td>
                     <td>
-                        <select id="results_blood" class="browser-default">
+                        <select id="results_blood" data-entity="urine_results" data-field="blood" class="browser-default">
                             <option value=""></option>
                             <option value="0">0</option>
                             <option value="1">+</option>
@@ -223,7 +224,7 @@
                 <tr>
                     <td>Glucose</td>
                     <td>
-                        <select id="results_glucose" class="browser-default">
+                        <select id="results_glucose" data-entity="urine_results" data-field="glucose" class="browser-default">
                             <option value=""></option>
                             <option value="0">0</option>
                             <option value="1">+</option>
@@ -236,7 +237,7 @@
                 <tr>
                     <td>Nitirites</td>
                     <td>
-                        <select id="results_nitirites" class="browser-default">
+                        <select id="results_nitirites" data-entity="urine_results" data-field="nitirites" class="browser-default">
                             <option value=""></option>
                             <option value="0">-</option>
                             <option value="1">+</option>
@@ -246,7 +247,7 @@
                 <tr>
                     <td>MSU Sent</td>
                     <td>
-                        <select id="results_nitirites" class="browser-default">
+                        <select id="results_msu_sent" data-entity="urine_results" data-field="msu_sent" class="browser-default">
                             <option value=""></option>
                             <option value="0">Yes</option>
                             <option value="1">No</option>
@@ -256,6 +257,7 @@
             </tbody>
         </table>
         <h4>Imaging Results</h4>
+        <button class="btn waves-effect waves-light" type="button" id="add-imaging-results">Save Imaging Results</button>
         <table>
             <thead>
                 <th data-field="name">Name</th>
@@ -265,31 +267,31 @@
                 <tr>
                     <td>CXR</td>
                     <td class="input-field">
-                        <textarea id="results_cxr" class="materialize-textarea"></textarea>
+                        <textarea id="results_cxr" class="materialize-textarea" data-entity="imaging_results" data-field="cxr"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>CT Scan</td>
                     <td class="input-field">
-                        <textarea id="results_ctscan" class="materialize-textarea"></textarea>
+                        <textarea id="results_ctscan" class="materialize-textarea" data-entity="imaging_results" data-field="ct_scan"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>Ultrasound</td>
                     <td class="input-field">
-                        <textarea id="results_ultrasound" class="materialize-textarea"></textarea>
+                        <textarea id="results_ultrasound" class="materialize-textarea" data-entity="imaging_results" data-field="ultrasound"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>MRI</td>
                     <td class="input-field">
-                        <textarea id="results_mri" class="materialize-textarea"></textarea>
+                        <textarea id="results_mri" class="materialize-textarea" data-entity="imaging_results" data-field="mri"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>Other</td>
                     <td class="input-field">
-                        <textarea id="results_other" class="materialize-textarea"></textarea>
+                        <textarea id="results_other" class="materialize-textarea" data-entity="imaging_results" data-field="other"></textarea>
                     </td>
                 </tr>
             </tbody>

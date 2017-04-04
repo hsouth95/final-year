@@ -1,3 +1,4 @@
+<button class="btn waves-effect waves-light" type="button" id="add-diagnosis">Save Diagnosis</button>
 <div class="row">
     <div class="input-field col s12">
         <input id="problemlist" type="text" class="autocomplete" />
@@ -7,65 +8,65 @@
 <div class="row">
     <h4>Tests Required</h4>
     <div class="col">
-        <input type="checkbox" id="tests_required_fbc" />
+        <input type="checkbox" data-entity="problem_list" data-field="fbc" id="tests_required_fbc" />
         <label for="tests_required_fbc">FBC</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_biochem" />
+        <input type="checkbox" data-entity="problem_list" data-field="biochem" id="tests_required_biochem" />
         <label for="tests_required_biochem">Biochem</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_clotting" />
+        <input type="checkbox" data-entity="problem_list" data-field="clotting" id="tests_required_clotting" />
         <label for="tests_required_clotting">Clotting</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_ddimer" />
+        <input type="checkbox" data-entity="problem_list" data-field="d_dimer" id="tests_required_ddimer" />
         <label for="tests_required_ddimer">D-Dimer</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_tropt" />
+        <input type="checkbox" data-entity="problem_list" data-field="trop_t" id="tests_required_tropt" />
         <label for="tests_required_tropt">TROPONIN T</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_ck" />
+        <input type="checkbox" data-entity="problem_list" data-field="cx" id="tests_required_ck" />
         <label for="tests_required_ck">CK</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_esr" />
+        <input type="checkbox" data-entity="problem_list" data-field="esr" id="tests_required_esr" />
         <label for="tests_required_esr">ESR</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_crp" />
+        <input type="checkbox" data-entity="problem_list" data-field="crp" id="tests_required_crp" />
         <label for="tests_required_crp">CRP</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_cxr" />
+        <input type="checkbox" data-entity="problem_list" data-field="cxr" id="tests_required_cxr" />
         <label for="tests_required_cxr">CXR</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_ct" />
+        <input type="checkbox" data-entity="problem_list" data-field="ct" id="tests_required_ct" />
         <label for="tests_required_ct">CT</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_ultrasound" />
+        <input type="checkbox" data-entity="problem_list" data-field="ultrasound" id="tests_required_ultrasound" />
         <label for="tests_required_ultrasound">Ultrasound</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_mri" />
+        <input type="checkbox" data-entity="problem_list" data-field="mri" id="tests_required_mri" />
         <label for="tests_required_mri">MRI</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_echo" />
+        <input type="checkbox" data-entity="problem_list" data-field="echo" id="tests_required_echo" />
         <label for="tests_required_echo">ECHO</label>
     </div>
     <div class="col">
-        <input type="checkbox" id="tests_required_svg" />
+        <input type="checkbox" data-entity="problem_list" data-field="svg" id="tests_required_svg" />
         <label for="tests_required_svg">SVG</label>
     </div>
 </div>
 <div class="row">
     <div class="input-field col s12">
-        <textarea id="working_diagnosis" class="materialize-textarea"></textarea>
+        <textarea id="working_diagnosis" data-entity="problem_list" data-field="working_diagnosis" class="materialize-textarea"></textarea>
         <label for="working_diagnosis">Working Diagnosis</label>
     </div>
 </div>

@@ -92,7 +92,14 @@ $(document).ready(function () {
                 $("select").material_select();
 
                 $("#add-blood-results").click(addBloodResults);
-            }
+                $("#add-urine-results").click(addUrineResults);
+                $("#add-imaging-results").click(addImagingResults);
+            },
+            completedAttributes: [
+                "blood_results_id",
+                "urine_results_id",
+                "imaging_results_id"
+            ]
         },
         {
             name: "diagnosis",
@@ -101,7 +108,12 @@ $(document).ready(function () {
             onload: function () {
                 // populate diagnosis list
                 populateDiagnosis();
-            }
+
+                $("#add-diagnosis").click(addDiagnosis);
+            },
+            completedAttributes: [
+                "problem_list_id",
+            ]
         }
     ],
         HOSPITALS = [],
@@ -211,7 +223,7 @@ $(document).ready(function () {
 
         $.post(url, history, function (data) {
             episode.history_id = data.history_id;
-            FromAPI.tabs.updateCompletion();
+            FormAPI.tabs.updateCompletion();
         }).fail(function (err) {
             FormAPI.error.showErrorDialog(err.message);
         });
@@ -231,6 +243,45 @@ $(document).ready(function () {
             $("input[data-entity=blood_results]").prop("disabled", true);
         }).fail(function (err) {
             FormAPI.error.showErrorDialog(err.message);
+        });
+    }
+
+    addUrineResults = function () {
+        var urineResults = FormAPI.data.getDataFromForm("urine_results"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/urineresults";
+
+        $.post(url, urineResults, function (data) {
+            episode.urine_results_id = data.urine_results_id;
+            FormAPI.tabs.updateCompletion();
+            $("input[data-entity=urine_results]").prop("disabled", true);
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog("Error submitting Urine Results");
+        });
+    }
+
+    addImagingResults = function () {
+        var imagingResults = FormAPI.data.getDataFromForm("imaging_results"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/imagingresults";
+
+        $.post(url, imagingResults, function (data) {
+            episode.imaging_results_id = data.imaging_results_id;
+            FormAPI.tabs.updateCompletion();
+            $("input[data-entity=imaging_results]").prop("disabled", true);
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog("Error submitting Urine Results");
+        });
+    }
+
+    addDiagnosis = function () {
+        var diagnosis = FormAPI.data.getDataFromForm("problem_list"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/problemlist";
+
+        $.post(url, diagnosis, function (data) {
+            episode.problem_list_id = data.problem_list_id;
+            FormAPI.tabs.updateCompletion();
+            $("input[data-entity=problem_list]").prop("disabled", true);
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog("Error submitting Urine Results");
         });
     }
 
@@ -312,6 +363,9 @@ $(document).ready(function () {
             episode.episode_id = currentEpisode.episode_id;
             episode.gp_id = currentEpisode.gp_id;
             episode.patient_id = currentEpisode.patient_id;
+            episode.hospital_id = currentEpisode.hospital_id;
+
+            FormAPI.tabs.updateCompletion();
 
             var episodeUrl = location.origin + "/patients/" + currentEpisode.patient_id + "/episodes/" + currentEpisode.episode_id;
 
@@ -659,10 +713,11 @@ $(document).ready(function () {
                     if (tab.onload) {
                         setTimeout(tab.onload, 100);
                         TABS[tab.index].loaded = true;
-                        FormAPI.tabs.currentTab = tab.name;
                     }
                 });
             }
+
+            FormAPI.tabs.currentTab = tab.name;
         } else {
             console.error("Tab is not set.");
         }

@@ -19,23 +19,20 @@ var routes = require("express").Router({ mergeParams: true }),
 //     });
 // });
 
-routes.post("/", function(req, res){
+routes.post("/", function (req, res) {
     var episodeId = req.params.episodeId,
         urineResults = req.body;
-    models.validate("urine_results", urineResults, function(err){
-        res.status(400).send(err.message);
-    },
-    function(object){
-        db.add({
-            tableName: "urine_results",
-            data: object,
-            error: function(err){
-                res.status(400).send(err.message);
-            },
-            success: function(urine_results_id){
-                res.json({urine_results_id: urine_results_id});
-            }
-        });
+    urineResults.episode_id = episodeId;
+
+    db.add({
+        tableName: "urine_results",
+        data: urineResults,
+        error: function (err) {
+            res.status(400).send(err.message);
+        },
+        success: function (urine_results_id) {
+            res.json({ urine_results_id: urine_results_id });
+        }
     });
 });
 

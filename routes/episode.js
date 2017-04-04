@@ -4,6 +4,8 @@ var routes = require("express").Router({ mergeParams: true }),
     examinations = require("./examinations.js"),
     history = require("./history.js"),
     bloodresults = require("./bloodresults.js"),
+    imagingresults = require("./imagingresults.js"),
+    problemlist = require("./problemlist.js"),
     db = require("../database.js"),
     models = require("../models");
 
@@ -59,10 +61,11 @@ routes.post("/", function (req, res) {
         });
 });
 
-routes.use("/:episodeId/urineresults", urineresults);
 routes.use("/:episodeId/observations", observations);
 routes.use("/:episodeId/examinations", examinations);
 routes.use("/:episodeId/history", history);
 routes.use("/:episodeId/bloodresults", bloodresults);
-
+routes.use("/:episodeId/urineresults", urineresults);
+routes.use("/:episodeId/imagingresults", imagingresults);
+routes.use("/:episodeId/problemlist", problemlist);
 module.exports = routes;
