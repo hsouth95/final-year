@@ -307,13 +307,17 @@ $(document).ready(function () {
         });
     }
 
-    populateCurrentEpisode = function (episode) {
-        if (episode && episode.episode_id && episode.patient_id && episode.gp_id) {
-            var episodeUrl = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id;
+    populateCurrentEpisode = function (currentEpisode) {
+        if (currentEpisode && currentEpisode.episode_id && currentEpisode.patient_id && currentEpisode.gp_id) {
+            episode.episode_id = currentEpisode.episode_id;
+            episode.gp_id = currentEpisode.gp_id;
+            episode.patient_id = currentEpisode.patient_id;
 
-            FormAPI.data.populate(episode, "clinical_episode");
+            var episodeUrl = location.origin + "/patients/" + currentEpisode.patient_id + "/episodes/" + currentEpisode.episode_id;
 
-            $.getJSON(location.origin + "/gp/" + episode.gp_id, function (data) {
+            FormAPI.data.populate(currentEpisode, "clinical_episode");
+
+            $.getJSON(location.origin + "/gp/" + currentEpisode.gp_id, function (data) {
                 FormAPI.data.populate(data, "gp");
             });
 

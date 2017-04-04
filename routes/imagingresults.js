@@ -19,4 +19,6 @@ routes.get("/:imagingResultId", function (req, res) {
     });
 });
 
+
+
 module.exports = routes;

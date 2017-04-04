@@ -364,5 +364,8 @@
         "respiratory_sats": {
             "type": "i"
         }
+    },
+    "blood_results": {
+        
     }
 }
