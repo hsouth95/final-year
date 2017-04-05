@@ -6,6 +6,7 @@ var routes = require("express").Router({ mergeParams: true }),
     bloodresults = require("./bloodresults.js"),
     imagingresults = require("./imagingresults.js"),
     problemlist = require("./problemlist.js"),
+    currentmedication = require("./currentmedication.js"),
     db = require("../database.js"),
     models = require("../models");
 
@@ -61,6 +62,18 @@ routes.post("/", function (req, res) {
         });
 });
 
+routes.post("/:episodeId/complete", function (req, res) {
+    var episodeId = req.params.episodeId;
+
+    db.query("UPDATE clinical_episode SET completed = 1 WHERE episode_id = ?", [episodeId], function (err, results) {
+        if (err) {
+            res.status(400).send("Failed to update the episode");
+        } else {
+            res.send("Done!");
+        }
+    });
+});
+
 routes.use("/:episodeId/observations", observations);
 routes.use("/:episodeId/examinations", examinations);
 routes.use("/:episodeId/history", history);
@@ -68,4 +81,5 @@ routes.use("/:episodeId/bloodresults", bloodresults);
 routes.use("/:episodeId/urineresults", urineresults);
 routes.use("/:episodeId/imagingresults", imagingresults);
 routes.use("/:episodeId/problemlist", problemlist);
+routes.use("/:episodeId/currentmedication", currentmedication);
 module.exports = routes;

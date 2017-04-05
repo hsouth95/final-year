@@ -20,6 +20,10 @@ app.get("/handwriting", function (req, res) {
     res.sendFile(__dirname + "/public/views/handwriting.html");
 });
 
+app.get("/episode/:episodeId", function(req, res){
+    res.sendFile(__dirname + "/public/views/view.html");
+});
+
 var server = app.listen(8000, "0.0.0.0", function () {
     console.log("Listening to port: 8000");
 });

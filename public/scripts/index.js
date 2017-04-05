@@ -71,8 +71,12 @@ $(document).ready(function () {
                     selectYears: 200
                 });
                 $("select").material_select();
+                $("#add-medication").click(addMedication);
                 populateDrugs();
-            }
+            },
+            completedAttributes: [
+                "current_medications"
+            ]
         },
         {
             name: "treatment",
@@ -110,6 +114,7 @@ $(document).ready(function () {
                 populateDiagnosis();
 
                 $("#add-diagnosis").click(addDiagnosis);
+                $("#complete-episode").click(completeEpisode);
             },
             completedAttributes: [
                 "problem_list_id",
@@ -230,7 +235,34 @@ $(document).ready(function () {
     }
 
     addMedication = function () {
-        var medicationData = FormAPI.data.getDataFromForm("medication");
+        var medicationData = FormAPI.data.getDataFromForm("current_medication"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/currentmedication";
+
+        $.post(url, medicationData, function (data) {
+            if (episode && !episode.current_medications) {
+                episode.current_medications = [];
+            }
+            episode.current_medications.push(medicationData.medication_id);
+
+            var drugName = $("#drug-name").val(),
+                dose = $("#dose").val(),
+                route = $("#route").val(),
+                currentMedicationToAdd = [];
+
+            currentMedicationToAdd.push(drugName);
+            currentMedicationToAdd.push(dose);
+            currentMedicationToAdd.push(route);
+            currentMedicationToAdd.push(medicationData.frequency);
+            currentMedicationToAdd.push(medicationData.details);
+
+            FormAPI.data.addTableRow("current_medication_table", currentMedicationToAdd);
+
+            $("#current_medication_table input").val("");
+
+            FormAPI.tabs.updateCompletion();
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog(err.message);
+        });
     }
 
     addBloodResults = function () {
@@ -292,6 +324,17 @@ $(document).ready(function () {
             });
     };
 
+    completeEpisode = function () {
+        if (episode) {
+            $.post(location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/complete", function () {
+                alertify.success("Episode successfully completed.");
+                $("form input").val("");
+            }).fail(function (err) {
+                console.log(err);
+            });
+        }
+    }
+
     populateHospitals = function () {
         $.getJSON(location.origin + "/hospitals", function (data) {
             HOSPITALS = data;
@@ -312,7 +355,18 @@ $(document).ready(function () {
         $.getJSON(location.origin + "/medication").done(function (data) {
             var drugData = convertJSONArrayToAutocomplete(data, "name");
             $("input#drug-name").autocomplete({
-                data: drugData
+                data: drugData,
+                onAutocomplete: function (val) {
+                    var medication = $.grep(data, function (e) {
+                        return e.name === val;
+                    });
+
+                    if (medication) {
+                        $("#drug-id").val(medication[0].medication_id);
+                        $("#route").val(medication[0].route);
+                        $("#dose").val(medication[0].dose);
+                    }
+                }
             });
         }).fail(function () {
             FormAPI.error.showErrorDialog("Cannot populate the medication");
@@ -342,12 +396,14 @@ $(document).ready(function () {
 
                 var episodeContainer = document.getElementById("previous-episodes");
                 $.each(data, function () {
-                    var value = this.date + " - " + this.reason_referral,
-                        valueContainer = document.createElement("a");
+                    if (this.complete) {
+                        var value = this.date + " - " + this.reason_referral,
+                            valueContainer = document.createElement("a");
 
-                    valueContainer.className = "collection-item";
-                    valueContainer.innerHTML = value;
-                    episodeContainer.appendChild(valueContainer);
+                        valueContainer.className = "collection-item";
+                        valueContainer.innerHTML = value;
+                        episodeContainer.appendChild(valueContainer);
+                    }
                 });
             } else {
                 episodeContainer.innerHTML = "No episodes for this patient.";
@@ -364,6 +420,15 @@ $(document).ready(function () {
             episode.gp_id = currentEpisode.gp_id;
             episode.patient_id = currentEpisode.patient_id;
             episode.hospital_id = currentEpisode.hospital_id;
+
+
+            var hospital = $.grep(HOSPITALS, function (e) {
+                return e.hospital_id === episode.hospital_id;
+            });
+
+            if (hospital) {
+                $("#hospital_name").val(hospital[0].name);
+            }
 
             FormAPI.tabs.updateCompletion();
 
@@ -635,6 +700,16 @@ $(document).ready(function () {
             selectedFields = selectedInputFields.concat(selectedSelectionFields).concat(selectedTextareaFields);
 
         return selectedFields;
+    }
+
+    FormAPI.data.addTableRow = function (elementId, data) {
+        var row = "<tr>";
+        $.each(data, function () {
+            row += "<td>" + this + "</td>";
+        });
+        row += "</tr>";
+
+        $("#" + elementId + " > tbody:last-child").append(row);
     }
 
     FormAPI.tabs = {};
