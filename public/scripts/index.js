@@ -396,11 +396,12 @@ $(document).ready(function () {
 
                 var episodeContainer = document.getElementById("previous-episodes");
                 $.each(data, function () {
-                    if (this.complete) {
-                        var value = this.date + " - " + this.reason_referral,
+                    if (this.completed) {
+                        var value = this.date.substring(0, 10) + " - " + this.reason_referral,
                             valueContainer = document.createElement("a");
 
                         valueContainer.className = "collection-item";
+                        valueContainer.href = location.origin + "/viewresult?episodeid=" + this.episode_id + "&patientid=" + this.patient_id;
                         valueContainer.innerHTML = value;
                         episodeContainer.appendChild(valueContainer);
                     }

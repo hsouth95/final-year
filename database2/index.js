@@ -80,6 +80,31 @@ list = function (options) {
     }
 }
 
+filteredList = function (options) {
+    if (!checkOptions(options) || !options.filteredField || !options.filteredValue) {
+        throw new Error("Options not provided.");
+    }
+    var query = "SELECT * FROM ?? WHERE ?? = ?";
+
+    if (isTransactionPending) {
+        transactionConnection.query(query, [options.tableName, options.filteredField, options.filteredValue], function (err, result) {
+            if (err) {
+                options.error(err.message);
+            }
+
+            options.success(result);
+        });
+    } else {
+        database.query(query, [options.tableName, options.filteredField, options.filteredValue], function (err, results) {
+            if (err) {
+                options.error(err);
+            } else {
+                options.success(results);
+            }
+        });
+    }
+}
+
 add = function (options) {
     if (!checkOptions(options) || !options.data) {
         throw new Error("Options not provided.");
@@ -165,5 +190,6 @@ module.exports = {
     customQuery: customQuery,
     list: list,
     add: add,
-    getById: getById
+    getById: getById,
+    filteredList: filteredList
 }; 

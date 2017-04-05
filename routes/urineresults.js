@@ -1,14 +1,20 @@
 var routes = require("express").Router({ mergeParams: true }),
     db = require("../database2");
 
-// routes.get("/", function (req, res) {
-//     var episodeId = req.params.episodeId;
-//     db.query("SELECT * FROM urine_results WHERE episode_id = ?", [episodeId], function (err, results) {
-//         if (err) throw err;
-
-//         res.json(results);
-//     });
-// });
+routes.get("/", function (req, res) {
+    var episodeId = req.params.episodeId;
+    db.filteredList({
+        tableName: "urine_results",
+        filteredField: "episode_id",
+        filteredValue: episodeId,
+        error: function (err) {
+            res.status(400).send(err);
+        },
+        success: function (data) {
+            res.json(data);
+        }
+    })
+});
 
 // routes.get("/:urineResultId", function (req, res) {
 //     var urineResultId = req.params.urineResultId;

@@ -20,7 +20,7 @@ app.get("/handwriting", function (req, res) {
     res.sendFile(__dirname + "/public/views/handwriting.html");
 });
 
-app.get("/episode/:episodeId", function(req, res){
+app.get("/viewresult", function(req, res){
     res.sendFile(__dirname + "/public/views/view.html");
 });
 

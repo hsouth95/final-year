@@ -4,9 +4,10 @@ var routes = require("express").Router({ mergeParams: true }),
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
-    db.customQuery({
-        query: "SELECT * FROM history WHERE episode_id = ?",
-        data: [episodeId],
+    db.filteredList({
+        tableName: "history",
+        filteredField: "episode_id",
+        filteredValue: episodeId,
         error: function (err) {
             res.status(400).send(err.message);
         },
