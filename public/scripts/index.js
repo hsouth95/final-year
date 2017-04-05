@@ -462,6 +462,26 @@ $(document).ready(function () {
                     FormAPI.data.populate(data, "history");
                 }
             });
+
+            $.getJSON(episodeUrl + "/bloodresults", function (data) {
+                if (data && data.length === 1) {
+                    episode.blood_results_id = data[0].blood_results_id;
+                    FormAPI.data.populate(data, "blood_results");
+                }
+            });
+
+            $.getJSON(episodeUrl + "/urineresults", function (data) {
+                if (data && data.length === 1) {
+                    episode.urine_results_id = data[0].urine_results_id;
+                    FormAPI.data.populate(data, "urine_results");
+                }
+            });
+            $.getJSON(episodeUrl + "/imagingresults", function (data) {
+                if (data && data.length === 1) {
+                    episode.imaging_results_id = data[0].imaging_results_id;
+                    FormAPI.data.populate(data, "imaging_results");
+                }
+            });
         }
     }
 
