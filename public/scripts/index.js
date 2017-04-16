@@ -203,8 +203,17 @@ $(document).ready(function () {
     }
 
     displayObservations = function (observations) {
-        var observationsValues = document.createElement("span");
-        observationsValues.innerHTML = JSON.stringify(observations);
+        var observationsValues = document.createElement("div");
+        observationsValues.className = "col s2";
+
+        for (var attribute in observations) {
+            if (observations.hasOwnProperty(attribute)) {
+                var observationProperty = document.createElement("div");
+                observationProperty.innerHTML = observations[attribute];
+
+                observationsValues.appendChild(observationProperty);
+            }
+        }
 
         document.getElementById("observations-results").appendChild(observationsValues);
     }
