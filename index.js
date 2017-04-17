@@ -24,6 +24,10 @@ app.get("/viewresult", function(req, res){
     res.sendFile(__dirname + "/public/views/view.html");
 });
 
+app.get("/viewsummary", function(req, res){
+    res.sendFile(__dirname + "/public/views/viewsummary.html");
+})
+
 var server = app.listen(8000, "0.0.0.0", function () {
     console.log("Listening to port: 8000");
 });
