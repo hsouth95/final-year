@@ -1,6 +1,10 @@
 {
   "name": "paper-styles",
+<<<<<<< HEAD
   "version": "1.2.0",
+=======
+  "version": "1.2.1",
+>>>>>>> RefactorScripts
   "description": "Common (global) styles for Material Design elements.",
   "authors": [
     "The Polymer Authors"

@@ -35,6 +35,7 @@ Shared styles for a native `button` to be used as an item in a `paper-listbox` e
 <dom-module id="paper-item">
   <template>
     <style>
+<<<<<<< HEAD
       .paper-item {
         display: block;
         position: relative;
@@ -46,6 +47,24 @@ Shared styles for a native `button` to be used as an item in a `paper-listbox` e
         background: white;
         width: 100%;
         text-align: left;
+=======
+      :host, html {
+        --paper-item: {
+          display: block;
+          position: relative;
+          min-height: var(--paper-item-min-height, 48px);
+          padding: 0px 16px;
+          @apply --paper-font-subhead;
+          border:none;
+          outline: none;
+          background: white;
+          width: 100%;
+          text-align: left;
+        };
+      }
+      .paper-item {
+        @apply --paper-item;
+>>>>>>> RefactorScripts
       }
 
       .paper-item[hidden] {
