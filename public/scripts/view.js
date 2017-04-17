@@ -11,11 +11,13 @@ $(document).ready(function () {
 
     $.getJSON(episodeBaseURL, function (data) {
         episode = data[0];
-        $("#tesla").html(JSON.stringify(episode, null, 2));
+
+        $("#date").html(episode.date.substring(0, 10));
 
         $.getJSON(location.origin + "/patients/" + patientId, function (data) {
             episode.patient = data;
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+            $("#patient_name").html(data.firstname + " " + data.surname);
+            $("#patient_number").html(data.patient_id);
         }).fail(function (err) {
             alert(err);
         });
@@ -23,66 +25,69 @@ $(document).ready(function () {
         $.getJSON(location.origin + "/hospitals/" + episode.hospital_id, function (data) {
             episode.hospital = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(location.origin + "/gp/" + episode.gp_id, function (data) {
             episode.gp = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(episodeBaseURL + "/history", function (data) {
             episode.history = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+            $("#presenting_complaint").html(episode.history.presenting_complaint);
+
         });
 
         $.getJSON(episodeBaseURL + "/history", function (data) {
             episode.history = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(episodeBaseURL + "/observations", function (data) {
             episode.observations = data;
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(episodeBaseURL + "/bloodresults", function (data) {
             episode.bloodresults = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(episodeBaseURL + "/imagingresults", function (data) {
             episode.imagingresults = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
         $.getJSON(episodeBaseURL + "/urineresults", function (data) {
             episode.urineresults = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(episodeBaseURL + "/currentmedication", function (data) {
             episode.currentmedication = data;
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(episodeBaseURL + "/examinations", function (data) {
             episode.examinations = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+
         });
 
         $.getJSON(episodeBaseURL + "/problemlist", function (data) {
             episode.examinations = data[0];
 
-            $("#tesla").html(JSON.stringify(episode, null, 2));
+            $("#working_diagnosis").html(episode.examinations.working_diagnosis);
+
+
         });
 
     });

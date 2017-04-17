@@ -1,3 +1,15 @@
 .information {
     padding: 10px;
 }
+
+main {
+    padding: 50px;
+}
+
+.view-value {
+    font-size: 32px;
+}
+
+label {
+    font-size: 20px;
+}
