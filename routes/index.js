@@ -7,11 +7,21 @@ var routes = require("express").Router(),
     diagnosis = require("./diagnosis.js"),
     models = require("../models");
 
-routes.use("/view", views);
-routes.use("/hospitals", hospitals);
-routes.use("/medication", medications);
-routes.use("/patients", patients);
-routes.use("/gp", gp);
-routes.use("/diagnosis", diagnosis);
+module.exports = function (app, passport) {
+    app.get("/home", isLoggedIn, function (req, res) {
+        res.sendFile("E:/Code/final-year/public/views/home.html");
+    });
 
-module.exports = routes;
+    routes.use("/view", views);
+    routes.use("/hospitals", hospitals);
+    routes.use("/medication", medications);
+    routes.use("/patients", patients);
+    routes.use("/gp", gp);
+    routes.use("/diagnosis", diagnosis);
+
+    function isLoggedIn(req, res, next) {
+        if (req.isAuthenticated()) return next();
+
+        res.redirect("/");
+    }
+}
