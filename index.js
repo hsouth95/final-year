@@ -16,7 +16,7 @@ app.use(cookieParser());
 
 require("./authenticate/init.js")(passport);
 
-app.use(session({ secret: "apple" }));
+app.use(session({ secret: "jz6lFRgb6q96liqI8vjtVWn1d0jI80Ej" }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -27,30 +27,10 @@ app.use(bodyParser.json());
 
 require("./routes")(app, passport);
 
-app.get("/continueepisode", function (req, res) {
-    res.sendFile(__dirname + "/public/views/continueepisode.html");
-});
-
-app.get("/handwriting", function (req, res) {
-    res.sendFile(__dirname + "/public/views/handwriting.html");
-});
-
-app.get("/viewresult", function (req, res) {
-    res.sendFile(__dirname + "/public/views/view.html");
-});
-
-app.get("/viewsummary", function (req, res) {
-    res.sendFile(__dirname + "/public/views/viewsummary.html");
-});
-
 app.post("/login", passport.authenticate("local-login", {
     successRedirect: "/home",
     failureRedirect: "/viewsummary"
 }));
-
-app.get("/", function (req, res) {
-    res.sendFile(__dirname + "/public/views/index.html");
-});
 
 var server = app.listen(8000, "0.0.0.0", function () {
     console.log("Listening to port: 8000");

@@ -50,7 +50,7 @@ module.exports = function (passport) {
 
 function findUserByUsername(username, success, error) {
     db.customQuery({
-        query: "SELECT * FROM users WHERE username = ?",
+        query: "SELECT user_id, username, firstname, surname, password FROM users WHERE username = ?",
         data: [username],
         success: success,
         error: error
@@ -59,7 +59,7 @@ function findUserByUsername(username, success, error) {
 
 function findUserById(id, success, error) {
     db.customQuery({
-        query: "SELECT * FROM users WHERE user_id = ?",
+        query: "SELECT user_id, username, firstname, surname FROM users WHERE user_id = ?",
         data: [id],
         success: success,
         error: error
