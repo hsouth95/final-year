@@ -10,7 +10,7 @@
   <meta name="HandheldFriendly" content="true" />
   <link rel="import" href="scripts/myscript/myscript-text-web/myscript-text-web.html">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" />
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.9.0/css/alertify.min.css"/>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.9.0/css/alertify.min.css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="styles/index.css" />
 </head>
@@ -20,6 +20,10 @@
     <nav class="light-blue">
       <div class="wrapper">
         <a href="#" class="brand-logo">Clinicbook</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="/viewsummary">View Patient</a></li>
+          <li><a href="/logout">Sign Out</a></li>
+        </ul>
       </div>
     </nav>
   </header>

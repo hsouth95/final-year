@@ -32,6 +32,11 @@ app.post("/login", passport.authenticate("local-login", {
     failureRedirect: "/viewsummary"
 }));
 
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/");
+})
+
 var server = app.listen(8000, "0.0.0.0", function () {
     console.log("Listening to port: 8000");
 });
