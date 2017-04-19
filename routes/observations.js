@@ -1,6 +1,7 @@
 var routes = require("express").Router({ mergeParams: true }),
     db = require("../database2"),
-    models = require("../models");
+    models = require("../models"),
+    fs = require("fs");
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
@@ -65,6 +66,16 @@ routes.post("/", function (req, res) {
                 });
             });
         });
+});
+
+routes.post("/lungs", function (req, res) {
+    var image = req.body.lungs,
+        episodeId = req.params.episodeId,
+        fileName = "lungs-" + episodeId + ".jpg";
+
+    fs.writeFile(fileName, image.split(",")[1], { encoding: 'base64' });
+
+    res.send("done!");
 });
 
 module.exports = routes;

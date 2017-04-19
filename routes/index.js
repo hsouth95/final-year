@@ -31,6 +31,9 @@ module.exports = function (app, passport) {
     app.get("/handwriting", function (req, res) {
         res.sendFile(appDir + "/public/views/handwriting.html");
     });
+    app.get("/drawing", function(req, res){
+        res.sendFile(appDir + "/public/views/drawing.html");
+    });
 
     app.get("/viewresult", isLoggedIn, function (req, res) {
         res.sendFile(appDir + "/public/views/view.html");

@@ -54,7 +54,7 @@ nav {
   display: none;
 }
 
-#handwriting-frame {
+.full-screen-frame {
   position: absolute;
   top: 0;
   left: 0;

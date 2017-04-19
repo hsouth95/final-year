@@ -40,6 +40,16 @@ $(document).ready(function () {
                 $("#start-episode").click(startEpisode);
                 $("#add-observations").click(addObservations);
                 $("#add-examination").click(addExamination);
+
+                $("#lungs-drawing").click(function (e) {
+                    if (drawingFrame) {
+                        drawingFrame.setImage("images/lungs.PNG", function (data) {
+                            alert(data);
+                        });
+                        $("#drawing-frame").removeClass("hidden");
+                    }
+                });
+
             },
             completedAttributes: [
                 "episode_id",
