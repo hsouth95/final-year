@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2017 at 05:29 AM
+-- Generation Time: Apr 19, 2017 at 06:43 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -475,6 +475,30 @@ INSERT INTO `urine_results` (`urine_results_id`, `episode_id`, `date`, `protein`
 (9, 28, '0000-00-00', 0, 0, 0, 0, 0),
 (10, 29, '0000-00-00', 0, 0, 0, 0, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(9) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `surname` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `salt` varchar(255) NOT NULL,
+  `hash` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `firstname`, `surname`, `username`, `password`, `salt`, `hash`) VALUES
+(5, 'harrison', 'apple', 'apple', '$2a$08$0Hqjd4I6Cv0RLaC9krtbue/Q.ggf/4/qeBN1Qq2JSsJaE.S4Jj9KS', '', ''),
+(6, 'Harrison', 'South', 'hsouth', '$2a$08$g9OTex8snrQzIxb7L1s7P.H8IdtoHcHUR.O44bGjp0/MadfiHQjKi', '', '');
+
 --
 -- Indexes for dumped tables
 --
@@ -602,6 +626,12 @@ ALTER TABLE `urine_results`
   ADD KEY `episode_id` (`episode_id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -670,6 +700,11 @@ ALTER TABLE `treatment`
 --
 ALTER TABLE `urine_results`
   MODIFY `urine_results_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- Constraints for dumped tables
 --
