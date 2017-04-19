@@ -29,7 +29,12 @@ require("./routes")(app, passport);
 
 app.post("/login", passport.authenticate("local-login", {
     successRedirect: "/home",
-    failureRedirect: "/viewsummary"
+    failureRedirect: "/?error=Failed_to_log_in"
+}));
+
+app.post("/createaccount", passport.authenticate("local-signup", {
+    successRedirect: "/",
+    failureRedirect: "/"
 }));
 
 app.get("/logout", function(req, res){

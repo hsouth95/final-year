@@ -8,7 +8,12 @@
     <meta name="author" content="Harrison South">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" />
     <link rel="stylesheet" href="styles/index.css" />
-    <link rel="stylesheet" href="styles/home.css" />
+    <style>
+        main {
+            margin-left: 300px;
+            margin-right: 300px;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,15 +25,22 @@
         </nav>
     </header>
     <main>
-        <form action="/login" method="post">
+        <div id="error" style="display:none;">
+
+        </div>
+        <form action="/login" method="post" autocomplete="off">
+            <!-- to prevent the autocompletion of usernames/passwords the below fields are set -->
+            <input type="text" style="display:none;" name="fakeusernameremembered">
+            <input type="password" style="display:none;" name="fakepasswordremembered">
+
             <div class="row">
                 <div class="col s12 input-field">
                     <label for="username">Username</label>
-                    <input type="text" name="username" id="username">
+                    <input type="text" name="username" id="username" autocomplete="nope">
                 </div>
                 <div class="col s12 input-field">
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password">
+                    <input type="password" name="password" id="password" autocomplete="new-password">
                 </div>
             </div>
             <div class="col s12">
@@ -39,6 +51,7 @@
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+    <script src="scripts/index.js"></script>
 </body>
 
 </html>

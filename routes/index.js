@@ -13,7 +13,11 @@ var appDir = path.dirname(require.main.filename);
 
 module.exports = function (app, passport) {
     app.get("/", function (req, res) {
-        res.sendFile(appDir + "/public/views/index.html");
+        if (req.isAuthenticated()) {
+            res.redirect("/home");
+        } else {
+            res.sendFile(appDir + "/public/views/index.html");
+        }
     });
 
     app.get("/home", isLoggedIn, function (req, res) {
