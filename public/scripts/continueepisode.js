@@ -32,6 +32,8 @@ $(document).ready(function () {
             url: location.origin + "/view/observations",
             loaded: false,
             onload: function () {
+                $("input").prop("disabled", false);
+
                 $('.datepicker').pickadate({
                     selectMonths: true,
                     selectYears: 200
@@ -41,10 +43,17 @@ $(document).ready(function () {
                 $("#add-observations").click(addObservations);
                 $("#add-examination").click(addExamination);
 
-                $("#lungs-drawing").click(function (e) {
+                $("img").click(function (e) {
                     if (drawingFrame) {
-                        drawingFrame.setImage("images/lungs.PNG", function (data) {
-                            alert(data);
+                        drawingFrame.setImage(e.currentTarget.src, function (data) {
+                            var lungData = {};
+                            lungData.lungs = data;
+                            $.post(location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/observations/lungs", lungData, function (lungsFileName) {
+                                e.currentTarget.src = data;
+                                e.currentTarget.dataset.savedFileName = lungsFileName.fileName;
+                            }).fail(function (e) {
+                                console.log("Failed!");
+                            });
                         });
                         $("#drawing-frame").removeClass("hidden");
                     }
@@ -231,6 +240,14 @@ $(document).ready(function () {
     addExamination = function () {
         var examinations = FormAPI.data.getDataFromForm("examination"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/examinations";
+
+        var drawings = $("img[data-entity=examination]");
+
+        $.each(drawings, function () {
+            if (this.dataset.savedFileName) {
+                examinations[this.dataset.field] = this.dataset.savedFileName;
+            }
+        });
 
         $.post(url, examinations, function (data) {
             episode.examination_id = data.examination_id;

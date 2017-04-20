@@ -1,7 +1,6 @@
 var routes = require("express").Router({ mergeParams: true }),
     db = require("../database2"),
-    models = require("../models"),
-    fs = require("fs");
+    models = require("../models");
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
@@ -75,7 +74,7 @@ routes.post("/lungs", function (req, res) {
 
     fs.writeFile(fileName, image.split(",")[1], { encoding: 'base64' });
 
-    res.send("done!");
+    res.json({ fileName: fileName });
 });
 
 module.exports = routes;

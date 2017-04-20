@@ -1,5 +1,6 @@
 var drawingFrame = {};
 
+drawingFrame.containerId = "drawing-frame";
 drawingFrame.canvasId = "drawing-canvas";
 drawingFrame.saveButtonId = "drawing-save";
 drawingFrame.clearButtonId = "drawing-clear";
@@ -166,5 +167,6 @@ document.getElementById("drawing-save").addEventListener("click", function (e) {
 
     if (drawingFrame.cache.successCallback) {
         drawingFrame.cache.successCallback(dataURL);
+        document.getElementById(drawingFrame.containerId).className += " hidden";
     }
 });

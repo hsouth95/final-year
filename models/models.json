@@ -363,9 +363,13 @@
         },
         "respiratory_sats": {
             "type": "i"
+        },
+        "respiratory_diagram": {
+            "type": "t"
+        },
+        "gastro_diagram": {
+            "type": "t"
         }
     },
-    "blood_results": {
-        
-    }
+    "blood_results": {}
 }
