@@ -20,6 +20,21 @@ module.exports = function (app, passport) {
         }
     });
 
+    app.post("/drawing", isLoggedIn, function (req, res) {
+        var image = req.body.drawing,
+            fileName = req.body.fileName;
+
+        fileName = appDir + "/public/drawings/" + fileName;
+
+        if (image && fileName) {
+            fs.writeFile(fileName, image.split(",")[1], { encoding: 'base64' });
+
+            res.json({ fileName: req.body.fileName });
+        } else {
+            res.status(400).send("Image or file name not provided.");
+        }
+    });
+
     app.get("/home", isLoggedIn, function (req, res) {
         res.sendFile(appDir + "/public/views/home.html");
     });
@@ -31,7 +46,7 @@ module.exports = function (app, passport) {
     app.get("/handwriting", function (req, res) {
         res.sendFile(appDir + "/public/views/handwriting.html");
     });
-    app.get("/drawing", function(req, res){
+    app.get("/drawing", function (req, res) {
         res.sendFile(appDir + "/public/views/drawing.html");
     });
 

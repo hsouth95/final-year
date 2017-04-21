@@ -9,10 +9,14 @@ drawingFrame.cache = {};
 
 drawingFrame.cache.successCallback = null;
 
-drawingFrame.setImage = function (imageUrl, success) {
+drawingFrame.openFrame = function (imageUrl, success) {
     drawingFrame.cache.imageUrl = imageUrl;
     drawingFrame.cache.successCallback = success;
 
+    drawingFrame.setImage(imageUrl);
+}
+
+drawingFrame.setImage = function (imageUrl) {
     var canvas = document.getElementById(drawingFrame.canvasId),
         ctx;
 
@@ -22,23 +26,11 @@ drawingFrame.setImage = function (imageUrl, success) {
         var img = new Image();
 
         img.onload = function () {
+            canvas.height = img.height;
+            canvas.width = img.width;
+
             /// set size proportional to image
-            canvas.height = canvas.width * (img.height / img.width);
-
-            /// step 1 - resize to 50%
-            var oc = document.createElement('canvas'),
-                octx = oc.getContext('2d');
-
-            oc.width = img.width * 0.5;
-            oc.height = img.height * 0.5;
-            octx.drawImage(img, 0, 0, oc.width, oc.height);
-
-            /// step 2 - resize 50% of step 1
-            octx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5);
-
-            /// step 3, resize to final size
-            ctx.drawImage(oc, 0, 0, oc.width * 0.5, oc.height * 0.5,
-                0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0,0, img.width, img.height);
         }
 
         img.src = imageUrl;
@@ -162,11 +154,22 @@ document.getElementById("drawing-clear").addEventListener("click", function (e) 
     drawingFrame.clearFrame();
 });
 
+document.getElementById("drawing-close").addEventListener("click", function (e) {
+    // Clear the cache
+    drawingFrame.cache = {};
+
+    drawingFrame.close();
+});
+
+drawingFrame.close = function () {
+    document.getElementById(drawingFrame.containerId).className += " hidden";
+}
+
 document.getElementById("drawing-save").addEventListener("click", function (e) {
-    var dataURL = canvas.toDataURL("image/jpeg", 0.1);
+    var dataURL = canvas.toDataURL("image/jpeg", 0.5);
 
     if (drawingFrame.cache.successCallback) {
         drawingFrame.cache.successCallback(dataURL);
-        document.getElementById(drawingFrame.containerId).className += " hidden";
+        drawingFrame.close();
     }
 });

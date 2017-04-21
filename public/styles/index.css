@@ -1,3 +1,8 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
 nav {
     color: #e1f5fe;
     padding-left: 10px;
@@ -55,16 +60,22 @@ nav {
 }
 
 .full-screen-frame {
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   z-index: 9999;
   background-color: #e1f5fe;
   padding: 50px;
+}
+
+.full-screen-frame .btn {
+  margin-right : 10px;
+}
+
+.drawing-image {
+  width: 100%;
+
 }
 
 .textarea-btn {

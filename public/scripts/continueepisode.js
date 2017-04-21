@@ -43,21 +43,7 @@ $(document).ready(function () {
                 $("#add-observations").click(addObservations);
                 $("#add-examination").click(addExamination);
 
-                $("img").click(function (e) {
-                    if (drawingFrame) {
-                        drawingFrame.setImage(e.currentTarget.src, function (data) {
-                            var lungData = {};
-                            lungData.lungs = data;
-                            $.post(location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/observations/lungs", lungData, function (lungsFileName) {
-                                e.currentTarget.src = data;
-                                e.currentTarget.dataset.savedFileName = lungsFileName.fileName;
-                            }).fail(function (e) {
-                                console.log("Failed!");
-                            });
-                        });
-                        $("#drawing-frame").removeClass("hidden");
-                    }
-                });
+                $("img").click(FormAPI.drawing.openDrawingFrame);
 
             },
             completedAttributes: [
@@ -685,6 +671,7 @@ $(document).ready(function () {
         if (data instanceof Array && data.length === 1) {
             data = data[0];
         } else {
+            data = data[0];
             console.log("Data contains more than one value.");
         }
 
@@ -692,12 +679,19 @@ $(document).ready(function () {
             if (data.hasOwnProperty(attribute)) {
                 var relatedField = $.grep(selectedFields, function (e) {
                     return e.dataset.field == attribute;
-                });
+                }),
+                    relatedImage = $.grep($("img"), function (e) {
+                        return e.dataset.field == attribute;
+                    });
 
                 if (relatedField && relatedField.length >= 1) {
                     $.each(relatedField, function () {
                         FormAPI.data.populateField(this, data[attribute]);
                     });
+                } else if (relatedImage && relatedImage.length === 1) {
+                    if (data[attribute]) {
+                        relatedImage[0].src = "drawings/" + data[attribute];
+                    }
                 }
             }
         }
@@ -745,15 +739,12 @@ $(document).ready(function () {
     }
 
     FormAPI.data.getRelatedEntityFields = function (entityName) {
-        var selectedInputFields = $.grep($("input"), function (e) {
+        var comparorFunction = function (e) {
             return e.dataset.entity === entityName;
-        }),
-            selectedSelectionFields = $.grep($("select"), function (e) {
-                return e.dataset.entity === entityName;
-            }),
-            selectedTextareaFields = $.grep($("textarea"), function (e) {
-                return e.dataset.entity === entityName;
-            }),
+        },
+            selectedInputFields = $.grep($("input"), comparorFunction),
+            selectedSelectionFields = $.grep($("select"), comparorFunction),
+            selectedTextareaFields = $.grep($("textarea"), comparorFunction),
             selectedFields = selectedInputFields.concat(selectedSelectionFields).concat(selectedTextareaFields);
 
         return selectedFields;
@@ -881,6 +872,30 @@ $(document).ready(function () {
 
         FormAPI.handwriting.currentInputField = null;
     }
+
+    FormAPI.drawing = {};
+
+    FormAPI.drawing.openDrawingFrame = function (element) {
+        // Click encapsulates the element with the currentTarget of the event
+        var clickedElement = element.currentTarget,
+            fileUrl = location.origin + "/drawing";
+
+        if (drawingFrame) {
+            drawingFrame.openFrame(clickedElement.src, function (data) {
+                var postData = {};
+                postData.drawing = data;
+                postData.fileName = clickedElement.dataset.field + "-" + episode.episode_id + ".jpg";
+
+                $.post(fileUrl, postData, function (response) {
+                    clickedElement.src = data;
+                    clickedElement.dataset.savedFileName = response.fileName;
+                }).fail(function (e) {
+                    FormAPI.error.showErrorDialog("Failed to upload the drawing, please try again.");
+                });
+            });
+            $("#drawing-frame").removeClass("hidden");
+        }
+    };
 
     FormAPI.error = {};
 
