@@ -161,10 +161,14 @@ $(document).ready(function () {
             title: "Patients",
             selectedCallback: function (data) {
                 FormAPI.data.populate(data, "patient");
+
                 episode.patient = data;
                 episode.patient_id = data.patient_id;
+
                 FormAPI.tabs.updateCompletion();
+
                 populateEpisodes(data.patient_id);
+                setCachedEpisode(data.patient_id);
             }
         });
 
@@ -439,6 +443,7 @@ $(document).ready(function () {
 
     populateCurrentEpisode = function (currentEpisode) {
         if (currentEpisode && currentEpisode.episode_id && currentEpisode.patient_id && currentEpisode.gp_id) {
+
             episode.episode_id = currentEpisode.episode_id;
             episode.gp_id = currentEpisode.gp_id;
             episode.patient_id = currentEpisode.patient_id;
@@ -573,6 +578,33 @@ $(document).ready(function () {
             });
     }
 
+    checkCachedEpisode = function () {
+        if (sessionStorage.getItem("patientId")) {
+            var patientUrl = location.origin + "/patients/" + sessionStorage.getItem("patientId");
+
+            $.getJSON(patientUrl, function (data) {
+                if (data) {
+                    FormAPI.data.populate(data, "patient");
+
+                    episode.patient = data;
+                    episode.patient_id = data.patient_id;
+
+                    FormAPI.tabs.updateCompletion();
+
+                    populateEpisodes(data.patient_id);
+                }
+            }).fail(function () {
+                FormAPI.error.showErrorDialog("Failed to get cached patient, please enter it again.");
+            });
+
+        }
+    }
+
+    setCachedEpisode = function (patientId) {
+        // TODO: replace with episode id and find relevant fields
+        sessionStorage.setItem("patientId", patientId);
+    }
+
     FormAPI.modals = {};
 
     FormAPI.modals.buildSelectionModal = function (options) {
@@ -670,7 +702,7 @@ $(document).ready(function () {
 
         if (data instanceof Array && data.length === 1) {
             data = data[0];
-        } else {
+        } else if (data instanceof Array && data.length > 1) {
             data = data[0];
             console.log("Data contains more than one value.");
         }
@@ -685,9 +717,18 @@ $(document).ready(function () {
                     });
 
                 if (relatedField && relatedField.length >= 1) {
-                    $.each(relatedField, function () {
-                        FormAPI.data.populateField(this, data[attribute]);
-                    });
+                    if (relatedField[0].type === "radio" && data[attribute] !== null) {
+                        $.each(relatedField, function () {
+                            if (parseInt(this.value) === data[attribute]) {
+                                this.checked = true;
+                                return false;
+                            }
+                        });
+                    } else {
+                        $.each(relatedField, function () {
+                            FormAPI.data.populateField(this, data[attribute]);
+                        });
+                    }
                 } else if (relatedImage && relatedImage.length === 1) {
                     if (data[attribute]) {
                         relatedImage[0].src = "drawings/" + data[attribute];
@@ -917,4 +958,6 @@ $(document).ready(function () {
         });
     });
 
+    // Check to see if there is a cached patient
+    checkCachedEpisode();
 });
