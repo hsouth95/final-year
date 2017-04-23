@@ -61,6 +61,9 @@
             "type": "t",
             "requiredCreation": true
         },
+        "relevant_history": {
+            "type": "t"
+        },
         "ihd": {
             "type": "i",
             "requiredCreation": true,
@@ -159,6 +162,9 @@
             "type": "i",
             "requiredCreation": true,
             "maxLength": 3
+        },
+        "allergies": {
+            "type": "t"
         }
     },
     "observations": {

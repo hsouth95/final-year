@@ -19,7 +19,7 @@ module.exports = function (app, passport) {
             res.sendFile(appDir + "/public/views/index.html");
         }
     });
-    app.get("/create", isAuthenticated, function (req, res) {
+    app.get("/create", isLoggedIn, function (req, res) {
         res.sendFile(appDir + "/public/views/createaccount.html");
     });
 

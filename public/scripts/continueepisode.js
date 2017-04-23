@@ -134,6 +134,9 @@ $(document).ready(function () {
     findPatient = function () {
         var patientNumber = $("#patient_number").val();
 
+        // Clear the current patient information
+        FormAPI.data.clearAll();
+
         fillPatientModal(patientNumber);
     }
 
@@ -211,7 +214,27 @@ $(document).ready(function () {
         });
     }
 
+    displayAllObservations = function () {
+        if (episode.observations && episode.observations.length >= 1) {
+            $.each(episode.observations, function () {
+                displayObservations(this);
+            });
+
+            FormAPI.tabs.updateCompletion();
+        }
+    }
+
     displayObservations = function (observations) {
+        var fields = [
+            "bp_systolic",
+            "bp_diastolic",
+            "pulse",
+            "temperature",
+            "respiratory_rate",
+            "avpu",
+            "news_score"
+        ];
+
         // If there are no observations currently, populate the headings
         if ($("#observations-results").children().length === 0) {
             displayObservationHeaders();
@@ -220,14 +243,18 @@ $(document).ready(function () {
         var observationsValues = document.createElement("div");
         observationsValues.className = "col s1";
 
-        for (var attribute in observations) {
-            if (observations.hasOwnProperty(attribute)) {
-                var observationProperty = document.createElement("div");
-                observationProperty.className = "observation-result-element";
-                observationProperty.innerHTML = observations[attribute];
+        for (var attribute in fields) {
+            var fieldName = fields[attribute],
+                observationProperty = document.createElement("div");
+            observationProperty.className = "observation-result-element";
 
-                observationsValues.appendChild(observationProperty);
+            if (observations.hasOwnProperty(fieldName)) {
+                observationProperty.innerHTML = observations[fieldName];
+            } else {
+                observationProperty.innerHTML = "-";
             }
+
+            observationsValues.appendChild(observationProperty);
         }
 
         document.getElementById("observations-results").appendChild(observationsValues);
@@ -243,9 +270,9 @@ $(document).ready(function () {
             "AVPU",
             "NEWS Score"
         ];
-        
+
         var observationHeaders = document.createElement("div");
-        observationHeaders.className = "col s4 observation-headers";
+        observationHeaders.className = "col s5 observation-headers";
 
         $.each(headings, function () {
             var observationProperty = document.createElement("div");
@@ -504,6 +531,8 @@ $(document).ready(function () {
                     episode.observations = data;
                 }
                 FormAPI.data.populate(data, "observations");
+
+                displayAllObservations();
             });
 
             $.getJSON(episodeUrl + "/examinations", function (data) {
@@ -755,6 +784,13 @@ $(document).ready(function () {
                                 return false;
                             }
                         });
+                    } else if ($(relatedField[0]).hasClass("datepicker")) {
+                        // Datepicker treats the field as text therefore we need to handle it outside the generic field handler
+                        $.each(relatedField, function () {
+                            var formattedDate = data[attribute].substring(0, 10);
+
+                            this.value = formattedDate;
+                        });
                     } else {
                         $.each(relatedField, function () {
                             FormAPI.data.populateField(this, data[attribute]);
@@ -768,6 +804,8 @@ $(document).ready(function () {
             }
         }
 
+        // Update the various form elements
+        FormAPI.tabs.updateCompletion();
         Materialize.updateTextFields();
     }
 
@@ -778,7 +816,7 @@ $(document).ready(function () {
                     picker = dataInput.packadate("picker"),
                     formattedDate = moment(value).format("YYYY-MM-DD");
 
-                picker.set("select", formattedDate, { format: "yyyy-mm-dd" });
+                picker.set("select", formattedDate.substring(0, 10), { format: "yyyy-mm-dd" });
 
                 break;
             case "checkbox":
@@ -832,14 +870,35 @@ $(document).ready(function () {
         $("#" + elementId + " > tbody:last-child").append(row);
     }
 
+    FormAPI.data.clearAll = function () {
+        $.each($("form"), function () {
+            this.reset();
+        });
+
+        $.each($("img.drawing-image"), function () {
+            this.src = this.dataset.originalSrc;
+        });
+
+        // Change these for tab dependent unloads
+        $("#observations-results").empty();
+        //$("#current_medication_table").empty();
+
+        episode = {};
+        FormAPI.tabs.clearTabProgress();
+        Materialize.updateTextFields();
+    }
+
     FormAPI.tabs = {};
 
     FormAPI.tabs.currentTab = "patient";
 
-    FormAPI.tabs.checkComplete = function () {
-        var tab = FormAPI.tabs.getCurrentTab();
-        if (tab) {
-            completedSection = true;
+    FormAPI.tabs.checkComplete = function (tab) {
+        if (!tab) {
+            tab = FormAPI.tabs.getCurrentTab();
+        }
+
+        if (tab && tab.completedAttributes) {
+            var completedSection = true;
             $.each(tab.completedAttributes, function () {
                 if (!episode[this]) {
                     completedSection = false;
@@ -849,30 +908,30 @@ $(document).ready(function () {
 
             return completedSection;
         }
-
         return false;
     }
 
     FormAPI.tabs.updateCompletion = function () {
-        if (FormAPI.tabs.checkComplete()) {
-            $("#" + FormAPI.tabs.currentTab + "-tab")
-                .removeClass("tab-in-progress")
-                .addClass("tab-completed");
-        } else {
-            var valuesSet = false,
-                tab = FormAPI.tabs.getCurrentTab();
+        $.each(TABS, function () {
+            if (FormAPI.tabs.checkComplete(this)) {
+                $("#" + this.name + "-tab")
+                    .removeClass("tab-in-progress")
+                    .addClass("tab-completed");
+            } else if (this.completedAttributes) {
+                var valuesSet = false;
 
-            $.each(tab.completedAttributes, function () {
-                if (episode[this]) {
-                    valuesSet = true;
-                    return false;
+                $.each(this.completedAttributes, function () {
+                    if (episode[this]) {
+                        valuesSet = true;
+                        return false;
+                    }
+                });
+
+                if (valuesSet) {
+                    $("#" + this.name + "-tab").addClass("tab-in-progress");
                 }
-            });
-
-            if (valuesSet) {
-                $("#" + FormAPI.tabs.currentTab + "-tab").addClass("tab-in-progress");
             }
-        }
+        });
     }
 
     FormAPI.tabs.getCurrentTab = function () {
@@ -916,6 +975,12 @@ $(document).ready(function () {
         } else {
             console.error("Tab is not set.");
         }
+    }
+
+    FormAPI.tabs.clearTabProgress = function () {
+        $(".tab")
+            .removeClass("tab-in-progress")
+            .removeClass("tab-completed");
     }
 
     FormAPI.handwriting = {};
