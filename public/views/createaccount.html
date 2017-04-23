@@ -1,0 +1,56 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+    <meta name="author" content="Harrison South">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" />
+    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="styles/home.css" />
+</head>
+
+<body>
+    <header>
+        <nav class="light-blue">
+            <div class="wrapper">
+                <a href="#" class="brand-logo">Clinicbook</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="/viewsummary">View Patient</a></li>
+                    <li><a href="/logout">Sign Out</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <form action="/createaccount" method="POST">
+            <div class="row">
+                <div class="col s12 input-field">
+                    <label for="firstname">First Name</label>
+                    <input type="text" name="firstname" id="firstname" autocomplete="nope">
+                </div>
+                <div class="col s12 input-field">
+                    <label for="surname">Surname</label>
+                    <input type="text" name="surname" id="surname" autocomplete="nope">
+                </div>
+                <div class="col s12 input-field">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" autocomplete="nope">
+                </div>
+                <div class="col s12 input-field">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" autocomplete="new-password">
+                </div>
+            </div>
+            <div class="col s12">
+                <button type="submit" id="create-account" class="btn waves-effect waves-light center-align">Log In</button>
+            </div>
+        </form>
+    </main>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+</body>
+
+</html>

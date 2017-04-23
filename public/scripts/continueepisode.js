@@ -212,12 +212,18 @@ $(document).ready(function () {
     }
 
     displayObservations = function (observations) {
+        // If there are no observations currently, populate the headings
+        if ($("#observations-results").children().length === 0) {
+            displayObservationHeaders();
+        }
+
         var observationsValues = document.createElement("div");
-        observationsValues.className = "col s2";
+        observationsValues.className = "col s1";
 
         for (var attribute in observations) {
             if (observations.hasOwnProperty(attribute)) {
                 var observationProperty = document.createElement("div");
+                observationProperty.className = "observation-result-element";
                 observationProperty.innerHTML = observations[attribute];
 
                 observationsValues.appendChild(observationProperty);
@@ -225,6 +231,31 @@ $(document).ready(function () {
         }
 
         document.getElementById("observations-results").appendChild(observationsValues);
+    }
+
+    displayObservationHeaders = function () {
+        var headings = [
+            "BP Systolic",
+            "BP Diastolic",
+            "Pulse",
+            "Temperature",
+            "Respiratory Rate",
+            "AVPU",
+            "NEWS Score"
+        ];
+        
+        var observationHeaders = document.createElement("div");
+        observationHeaders.className = "col s4 observation-headers";
+
+        $.each(headings, function () {
+            var observationProperty = document.createElement("div");
+            observationProperty.className = "observation-result-element";
+            observationProperty.innerHTML = this;
+
+            observationHeaders.appendChild(observationProperty);
+        });
+
+        document.getElementById("observations-results").appendChild(observationHeaders);
     }
 
     addExamination = function () {

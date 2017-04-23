@@ -19,6 +19,9 @@ module.exports = function (app, passport) {
             res.sendFile(appDir + "/public/views/index.html");
         }
     });
+    app.get("/create", isAuthenticated, function (req, res) {
+        res.sendFile(appDir + "/public/views/createaccount.html");
+    });
 
     app.post("/drawing", isLoggedIn, function (req, res) {
         var image = req.body.drawing,

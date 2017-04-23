@@ -369,6 +369,9 @@
         },
         "gastro_diagram": {
             "type": "t"
+        },
+        "other_diagram": {
+            "type": "t"
         }
     },
     "blood_results": {}

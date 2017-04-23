@@ -78,6 +78,15 @@ nav {
 
 }
 
+.observation-result-element {
+  padding: 20px;
+  font-size: 24px;
+}
+
+.observation-headers {
+  text-overflow: ellipsis;
+}
+
 .textarea-btn {
   position: absolute;
   right: 0;
