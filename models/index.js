@@ -30,15 +30,23 @@ models.validateFields = function (data, dataModel) {
             if (dataAttribute) {
                 var validField = false;
                 switch (dataModel[attribute].type) {
+                    // Integer
                     case "i":
                         validField = models.validateInteger(dataModel[attribute], parseInt(dataAttribute));
                         break;
+                    // Text
                     case "t":
                         validField = true;
                         break;
+                    // Date
                     case "d":
                         validField = models.validateDate(dataModel[attribute], dataAttribute);
                         break;
+                    // Decimal
+                    case "de":
+                        validField = models.validateDecimal(dataModel[attribute], models.filterFloat(dataAttribute));
+                        break;
+                    // Time
                     case "ti":
                         validField = true;
                         break;
@@ -57,6 +65,36 @@ models.validateFields = function (data, dataModel) {
     }
 
     return { status: true };
+}
+
+models.validateDecimal = function (modelAttribute, dataAttribute) {
+    if (dataAttribute !== NaN) {
+        if (modelAttribute.maxIntLength && dataAttribute.toString().split(".").length > modelAttribute.maxIntLength) {
+            return false;
+        }
+
+        if (modelAttribute.minIntLength && dataAttribute.toString().split(".").length < modelAttribute.minIntLength) {
+            return false;
+        }
+
+        if (modelAttribute.minDecLength && dataAttribute.toString().split(".").length < modelAttribute.minDecLength) {
+            return false;
+        }
+        if (modelAttribute.maxDecLength && dataAttribute.toString().split(".").length > modelAttribute.maxDecLength) {
+            return false;
+        }
+
+        if (modelAttribute.range) {
+            var values = modelAttribute.range.split("-").map(function (d) { return models.filterFloat(d); });
+            if (dataAttribute < values[0] || dataAttribute > values[1]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    return false;
 }
 
 models.validateInteger = function (modelAttribute, dataAttribute) {
@@ -135,6 +173,13 @@ models.trimObject = function (data, dataModel) {
     }
 
     return returnedObject;
+}
+
+models.filterFloat = function (value) {
+    if (/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/
+        .test(value))
+        return Number(value);
+    return NaN;
 }
 
 module.exports = models;

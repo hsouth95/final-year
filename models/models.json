@@ -380,5 +380,40 @@
             "type": "t"
         }
     },
-    "blood_results": {}
+    "blood_results": {
+        "blood_results_id": {
+            "type": "t"
+        },
+        "episode_id": {
+            "type": "i",
+            "maxLength": 9,
+            "requiredCreation": true
+        },
+        "date": {
+            "type": "d"
+        },
+        "hb": {
+            "type": "i",
+            "maxLength": 3,
+            "minLength": 2
+        },
+        "platelets": {
+            "type": "i",
+            "maxLength": 3,
+            "minLength": 2
+        },
+        "mcv": {
+            "type": "i",
+            "maxLength": 3,
+            "minLength": 2
+        },
+        "wbc": {
+            "type": "de",
+            "maxIntLength": 2
+        },
+        "neutrophils": {
+            "type": "de",
+            "maxIntLength": 2
+        }
+    }
 }

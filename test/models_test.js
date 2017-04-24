@@ -43,14 +43,24 @@ describe("models.validate", function () {
                 arg3: {
                     type: "t",
                     requiredCreation: true
+                },
+                arg4: {
+                    type: "de",
+                    minIntLength: 2,
+                    maxIntLength: 4,
+                    minDecLength: 2,
+                    maxDecLength: 3,
+                    range: "95.0-1050.555"
                 }
             }
         };
+
         validData = {
             id: 1,
             arg1: 200,
             arg2: "2017-03-28",
-            arg3: "This is a test"
+            arg3: "This is a test",
+            arg4: 150.555
         };
 
         fs.readFile = sinon.stub().callsFake(function (arg1, arg2, callback) {
@@ -193,4 +203,124 @@ describe("models.validate", function () {
                 done();
             });
     });
+
+    it("should return an error on a text value in a decimal format", function (done) {
+        validData.arg4 = "wrongvalue";
+
+        models.validate("test", validData, function (message) {
+            done();
+        },
+            function (data) {
+                assert.fail("Expected a error, got a successful response");
+                done();
+            });
+    });
+
+    it("should return an error on a out of minIntLength decimal", function (done) {
+        validData.arg4 = 1;
+
+        models.validate("test", validData, function (message) {
+            done();
+        },
+            function (data) {
+                assert.fail("Expected a error, got a successful response");
+                done();
+            });
+    });
+
+    it("should return an error on a out of maxIntLength decimal", function (done) {
+        validData.arg1 = 9999999;
+
+        models.validate("test", validData, function (message) {
+            done();
+        },
+            function (data) {
+                assert.fail("Expected a error, got a successful response");
+                done();
+            });
+    });
+
+    it("should return an error on a out of minDecLength decimal", function (done) {
+        validData.arg4 = 5;
+
+        models.validate("test", validData, function (message) {
+            done();
+        },
+            function (data) {
+                assert.fail("Expected a error, got a successful response");
+                done();
+            });
+    });
+
+    it("should return an error on a out of maxDecLength decimal", function (done) {
+        validData.arg1 = 9999999;
+
+        models.validate("test", validData, function (message) {
+            done();
+        },
+            function (data) {
+                assert.fail("Expected a error, got a successful response");
+                done();
+            });
+    });
+
+    it("should return an error on a out of lower range decimal", function (done) {
+        validData.arg1 = 94.99;
+
+        models.validate("test", validData, function (message) {
+            done();
+        },
+            function (data) {
+                assert.fail("Expected a error, got a successful response");
+                done();
+            });
+    });
+    it("should return an error on an out of upper range decimal", function (done) {
+        validData.arg1 = 1050.556;
+
+        models.validate("test", validData, function (message) {
+            done();
+        },
+            function (data) {
+                assert.fail("Expected a error, got a successful response");
+                done();
+            });
+    });
+
+    it("should succeed on an lower range decimal value", function (done) {
+        validData.arg1 = 95.0;
+
+        models.validate("test", validData, function (message) {
+            assert.fail(message);
+            done();
+        },
+            function (data) {
+                done();
+            });
+    });
+
+    it("should succeed on a on upper range decimal value", function (done) {
+        validData.arg1 = 1050.555;
+
+        models.validate("test", validData, function (message) {
+            assert.fail(message);
+            done();
+        },
+            function (data) {
+                done();
+            });
+    });
+
+    it("should succeed on an integer value in a decimal field", function (done) {
+        validData.arg1 = 1000;
+
+        models.validate("test", validData, function (message) {
+            assert.fail(message);
+            done();
+        },
+            function (data) {
+                done();
+            });
+    });
+
 });
