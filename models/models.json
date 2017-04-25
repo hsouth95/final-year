@@ -349,9 +349,6 @@
             "maxLength": 1,
             "range": "0-1"
         },
-        "pulse": {
-            "type": "i"
-        },
         "SOA": {
             "type": "i",
             "minLength": 1,
@@ -359,16 +356,27 @@
             "range": "0-1"
         },
         "bp_systolic": {
-            "type": "i"
+            "type": "i",
+            "maxLength": 3
         },
         "bp_diastolic": {
-            "type": "i"
+            "type": "i",
+            "maxLength": 3
         },
-        "respiratory_rate_min": {
-            "type": "i"
+        "pulse": {
+            "type": "i",
+            "requiredCreation": false,
+            "maxLength": 3
+        },
+        "respiratory_rate": {
+            "type": "i",
+            "requiredCreation": false,
+            "maxLength": 2
         },
         "respiratory_sats": {
-            "type": "i"
+            "type": "i",
+            "maxLength": 3,
+            "range": "0-100"
         },
         "respiratory_diagram": {
             "type": "t"
@@ -377,6 +385,12 @@
             "type": "t"
         },
         "other_diagram": {
+            "type": "t"
+        },
+        "heart_sound_diagram": {
+            "type": "t"
+        },
+        "neuro": {
             "type": "t"
         }
     },

@@ -130,19 +130,57 @@
   <hr />
 
   <div class="row">
-    <h4>Diagrams</h4>
-    <h5>Click to draw on diagrams</h5>
+    <div class="col s6">
+      <h4>Cardiovascular</h4>
+      <div class="input-field inline">
+        <label for="examinations-pulse">Pulse</label>
+        <input type="number" id="examinations-pulse" data-entity="examination" data-field="pulse">
+      </div>
+      <div class="input-field inline">
+        <label for="examinations-bp-systolic">BP Systolic</label>
+        <input type="number" id="examinations-bp-systolic" data-entity="examination" data-field="bp_systolic">
+      </div>
+      <div class="input-field inline">
+        <label for="examinations-bp-diastolic">BP Diastolic</label>
+        <input type="number" id="examinations-bp-diastolic" data-entity="examination" data-field="bp_diastolic">
+      </div>
+      <div class="input-field">
+        <select id="soa" data-entity="examination" data-field="SOA" class="browser-default" disabled>
+          <option value="" selected>SOA</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+      <img class="drawing-image" src="images/heart-sounds.PNG" data-original-src="images/heart-sounds.png" id="heart-sounds-drawing"
+        data-entity="examination" data-field="heart_sound_diagram">
+    </div>
     <div class="col s6">
       <h4>Respiratory</h4>
+      <div class="input-field inline">
+        <label for="examinations-respiratory-rate">Respiratory Rate/min</label>
+        <input type="number" id="examinations-respiratory-rate" data-entity="examination" data-field="respiratory_rate_min">
+      </div>
+      <div class="input-field inline">
+        <label for="examinations-respiratory-sats">Sats %</label>
+        <input type="number" id="examinations-respiratory-sats" data-entity="examination" data-field="respiratory_sats">
+      </div>
       <img class="drawing-image" src="images/lungs.PNG" data-original-src="images/lungs.PNG" id="lungs-drawing" data-entity="examination"
         data-field="respiratory_diagram">
     </div>
+  </div>
+
+  <div class="row">
     <div class="col s6">
-      <h4>Abdo</h4>
+      <h4>Gastro</h4>
       <img class="drawing-image" src="images/Gastro.PNG" data-original-src="images/gastro.png" id="gastro-drawing" data-entity="examination"
         data-field="gastro_diagram">
     </div>
-
+    <div class="col s6">
+      <h4>Neuro</h4>
+      <i class="material-icons textarea-btn right">mode_edit</i>
+      <label for="neuro">Neuro</label>
+      <textarea id="neuro" data-entity="examination" data-field="neuro" class="materialize-textarea"></textarea>
+    </div>
   </div>
   <div class="row">
     <div class="col s12">
