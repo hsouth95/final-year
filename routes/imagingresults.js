@@ -16,14 +16,21 @@ routes.get("/", function (req, res) {
     })
 });
 
-// routes.get("/:imagingResultId", function (req, res) {
-//     var imagingResultId = req.params.imagingResultId;
-//     db.query("SELECT * FROM urine_results WHERE imaging_results_id = ?", [imagingResultId], function (err, results) {
-//         if (err) throw err;
+routes.get("/:imagingResultId", function (req, res) {
+    var imagingResultId = req.params.imagingResultId;
 
-//         res.json(results);
-//     });
-// });
+    db.getById({
+        tableName: "imaging_results",
+        attributeName: "imaging_results_id",
+        id: imagingResultId,
+        error: function (err) {
+            res.status(400).send(err.message);
+        },
+        success: function (data) {
+            res.json(data);
+        }
+    });
+});
 
 routes.post("/", function (req, res) {
     var episodeId = req.params.episodeId,

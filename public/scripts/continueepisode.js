@@ -4,6 +4,15 @@ $(document).ready(function () {
         location.origin = location.protocol + "//" + location.host;
     }
 
+    /**
+     * An array of the different tabs with values.
+     * @member name - The name of the tab - this needs to match the prefix of the id of the tab and corresponding form:
+     * e.g. name: history = <li id="history-tab">
+     * @member url - The URL of the form html
+     * @member loaded - Boolean flag to indicate if the tab has been loaded yet
+     * @member onload - The function to be run once the tab HTML is loaded, the event handlers for buttons and other such elements should be set here
+     * @member completedAttributes - An array of all the data attributes that need to be set on the episode before this tab can be seen as completed
+     */
     var TABS = [
         {
             name: "patient",
@@ -60,7 +69,7 @@ $(document).ready(function () {
                 $("#add-history").click(addHistory);
                 $("select").material_select();
 
-                setupHandwritingButtons();
+                FormAPI.handwriting.setupHandwritingButtons();
             },
             completedAttributes: [
                 "history_id"
@@ -76,8 +85,8 @@ $(document).ready(function () {
                     selectYears: 200
                 });
                 $("select").material_select();
-                $("#add-medication").click(addMedication);
-                populateDrugs();
+                $("#add-medication").click(addCurrentMedication);
+                populateDrugs("current_medication_table");
             },
             completedAttributes: [
                 "current_medications"
@@ -90,8 +99,15 @@ $(document).ready(function () {
             onload: function () {
                 $("select").material_select();
 
-                populateDrugs();
-            }
+                $("#add-drugtreatment").click(addDrugTreatment);
+                $("#add-treatment").click(addTreatment);
+
+                populateDrugs("drug-treatment-table");
+            },
+            completedAttributes: [
+                "drug_treatments",
+                "treatment_id"
+            ]
         },
         {
             name: "results",
@@ -131,6 +147,9 @@ $(document).ready(function () {
         episode = {},
         selectedPatient = null;
 
+    /**
+     * Creates the query to find the patient and opens the selective modal
+     */
     findPatient = function () {
         var patientNumber = $("#patient_number").val();
 
@@ -140,6 +159,9 @@ $(document).ready(function () {
         fillPatientModal(patientNumber);
     }
 
+    /**
+     * Creates the query to find the GP and opens the selective modal
+     */
     findGP = function () {
         var firstName = $("#gp_firstname").val(),
             surname = $("#gp_surname").val(),
@@ -155,6 +177,10 @@ $(document).ready(function () {
         fillGPModal($.param(params));
     }
 
+    /**
+     * Creates a modal with all the patient's that fulfill the criteria set by the user
+     * @argument patientNumber - The value entered by the user
+     */
     fillPatientModal = function (patientNumber) {
         FormAPI.modals.buildSelectionModal({
             dataUrl: location.origin + "/patients/" + patientNumber,
@@ -168,7 +194,9 @@ $(document).ready(function () {
                 episode.patient = data;
                 episode.patient_id = data.patient_id;
 
-                FormAPI.tabs.updateCompletion();
+                FormAPI.actionBar.updatePatient(data.firstname + " " + data.surname);
+
+                FormAPI.data.updateEpisodeProgress();
 
                 populateEpisodes(data.patient_id);
                 setCachedEpisode(data.patient_id);
@@ -178,6 +206,10 @@ $(document).ready(function () {
         FormAPI.modals.openSelectionModal();
     }
 
+    /**
+     * Creates a modal with all the GP's that fulfill the criteria set by the user
+     * @argument query - Query based on the fields filled out
+     */
     fillGPModal = function (query) {
         FormAPI.modals.buildSelectionModal({
             dataUrl: location.origin + "/gp?" + query,
@@ -189,17 +221,21 @@ $(document).ready(function () {
                 FormAPI.data.populate(data, "gp");
                 episode.gp = data;
                 episode.gp_id = data.gp_id;
-                FormAPI.tabs.updateCompletion();
+                FormAPI.data.updateEpisodeProgress();
             }
         });
 
         FormAPI.modals.openSelectionModal();
     }
 
+    /**
+     * Handles the adding of a set of observations
+     */
     addObservations = function () {
         var observations = FormAPI.data.getDataFromForm("observations"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/observations";
         $.post(url, observations, function (data) {
+            // Can have multiple sets of observations, therefore, store as an array
             if (!episode.observations) {
                 episode.observations = [];
             }
@@ -207,24 +243,32 @@ $(document).ready(function () {
             displayObservations(observations);
 
             episode.observations.push(data.observation_id);
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
             $("input[data-entity=observations]").val("");
         }).fail(function (err) {
             FormAPI.error.showErrorDialog(err.message);
         });
     }
 
+    /**
+     * Displays all observations that belong to this clinical episode
+     */
     displayAllObservations = function () {
         if (episode.observations && episode.observations.length >= 1) {
             $.each(episode.observations, function () {
                 displayObservations(this);
             });
 
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
         }
     }
 
+    /**
+     * Displays the observation values after they have been added
+     * @argument observations - The observations values
+     */
     displayObservations = function (observations) {
+        // The fields added in the order they should appear vertically
         var fields = [
             "bp_systolic",
             "bp_diastolic",
@@ -260,7 +304,11 @@ $(document).ready(function () {
         document.getElementById("observations-results").appendChild(observationsValues);
     }
 
+    /**
+     * Displays the observation value titles to indicate which each value is after they have been added
+     */
     displayObservationHeaders = function () {
+        // The headings in the order they should appear
         var headings = [
             "BP Systolic",
             "BP Diastolic",
@@ -285,6 +333,9 @@ $(document).ready(function () {
         document.getElementById("observations-results").appendChild(observationHeaders);
     }
 
+    /**
+     * Handles the adding of the examinations to the database
+     */
     addExamination = function () {
         var examinations = FormAPI.data.getDataFromForm("examination"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/examinations";
@@ -299,26 +350,32 @@ $(document).ready(function () {
 
         $.post(url, examinations, function (data) {
             episode.examination_id = data.examination_id;
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
             $("input[data-entity=examination]").prop("disabled", true);
         }).fail(function (err) {
             FormAPI.error.showErrorDialog(err.message);
         });
     }
 
+    /**
+     * Handles the adding of the history to the database
+     */
     addHistory = function () {
         var history = FormAPI.data.getDataFromForm("history"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/history";
 
         $.post(url, history, function (data) {
             episode.history_id = data.history_id;
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
         }).fail(function (err) {
             FormAPI.error.showErrorDialog(err.message);
         });
     }
 
-    addMedication = function () {
+    /**
+     * Handles the adding of the current medication to the database
+     */
+    addCurrentMedication = function () {
         var medicationData = FormAPI.data.getDataFromForm("current_medication"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/currentmedication";
 
@@ -328,9 +385,9 @@ $(document).ready(function () {
             }
             episode.current_medications.push(medicationData.medication_id);
 
-            var drugName = $("#drug-name").val(),
-                dose = $("#dose").val(),
-                route = $("#route").val(),
+            var drugName = $("#current_medication_table #drug-name").val(),
+                dose = $("#current_medication_table #dose").val(),
+                route = $("#current_medication_table #route").val(),
                 currentMedicationToAdd = [];
 
             currentMedicationToAdd.push(drugName);
@@ -343,64 +400,129 @@ $(document).ready(function () {
 
             $("#current_medication_table input").val("");
 
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
         }).fail(function (err) {
             FormAPI.error.showErrorDialog(err.message);
         });
     }
 
+    /**
+     * Handles the adding of a selected medication to the patients drug treatment list
+     */
+    addDrugTreatment = function () {
+        var drugTreatmentData = FormAPI.data.getDataFromForm("drug_treatment"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/drugtreatment";
+
+        $.post(url, drugTreatmentData, function (data) {
+            if (episode && !episode.drugtreatments) {
+                episode.drug_treatments = [];
+            }
+            episode.drug_treatments.push(drugTreatmentData.medication_id);
+
+            var drugName = $("#drug-treatment-table #drug-name").val(),
+                dose = $("#drug-treatment-table #dose").val(),
+                route = $("#drug-treatment-table #route").val(),
+                drugTreatmentToAdd = [];
+
+            // Add all the information in order it should appear to the user
+            drugTreatmentToAdd.push(drugName);
+            drugTreatmentToAdd.push(dose);
+            drugTreatmentToAdd.push(route);
+            drugTreatmentToAdd.push(drugTreatmentData.frequency);
+            drugTreatmentToAdd.push(drugTreatmentData.details);
+
+            FormAPI.data.addTableRow("drug-treatment-table", drugTreatmentToAdd);
+
+            $("#drug-treatment-table input").val("");
+
+            FormAPI.data.updateEpisodeProgress();
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog(err.message);
+        });
+    }
+
+    /**
+     * Handles the adding of the treatment information
+     */
+    addTreatment = function () {
+        var treatment = FormAPI.data.getDataFromForm("treatment"),
+            url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/treatment";
+
+        $.post(url, treatment, function (data) {
+            episode.treatment_id = data.treatment_id;
+            FormAPI.data.updateEpisodeProgress();
+        }).fail(function (err) {
+            FormAPI.error.showErrorDialog(err.message);
+        });
+    }
+
+    /**
+     * Handles the adding of the blood results to the database
+     */
     addBloodResults = function () {
         var bloodResults = FormAPI.data.getDataFromForm("blood_results"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/bloodresults";
 
         $.post(url, bloodResults, function (data) {
             episode.blood_results_id = data.blood_results_id;
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
             $("input[data-entity=blood_results]").prop("disabled", true);
         }).fail(function (err) {
             FormAPI.error.showErrorDialog(err.message);
         });
     }
 
+    /**
+     * Handles the adding of the urine results to the database
+     */
     addUrineResults = function () {
         var urineResults = FormAPI.data.getDataFromForm("urine_results"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/urineresults";
 
         $.post(url, urineResults, function (data) {
             episode.urine_results_id = data.urine_results_id;
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
             $("input[data-entity=urine_results]").prop("disabled", true);
         }).fail(function (err) {
             FormAPI.error.showErrorDialog("Error submitting Urine Results");
         });
     }
 
+    /**
+     * Handles the adding of the imaging results to the database
+     */
     addImagingResults = function () {
         var imagingResults = FormAPI.data.getDataFromForm("imaging_results"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/imagingresults";
 
         $.post(url, imagingResults, function (data) {
             episode.imaging_results_id = data.imaging_results_id;
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
             $("input[data-entity=imaging_results]").prop("disabled", true);
         }).fail(function (err) {
             FormAPI.error.showErrorDialog("Error submitting Urine Results");
         });
     }
 
+    /**
+     * Handles the adding of the diagnosis values to the database
+     */
     addDiagnosis = function () {
         var diagnosis = FormAPI.data.getDataFromForm("problem_list"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/problemlist";
 
         $.post(url, diagnosis, function (data) {
             episode.problem_list_id = data.problem_list_id;
-            FormAPI.tabs.updateCompletion();
+            FormAPI.data.updateEpisodeProgress();
             $("input[data-entity=problem_list]").prop("disabled", true);
         }).fail(function (err) {
             FormAPI.error.showErrorDialog("Error submitting Urine Results");
         });
     }
 
+    /**
+     * Loads the HTML of a form
+     */
     getFormHtml = function (url) {
         return $.get(url)
             .fail(function (err) {
@@ -408,17 +530,23 @@ $(document).ready(function () {
             });
     };
 
+    /**
+     * Completes the episode to show that this clinical episode has concluded
+     */
     completeEpisode = function () {
         if (episode) {
             $.post(location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/complete", function () {
                 alertify.success("Episode successfully completed.");
-                $("form input").val("");
+                FormAPI.data.clearAll();
             }).fail(function (err) {
                 console.log(err);
             });
         }
     }
 
+    /**
+     * Populates the hospitals on the patient tab
+     */
     populateHospitals = function () {
         $.getJSON(location.origin + "/hospitals", function (data) {
             HOSPITALS = data;
@@ -427,7 +555,7 @@ $(document).ready(function () {
                 onAutocomplete: function (val) {
                     var selectedHospital = $.grep(HOSPITALS, function (e) { return e.name === val });
                     episode.hospital_id = selectedHospital[0].hospital_id;
-                    FormAPI.tabs.updateCompletion();
+                    FormAPI.data.updateEpisodeProgress();
                 }
             });
         }).fail(function () {
@@ -435,20 +563,25 @@ $(document).ready(function () {
         });
     };
 
-    populateDrugs = function () {
+    /**
+     * Populates the drugs table on the medication tab
+     * @argument 
+     */
+    populateDrugs = function (tableId) {
         $.getJSON(location.origin + "/medication").done(function (data) {
             var drugData = convertJSONArrayToAutocomplete(data, "name");
-            $("input#drug-name").autocomplete({
+            $("#" + tableId + " input#drug-name").autocomplete({
                 data: drugData,
                 onAutocomplete: function (val) {
                     var medication = $.grep(data, function (e) {
                         return e.name === val;
                     });
 
+                    // Populate the table with the values selected e.g. 500mg on selecting Paracetamol
                     if (medication) {
-                        $("#drug-id").val(medication[0].medication_id);
-                        $("#route").val(medication[0].route);
-                        $("#dose").val(medication[0].dose);
+                        $("#" + tableId + " #drug-id").val(medication[0].medication_id);
+                        $("#" + tableId + " #route").val(medication[0].route);
+                        $("#" + tableId + " #dose").val(medication[0].dose);
                     }
                 }
             });
@@ -457,6 +590,9 @@ $(document).ready(function () {
         })
     };
 
+    /**
+     * Populates the list of diagnosis' on the results tab
+     */
     populateDiagnosis = function () {
         $.getJSON(location.origin + "/diagnosis").done(function (data) {
             var diagnosisData = convertJSONArrayToAutocomplete(data, "name");
@@ -471,17 +607,25 @@ $(document).ready(function () {
         });
     }
 
+    /**
+     * Retrieves and populates both the previous and current episode of a patient
+     * @argument patientId - The ID of the patient to find the episodes for
+     */
     populateEpisodes = function (patientId) {
+        $("previous-episodes").empty();
         $.getJSON(location.origin + "/patients/" + patientId + "/episodes", function (data) {
+            // Check the most recent episode to see if it is still in progress
+            var episodeContainer = document.getElementById("previous-episodes");
+
             if (data && data.length > 0) {
                 if (!data[data.length - 1].completed) {
                     populateCurrentEpisode(data[data.length - 1]);
                 }
 
-                var episodeContainer = document.getElementById("previous-episodes");
+                // For the rest of the episodes append them into the collection on the form
                 $.each(data, function () {
                     if (this.completed) {
-                        var value = this.date.substring(0, 10) + " - " + this.reason_referral,
+                        var value = FormAPI.data.filterDate(this.date) + " - " + this.reason_referral,
                             valueContainer = document.createElement("a");
 
                         valueContainer.className = "collection-item";
@@ -499,6 +643,10 @@ $(document).ready(function () {
         });
     }
 
+    /**
+     * Populates all of the saved data when a currently in progress episode is found
+     * @argument currentEpisode - The episode that has been found
+     */
     populateCurrentEpisode = function (currentEpisode) {
         if (currentEpisode && currentEpisode.episode_id && currentEpisode.patient_id && currentEpisode.gp_id) {
 
@@ -516,7 +664,8 @@ $(document).ready(function () {
                 $("#hospital_name").val(hospital[0].name);
             }
 
-            FormAPI.tabs.updateCompletion();
+            FormAPI.actionBar.updateEpisode(FormAPI.data.filterDate(currentEpisode.date) + " - " + currentEpisode.reason_referral);
+            FormAPI.data.updateEpisodeProgress();
 
             var episodeUrl = location.origin + "/patients/" + currentEpisode.patient_id + "/episodes/" + currentEpisode.episode_id;
 
@@ -526,52 +675,45 @@ $(document).ready(function () {
                 FormAPI.data.populate(data, "gp");
             });
 
-            $.getJSON(episodeUrl + "/observations", function (data) {
-                if (data) {
-                    episode.observations = data;
-                }
-                FormAPI.data.populate(data, "observations");
-
+            // Observations has a unique vertical table therefore fire off its own function after populating fields
+            FormAPI.data.populateData(episodeUrl + "/observations", "observations", "observations", true, function () {
                 displayAllObservations();
             });
 
-            $.getJSON(episodeUrl + "/examinations", function (data) {
-                if (data) {
-                    episode.examination_id = data[0].examination_id;
-                }
+            // Below are simple input fields therefore treat generically
+            FormAPI.data.populateData(episodeUrl + "/examinations", "examination_id", "examination");
+            FormAPI.data.populateData(episodeUrl + "/history", "history_id", "history");
+            FormAPI.data.populateData(episodeUrl + "/bloodresults", "blood_results_id", "blood_results");
+            FormAPI.data.populateData(episodeUrl + "/urineresults", "urine_results_id", "urine_results");
+            FormAPI.data.populateData(episodeUrl + "/imagingresults", "imaging_results_id", "imaging_results");
+            FormAPI.data.populateData(episodeUrl + "/treatment", "treatment_id", "treatment");
+            FormAPI.data.populateData(episodeUrl + "/problemlist", "problem_list_id", "problem_list");
 
-                FormAPI.data.populate(data, "examination");
-            });
+            // Below are tables, therefore add to these to these tables
+            $.getJSON(episodeUrl + "/currentmedication", function (data) {
+                if (data && data.length >= 1) {
+                    episode.current_medications = data;
+                    addToMedicationTable(data, "current_medication_table");
 
-            $.getJSON(episodeUrl + "/history", function (data) {
-                if (data && data.length === 1) {
-                    episode.history_id = data[0].history_id;
-                    FormAPI.data.populate(data, "history");
-                }
-            });
-
-            $.getJSON(episodeUrl + "/bloodresults", function (data) {
-                if (data && data.length === 1) {
-                    episode.blood_results_id = data[0].blood_results_id;
-                    FormAPI.data.populate(data, "blood_results");
+                    FormAPI.data.updateEpisodeProgress();
                 }
             });
 
-            $.getJSON(episodeUrl + "/urineresults", function (data) {
-                if (data && data.length === 1) {
-                    episode.urine_results_id = data[0].urine_results_id;
-                    FormAPI.data.populate(data, "urine_results");
-                }
-            });
-            $.getJSON(episodeUrl + "/imagingresults", function (data) {
-                if (data && data.length === 1) {
-                    episode.imaging_results_id = data[0].imaging_results_id;
-                    FormAPI.data.populate(data, "imaging_results");
+            $.getJSON(episodeUrl + "/drugtreatment", function (data) {
+                if (data && data.length >= 1) {
+                    episode.drug_treatments = data;
+                    addToMedicationTable(data, "drug-treatment-table");
+
+                    FormAPI.data.updateEpisodeProgress();
                 }
             });
         }
     }
 
+    /**
+     * Due to the way that materializecss handles data for autocomplete a conversion is needed
+     * @see http://materializecss.com/forms.html#autocomplete
+     */
     convertJSONArrayToAutocomplete = function (data, attributeToConvert) {
         var convertedData = {};
 
@@ -585,23 +727,41 @@ $(document).ready(function () {
         return convertedData;
     }
 
-    setupHandwritingButtons = function () {
-        $(".textarea-btn").click(function () {
-            var inputField = $(this).parent().children("textarea");
+    /**
+     * Adds the medication data to a table in a specific order
+     * @argument data - The data to add to the table
+     * @argument elementId - The table being added to
+     */
+    addToMedicationTable = function (data, elementId) {
+        var orderedAttributes = [
+            "name",
+            "dose",
+            "route",
+            "frequency",
+            "details"
+        ];
 
-            if (inputField && inputField.length === 1) {
-                FormAPI.handwriting.openHandwritingFrame(inputField[0].id);
-            }
-        });
+        if (data && data.length >= 1) {
+            $.each(data, function () {
+                // Convert each medication object to an array for displaying
+                var convertedData = [];
+                for (var attribute in orderedAttributes) {
+                    var fieldName = orderedAttributes[attribute];
+                    if (this.hasOwnProperty(fieldName)) {
+                        convertedData.push(this[fieldName]);
+                    } else {
+                        convertedData.push("-");
+                    }
+                }
 
-        $("#handwriting-save").click(function () {
-            var value = document.querySelector("myscript-text-web").firstcandidate;
-            FormAPI.handwriting.recieveHandwritingValue(value);
-        });
-
-        $("#handwriting-back").click(function () { FormAPI.handwriting.closeHandwritingFrame(); });
+                FormAPI.data.addTableRow(elementId, convertedData)
+            });
+        }
     }
 
+    /**
+     * Creates the clinical episode in the database and removes the blocks on the forms
+     */
     startEpisode = function () {
         var source = $("#observations_source_referral").val(),
             reason = $("#observations_referral_reason").val();
@@ -632,24 +792,29 @@ $(document).ready(function () {
 
                 $("#start-episode").prop("disabled", true);
 
-                FormAPI.tabs.updateCompletion();
+                FormAPI.data.updateEpisodeProgress();
             }).fail(function () {
                 FormAPI.error.showErrorDialog("Failed to create the clinical episode, please try again.");
             });
     }
 
+    /**
+     * Checks the contents of the session storage and populates the patient/episode accordingly
+     */
     checkCachedEpisode = function () {
         if (sessionStorage.getItem("patientId")) {
             var patientUrl = location.origin + "/patients/" + sessionStorage.getItem("patientId");
 
             $.getJSON(patientUrl, function (data) {
-                if (data) {
+                if (data && data.length === 1) {
+                    data = data[0];
                     FormAPI.data.populate(data, "patient");
 
                     episode.patient = data;
                     episode.patient_id = data.patient_id;
 
-                    FormAPI.tabs.updateCompletion();
+                    FormAPI.actionBar.updatePatient(data.firstname + " " + data.surname);
+                    FormAPI.data.updateEpisodeProgress();
 
                     populateEpisodes(data.patient_id);
                 }
@@ -660,6 +825,9 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Store a unique identifier in the session storage which is deleted on browser close
+     */
     setCachedEpisode = function (patientId) {
         // TODO: replace with episode id and find relevant fields
         sessionStorage.setItem("patientId", patientId);
@@ -667,6 +835,12 @@ $(document).ready(function () {
 
     FormAPI.modals = {};
 
+    /**
+     * Builds a modal in which the user can select the required value e.g. select the patient
+     * @argument options - The options provided to the modal
+     * @argument options.dataValue - The unique identifier of the entities displayed e.g. patient_id
+     * @argument options.dataUrl - The GET url for retrieving the data
+     */
     FormAPI.modals.buildSelectionModal = function (options) {
         if (!options || !options.dataValue) {
             return;
@@ -717,13 +891,24 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Shows the modal
+     */
     FormAPI.modals.openSelectionModal = function () {
         $("#shared-modal").modal("open");
     }
 
+    /**
+     * Builds a selector of the selector modal for a given entity - each instance of the entity will call this method
+     * @argument header - The name of the value to use for the header of the select e.g. firstname
+     * @argument subtext - The subtext of the value to use in the selector e.g. surname
+     * @argument dataValue - The unique identifier for this instance of the entity e.g. patient_id
+     * @argument data - The data of this entity
+     */
     FormAPI.modals.buildSelector = function (header, subtext, dataValue, data) {
         var container = document.createElement("div");
         container.className = "modal-selector card-panel blue";
+
         container.dataset.id = data[dataValue];
         container.addEventListener("click", FormAPI.modals.select);
 
@@ -741,13 +926,20 @@ $(document).ready(function () {
         return container;
     }
 
+    /**
+     * Caches the data and indicates to the user their selection on the select modal
+     */
     FormAPI.modals.select = function () {
         $(".modal-selector").removeClass().addClass("modal-selector card-panel blue");
 
+        // Store the selected id on the modal for easy retrieval
         $(".modal-main").data("id", this.dataset.id);
         this.className = "modal-selector card-panel teal";
     }
 
+    /**
+     * Closes and empties the modal
+     */
     FormAPI.modals.closeModal = function () {
         $(".modal-main").empty();
         $(".modal-title").empty();
@@ -757,9 +949,15 @@ $(document).ready(function () {
 
     FormAPI.data = {};
 
+    /**
+     * Populates a Entity on the form
+     * @argument data - The date to populate the form with
+     * @argument entityName - The name of the entity being
+     */
     FormAPI.data.populate = function (data, entityName) {
         var selectedFields = FormAPI.data.getRelatedEntityFields(entityName);
 
+        // Check that there is not a mistake with the data
         if (data instanceof Array && data.length === 1) {
             data = data[0];
         } else if (data instanceof Array && data.length > 1) {
@@ -772,11 +970,12 @@ $(document).ready(function () {
                 var relatedField = $.grep(selectedFields, function (e) {
                     return e.dataset.field == attribute;
                 }),
-                    relatedImage = $.grep($("img"), function (e) {
+                    relatedImage = $.grep($("img.drawing-image"), function (e) {
                         return e.dataset.field == attribute;
                     });
 
                 if (relatedField && relatedField.length >= 1) {
+                    // For all radio buttons tick the one with the value stored
                     if (relatedField[0].type === "radio" && data[attribute] !== null) {
                         $.each(relatedField, function () {
                             if (parseInt(this.value) === data[attribute]) {
@@ -787,17 +986,19 @@ $(document).ready(function () {
                     } else if ($(relatedField[0]).hasClass("datepicker")) {
                         // Datepicker treats the field as text therefore we need to handle it outside the generic field handler
                         $.each(relatedField, function () {
-                            var formattedDate = data[attribute].substring(0, 10);
+                            var formattedDate = FormAPI.data.filterDate(data[attribute]);
 
                             this.value = formattedDate;
                         });
                     } else {
+                        // If none of the above types of fields populate the field normally
                         $.each(relatedField, function () {
                             FormAPI.data.populateField(this, data[attribute]);
                         });
                     }
                 } else if (relatedImage && relatedImage.length === 1) {
                     if (data[attribute]) {
+                        // Set the src of the image to what is stored in the drawings folder
                         relatedImage[0].src = "drawings/" + data[attribute];
                     }
                 }
@@ -805,10 +1006,15 @@ $(document).ready(function () {
         }
 
         // Update the various form elements
-        FormAPI.tabs.updateCompletion();
+        FormAPI.data.updateEpisodeProgress();
         Materialize.updateTextFields();
     }
 
+    /**
+     * Populates a given field based on the type of data it is
+     * @argument element - The element on the form being set
+     * @argument value - The value to set the element as
+     */
     FormAPI.data.populateField = function (element, value) {
         switch (element.type) {
             case "date":
@@ -816,7 +1022,7 @@ $(document).ready(function () {
                     picker = dataInput.packadate("picker"),
                     formattedDate = moment(value).format("YYYY-MM-DD");
 
-                picker.set("select", formattedDate.substring(0, 10), { format: "yyyy-mm-dd" });
+                picker.set("select", FormAPI.data.filterDate(formattedDate), { format: "yyyy-mm-dd" });
 
                 break;
             case "checkbox":
@@ -828,16 +1034,22 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Returns an object with all the data for a given entity
+     * @argument entityName - The name of the entity to retrieve data for
+     */
     FormAPI.data.getDataFromForm = function (entityName) {
         var selectedFields = FormAPI.data.getRelatedEntityFields(entityName),
             entityData = {};
 
         $.each(selectedFields, function () {
+            // Convert the data according to the type of values they are
             if (this.value) {
                 if (this.type === "checkbox") {
                     // Convert true/false to 1/0
                     entityData[this.dataset.field] = this.checked ? 1 : 0;
                 } else if (this.type === "radio") {
+                    // Get the first radio value for the set which is checked
                     entityData[this.dataset.field] = $("input[name=" + this.name + "]:checked").val();
                 } else {
                     entityData[this.dataset.field] = this.value;
@@ -848,6 +1060,11 @@ $(document).ready(function () {
         return entityData;
     }
 
+    /**
+     * Gets all input fields (select, textarea etc.) which are connected to the relevant entity
+     * @argument entityName - The name of the entity that the data is retrieved for. 
+     * This would be the value in the data-entity on the input field
+     */
     FormAPI.data.getRelatedEntityFields = function (entityName) {
         var comparorFunction = function (e) {
             return e.dataset.entity === entityName;
@@ -860,6 +1077,11 @@ $(document).ready(function () {
         return selectedFields;
     }
 
+    /**
+     * Adds a row in a table
+     * @argument elementId - The table which the row is added to
+     * @argument data - An array of the data points to add
+     */
     FormAPI.data.addTableRow = function (elementId, data) {
         var row = "<tr>";
         $.each(data, function () {
@@ -870,11 +1092,16 @@ $(document).ready(function () {
         $("#" + elementId + " > tbody:last-child").append(row);
     }
 
+    /**
+     * Clears all of the data on the application e.g. forms/tables etc
+     */
     FormAPI.data.clearAll = function () {
+        // Each tab is a form so reset all of these
         $.each($("form"), function () {
             this.reset();
         });
 
+        // Images which hold drawings are reset to their original images
         $.each($("img.drawing-image"), function () {
             this.src = this.dataset.originalSrc;
         });
@@ -884,14 +1111,61 @@ $(document).ready(function () {
         //$("#current_medication_table").empty();
 
         episode = {};
+
         FormAPI.tabs.clearTabProgress();
         Materialize.updateTextFields();
     }
 
+    /**
+     * Filters the date to fit the format of this application
+     * @argument dateValue - The value to format
+     */
+    FormAPI.data.filterDate = function (dateValue) {
+        return dateValue.substring(0, 10);
+    }
+
+    FormAPI.data.populateData = function (url, uniqueAttributeName, entityName, isMultiple, onLoad) {
+        if (url && uniqueAttributeName && entityName) {
+            // Default to false if not set
+            isMultiple = isMultiple || false;
+
+            $.getJSON(url, function (data) {
+                if (data && data.length >= 1) {
+                    if (isMultiple) {
+                        episode[uniqueAttributeName] = data;
+                    } else {
+                        episode[uniqueAttributeName] = data[0];
+                    }
+
+                    FormAPI.data.populate(data, entityName);
+
+                    if (onLoad && typeof onLoad === "function") {
+                        onLoad(data);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Updates the progress of the episode visually to the user
+     */
+    FormAPI.data.updateEpisodeProgress = function() {
+        FormAPI.tabs.updateCompletion();
+        FormAPI.actionBar.updateSubmitButton();
+    }
+
     FormAPI.tabs = {};
 
+    /**
+     * The name of the tag that the User is currently on
+     * Defaults to patient as that is the first tab loaded
+     */
     FormAPI.tabs.currentTab = "patient";
 
+    /**
+     * Checks if all the required completed attributes are set on a tab 
+     */
     FormAPI.tabs.checkComplete = function (tab) {
         if (!tab) {
             tab = FormAPI.tabs.getCurrentTab();
@@ -911,7 +1185,11 @@ $(document).ready(function () {
         return false;
     }
 
+    /**
+     * Updates the progress of the tabs to show which are in progress and which are completed
+     */
     FormAPI.tabs.updateCompletion = function () {
+        // Iterate through the different tabs and check their required completed attributes
         $.each(TABS, function () {
             if (FormAPI.tabs.checkComplete(this)) {
                 $("#" + this.name + "-tab")
@@ -920,6 +1198,7 @@ $(document).ready(function () {
             } else if (this.completedAttributes) {
                 var valuesSet = false;
 
+                // If any of the completed attributes are done then set the tab to in progress
                 $.each(this.completedAttributes, function () {
                     if (episode[this]) {
                         valuesSet = true;
@@ -934,7 +1213,11 @@ $(document).ready(function () {
         });
     }
 
+    /**
+     * Attempts to find the tab that is currently displayed to the User
+     */
     FormAPI.tabs.getCurrentTab = function () {
+        // Get all tabs with the same as the cached tab name
         var tabs = $.grep(TABS, function (e) {
             return e.name === FormAPI.tabs.currentTab;
         });
@@ -946,11 +1229,17 @@ $(document).ready(function () {
         return null;
     }
 
+
+    /**
+     * Event Handler to change the tab on click on said tab
+     */
     FormAPI.tabs.changeTab = function () {
         var tab = null,
             tabClicked = this;
 
+        // Iterates through the tabs until it finds the one being clicked on
         for (var i = 0; i < TABS.length; i++) {
+            // dataset.html contains the name of the tab
             if (tabClicked.dataset.html === TABS[i].name) {
                 tab = TABS[i];
                 tab.index = i;
@@ -965,6 +1254,7 @@ $(document).ready(function () {
                 getFormHtml(tab.url).done(function (data) {
                     $("#" + tabClicked.dataset.formId).append(data);
                     if (tab.onload) {
+                        // Timeout to ensure that jquery has time to update the HTML
                         setTimeout(tab.onload, 100);
                         TABS[tab.index].loaded = true;
                     }
@@ -973,19 +1263,84 @@ $(document).ready(function () {
 
             FormAPI.tabs.currentTab = tab.name;
         } else {
+            // If this is called, the tabs variable has an error in it
             console.error("Tab is not set.");
         }
     }
 
+    /**
+     * Removes all progress indication on the tabs
+     */
     FormAPI.tabs.clearTabProgress = function () {
         $(".tab")
             .removeClass("tab-in-progress")
             .removeClass("tab-completed");
     }
 
+    FormAPI.actionBar = {};
+
+    /**
+     * Updates the patients name in the action bar
+     * @argument patientName - The value to display
+     */
+    FormAPI.actionBar.updatePatient = function (patientName) {
+        if($("footer").hasClass("hidden")) {
+            $("footer").removeClass("hidden");
+        }
+        $("footer #footer-patient-name").html(patientName);
+    }
+
+    /**
+     * Updates the episode data in the action bar
+     * @argument episodeData - The value to display
+     */
+    FormAPI.actionBar.updateEpisode = function (episodeData) {
+        $("footer #footer-episode-info").html(episodeData);
+    }
+
+    /**
+     * Checks that all of the requirements for completing a clinical episode are fulfilled
+     */
+    FormAPI.actionBar.updateSubmitButton = function () {
+        if (episode.episode_id && episode.patient_id && episode.gp_id
+            && episode.history_id && episode.observations && episode.examination_id
+            && episode.treatment_id && episode.blood_results_id && episode.urine_results_id
+            && episode.imaging_results_id && episode.problem_list_id) {
+            $("#footer-action-submit").prop("disabled", false);
+        }
+    }
+
     FormAPI.handwriting = {};
+
+    /**
+     * Cached field so as to know what input field needs to be updated
+     */
     FormAPI.handwriting.currentInputField;
 
+    /**
+     * Sets up the textareas with handwriting capabilities
+     */
+    FormAPI.handwriting.setupHandwritingButtons = function () {
+        $(".textarea-btn").click(function () {
+            var inputField = $(this).parent().children("textarea");
+
+            if (inputField && inputField.length === 1) {
+                FormAPI.handwriting.openHandwritingFrame(inputField[0].id);
+            }
+        });
+
+        $("#handwriting-save").click(function () {
+            var value = document.querySelector("myscript-text-web").firstcandidate;
+            FormAPI.handwriting.recieveHandwritingValue(value);
+        });
+
+        $("#handwriting-back").click(function () { FormAPI.handwriting.closeHandwritingFrame(); });
+    }
+
+    /**
+     * Opens the full screen handwriting frame
+     * @argument inputFieldId - The text field that the handwriting value will fill
+     */
     FormAPI.handwriting.openHandwritingFrame = function (inputFieldId) {
         if (!FormAPI.handwriting.currentInputField) {
             $("#handwriting-frame").removeClass("hidden");
@@ -995,6 +1350,10 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Handles the value returned by the handwriting frame
+     * @argument val - The values returned
+     */
     FormAPI.handwriting.recieveHandwritingValue = function (val) {
         if (FormAPI.handwriting.currentInputField) {
             $("#" + FormAPI.handwriting.currentInputField).val(val);
@@ -1003,6 +1362,9 @@ $(document).ready(function () {
         }
     }
 
+    /**
+     * Closes the handwriting frame
+     */
     FormAPI.handwriting.closeHandwritingFrame = function () {
         $("#handwriting-frame").addClass("hidden");
         $("main").removeClass("hidden");
@@ -1012,11 +1374,16 @@ $(document).ready(function () {
 
     FormAPI.drawing = {};
 
+    /**
+     * Opens a full screen frame of which is used to allow the user to draw on an image
+     * @argument element - The image that was clicked on which is used to draw on
+     */
     FormAPI.drawing.openDrawingFrame = function (element) {
         // Click encapsulates the element with the currentTarget of the event
         var clickedElement = element.currentTarget,
             fileUrl = location.origin + "/drawing";
 
+        // drawingFrame is a global variable from the draw.js file
         if (drawingFrame) {
             drawingFrame.openFrame(clickedElement.src, function (data) {
                 var postData = {};
@@ -1036,15 +1403,21 @@ $(document).ready(function () {
 
     FormAPI.error = {};
 
+    /**
+     * Displays an error to the user
+     * @argument errorMessage - The error message to show the User
+     * @requires alertify
+     */
     FormAPI.error.showErrorDialog = function (errorMessage) {
         alertify.error(errorMessage);
     }
 
-    $('select').material_select();
+    // Setup event handlers for general form, do not put event handlers which exist in tabs here, those go in tab on loads
 
     $(".tab a").click(FormAPI.tabs.changeTab);
+    $("#footer-action-submit").click(completeEpisode);
 
-
+    // Asynchronously load all of the tabs HTML
     $.each(TABS, function (i, e) {
         var tab = e;
         getFormHtml(tab.url).done(function (data) {

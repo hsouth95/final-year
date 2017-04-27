@@ -7,6 +7,8 @@ var routes = require("express").Router({ mergeParams: true }),
     imagingresults = require("./imagingresults.js"),
     problemlist = require("./problemlist.js"),
     currentmedication = require("./currentmedication.js"),
+    drugTreatment = require("./drugtreatment.js"),
+    treatment = require("./treatment.js"),
     db = require("../database.js"),
     models = require("../models");
 
@@ -82,5 +84,7 @@ routes.use("/:episodeId/urineresults", urineresults);
 routes.use("/:episodeId/imagingresults", imagingresults);
 routes.use("/:episodeId/problemlist", problemlist);
 routes.use("/:episodeId/currentmedication", currentmedication);
+routes.use("/:episodeId/drugtreatment", drugTreatment);
+routes.use("/:episodeId/treatment", treatment);
 
 module.exports = routes;

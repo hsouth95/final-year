@@ -1,5 +1,6 @@
 var drawingFrame = {};
 
+// The various ID's of the draw frame elements
 drawingFrame.containerId = "drawing-frame";
 drawingFrame.canvasId = "drawing-canvas";
 drawingFrame.saveButtonId = "drawing-save";
@@ -9,6 +10,11 @@ drawingFrame.cache = {};
 
 drawingFrame.cache.successCallback = null;
 
+/**
+ * Opens the drawing frame and sets in the cache the image being drawn on and the function to call once the user saves
+ * @argument imageUrl - The url of the image being drawn on
+ * @argument success - The function to call once the user saves the drawing
+ */
 drawingFrame.openFrame = function (imageUrl, success) {
     drawingFrame.cache.imageUrl = imageUrl;
     drawingFrame.cache.successCallback = success;
@@ -16,6 +22,10 @@ drawingFrame.openFrame = function (imageUrl, success) {
     drawingFrame.setImage(imageUrl);
 }
 
+/**
+ * Draws the image onto the main canvas
+ * @argument imageUrl - The URL of the image
+ */
 drawingFrame.setImage = function (imageUrl) {
     var canvas = document.getElementById(drawingFrame.canvasId),
         ctx;
@@ -29,14 +39,17 @@ drawingFrame.setImage = function (imageUrl) {
             canvas.height = img.height;
             canvas.width = img.width;
 
-            /// set size proportional to image
-            ctx.drawImage(img, 0,0, img.width, img.height);
+            // Set canvas size proportional to image
+            ctx.drawImage(img, 0, 0, img.width, img.height);
         }
 
         img.src = imageUrl;
     }
 }
 
+/**
+ * Renders the line drawn onto the canvas
+ */
 drawingFrame.renderCanvas = function () {
     if (drawing) {
         ctx.moveTo(lastPos.x, lastPos.y);
@@ -46,6 +59,9 @@ drawingFrame.renderCanvas = function () {
     }
 }
 
+/**
+ * Clears the canvas to allow the User to start again
+ */
 drawingFrame.clearFrame = function () {
     drawingFrame.setImage(drawingFrame.cache.imageUrl);
 }

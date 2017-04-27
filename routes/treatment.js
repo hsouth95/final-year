@@ -1,21 +1,51 @@
 var routes = require("express").Router({ mergeParams: true }),
-    db = require("../database.js");
+    db = require("../database2");
 
 routes.get("/", function (req, res) {
     var episodeId = req.params.episodeId;
-    db.query("SELECT * FROM treatment WHERE episode_id = ?", [episodeId], function (err, results) {
-        if (err) throw err;
 
-        res.json(results);
+    db.filteredList({
+        tableName: "treatment",
+        filteredField: "episode_id",
+        filteredValue: episodeId,
+        error: function (err) {
+            res.status(400).send(err.message);
+        },
+        success: function (data) {
+            res.json(data);
+        }
     });
 });
 
 routes.get("/:treatmentId", function (req, res) {
     var treatmentId = req.params.treatmentId;
-    db.query("SELECT * FROM treatment WHERE treatment_id = ?", [treatmentId], function (err, results) {
-        if (err) throw err;
+    db.getById({
+        tableName: "treatment",
+        attributeName: "treatment_id",
+        id: treatmentId,
+        error: function (err) {
+            res.status(400).send(err.message);
+        },
+        success: function (data) {
+            res.json(data);
+        }
+    });
+});
 
-        res.json(results);
+routes.post("/", function (req, res) {
+    var treatment = req.body,
+        episodeId = req.params.episodeId;
+    treatment.episode_id = episodeId;
+
+    db.add({
+        tableName: "treatment",
+        data: treatment,
+        error: function (err) {
+            res.status(400).send(err);
+        },
+        success: function (data) {
+            res.json(data);
+        }
     });
 });
 

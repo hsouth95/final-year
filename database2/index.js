@@ -138,7 +138,7 @@ getById = function (options) {
         throw new Error("Options not provided.");
     }
 
-    var query = "SELECT * FROM ? WHERE ? = ?";
+    var query = "SELECT * FROM ?? WHERE ?? = ?";
 
     if (isTransactionPending) {
         transactionConnection.query(query, [options.tableName, options.attributeName, options.id], function (err, results) {

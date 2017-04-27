@@ -1,5 +1,5 @@
 <div class="row">
-    <table>
+    <table id="drug-treatment-table">
         <thead>
             <tr>
                 <th data-field="drug-name">Drug Name</th>
@@ -14,6 +14,7 @@
             <tr>
                 <td>
                     <input id="drug-name" type="text" class="autocomplete" required>
+                    <input id="drug-id" data-entity="drug_treatment" data-field="medication_id" type="hidden">
                 </td>
                 <td>
                     <input type="number" id="dose">
@@ -22,27 +23,37 @@
                     <input type="text" id="route">
                 </td>
                 <td>
-                    <input type="text" id="frequency">
+                    <input type="text" data-entity="drug_treatment" data-field="frequency" id="frequency">
                 </td>
                 <td>
-                    <input type="text" id="details">
+                    <input type="text" id="details" data-entity="drug_treatment" data-field="details">
                 </td>
                 <td>
-                    <button type="button" class="btn waves-effect waves-light" id="add-medication">Add</button>
+                    <button type="button" class="btn waves-effect waves-light" id="add-drugtreatment">Add</button>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<hr>
+
+<button type="button" class="btn waves-effect waves-light right" id="add-treatment">Save Treatment Data</button>
 <div class="row">
     <div class="input-field col s12">
-        <textarea id="additional_treatments" class="materialize-textarea"></textarea>
+        <textarea id="additional_treatments" data-entity="treatment" data-field="additional_treatments" class="materialize-textarea"></textarea>
         <label for="additional_treatments">Additional Treatments</label>
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12">
+        <textarea id="information_given" data-entity="treatment" data-field="information_given" class="materialize-textarea"></textarea>
+        <label for="information_given">Information Given</label>
     </div>
 </div>
 
 <div class="input-field">
-    <select id="patient_gender" class="browser-default">
+    <select id="follow_up" data-entity="treatment" data-field="follow_up" class="browser-default">
         <option value="" selected>Choose Follow-up Arrangement</option>
         <option value="0">2 Weeks</option>
         <option value="1">4 Weeks</option>

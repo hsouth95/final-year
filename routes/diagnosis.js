@@ -1,11 +1,15 @@
 var routes = require("express").Router(),
-    db = require("../database.js");
+    db = require("../database2");
 
 routes.get("/", function (req, res) {
-    db.query("SELECT * FROM diagnosis", function (err, results) {
-        if (err) throw err;
-
-        res.json(results);
+    db.list({
+        tableName: "diagnosis",
+        success: function (data) {
+            res.json(data);
+        },
+        error: function (err) {
+            res.status(400).send(err.message);
+        }
     });
 });
 
