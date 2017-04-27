@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2017 at 12:52 AM
+-- Generation Time: Apr 27, 2017 at 08:20 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -94,9 +94,11 @@ CREATE TABLE `clinical_episode` (
 
 INSERT INTO `clinical_episode` (`episode_id`, `patient_id`, `gp_id`, `hospital_id`, `date`, `time`, `source_referral`, `reason_referral`, `completed`) VALUES
 (28, 111111111, 2, 1, '2017-04-05', '03:04:12', 'GP', 'Broke left arm', 1),
-(29, 111111111, 3, 1, '2017-04-05', '00:00:00', 'ED', 'Chest pains', 0),
+(29, 111111111, 3, 1, '2017-04-05', '00:00:00', 'ED', 'Chest pains', 1),
 (30, 123456789, 2, 1, '2017-04-20', '17:04:04', 'GP', 'Apples', 0),
-(31, 555555555, 3, 2, '2017-04-23', '17:04:26', 'Speciality Clinic', 'Test', 0);
+(31, 555555555, 3, 2, '2017-04-23', '17:04:26', 'Speciality Clinic', 'Test', 1),
+(32, 555555555, 2, 1, '2017-04-24', '00:04:07', 'GP', 'Ill', 0),
+(33, 111111111, 2, 1, '2017-04-27', '00:00:00', 'GP', 'Panic attack', 0);
 
 -- --------------------------------------------------------
 
@@ -108,18 +110,20 @@ CREATE TABLE `current_medication` (
   `episode_id` int(11) NOT NULL,
   `medication_id` int(11) NOT NULL,
   `frequency` int(11) NOT NULL,
-  `details` varchar(255) NOT NULL
+  `details` varchar(255) NOT NULL,
+  `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `current_medication`
 --
 
-INSERT INTO `current_medication` (`episode_id`, `medication_id`, `frequency`, `details`) VALUES
-(28, 5, 1, 'To relieve the pain'),
-(29, 5, 1, 'n/a'),
-(31, 1, 0, ''),
-(31, 2, 0, '');
+INSERT INTO `current_medication` (`episode_id`, `medication_id`, `frequency`, `details`, `date`) VALUES
+(28, 5, 1, 'To relieve the pain', '0000-00-00'),
+(29, 5, 1, 'n/a', '0000-00-00'),
+(31, 1, 0, '', '0000-00-00'),
+(31, 2, 0, '', '0000-00-00'),
+(33, 5, 1, 'Theksbdvmbdsvm', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -149,11 +153,22 @@ INSERT INTO `diagnosis` (`diagnosis_id`, `name`) VALUES
 --
 
 CREATE TABLE `drug_treatment` (
-  `treatment_id` int(9) NOT NULL,
+  `episode_id` int(9) NOT NULL,
   `medication_id` int(9) NOT NULL,
   `frequency` int(4) NOT NULL,
-  `details` varchar(255) NOT NULL
+  `details` varchar(255) NOT NULL,
+  `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `drug_treatment`
+--
+
+INSERT INTO `drug_treatment` (`episode_id`, `medication_id`, `frequency`, `details`, `date`) VALUES
+(29, 5, 1, 'a', '0000-00-00'),
+(33, 1, 1, 'Once a day', '0000-00-00'),
+(33, 4, 1, '2', '0000-00-00'),
+(33, 5, 1, '5', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -187,7 +202,8 @@ INSERT INTO `episode_observations` (`episode_id`, `observation_id`) VALUES
 (30, 17),
 (30, 18),
 (30, 27),
-(31, 26);
+(31, 26),
+(32, 28);
 
 -- --------------------------------------------------------
 
@@ -211,25 +227,27 @@ CREATE TABLE `examination` (
   `bp_diastolic` int(3) NOT NULL,
   `respiratory_rate_min` int(3) NOT NULL,
   `respiratory_sats` int(4) NOT NULL,
+  `neuro` varchar(1024) NOT NULL,
   `respiratory_diagram` varchar(512) NOT NULL,
   `gastro_diagram` varchar(255) NOT NULL,
-  `other_diagram` varchar(512) NOT NULL
+  `other_diagram` varchar(512) NOT NULL,
+  `heart_sound_diagram` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `examination`
 --
 
-INSERT INTO `examination` (`examination_id`, `episode_id`, `anaemia`, `jaundice`, `cyanosis`, `clubbing`, `lymphnodes`, `dehydration`, `drowsy`, `pulse`, `SOA`, `bp_systolic`, `bp_diastolic`, `respiratory_rate_min`, `respiratory_sats`, `respiratory_diagram`, `gastro_diagram`, `other_diagram`) VALUES
-(10, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', ''),
-(12, 30, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', ''),
-(13, 30, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', ''),
-(14, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', ''),
-(15, 30, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', '', ''),
-(16, 30, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 'lungs-30.jpg', '', ''),
-(25, 29, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 'respiratory_diagram-29.jpg', '', ''),
-(26, 29, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 'respiratory_diagram-29.jpg', 'gastro_diagram-29.jpg', ''),
-(27, 31, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 'respiratory_diagram-31.jpg', 'gastro_diagram-31.jpg', 'other_diagram-31.jpg');
+INSERT INTO `examination` (`examination_id`, `episode_id`, `anaemia`, `jaundice`, `cyanosis`, `clubbing`, `lymphnodes`, `dehydration`, `drowsy`, `pulse`, `SOA`, `bp_systolic`, `bp_diastolic`, `respiratory_rate_min`, `respiratory_sats`, `neuro`, `respiratory_diagram`, `gastro_diagram`, `other_diagram`, `heart_sound_diagram`) VALUES
+(10, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
+(12, 30, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
+(13, 30, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
+(14, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
+(15, 30, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
+(16, 30, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', 'lungs-30.jpg', '', '', ''),
+(25, 29, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', 'respiratory_diagram-29.jpg', '', '', ''),
+(26, 29, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', 'respiratory_diagram-29.jpg', 'gastro_diagram-29.jpg', '', ''),
+(27, 31, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', 'respiratory_diagram-31.jpg', 'gastro_diagram-31.jpg', 'other_diagram-31.jpg', '');
 
 -- --------------------------------------------------------
 
@@ -297,7 +315,8 @@ CREATE TABLE `history` (
 INSERT INTO `history` (`history_id`, `episode_id`, `presenting_complaint`, `history_presenting_complaint`, `relevant_history`, `ihd`, `epilepsy`, `asthma`, `notes`, `dm`, `copd`, `mi`, `dvt`, `pe`, `tia`, `cva`, `family_history`, `social_history`, `alcohol_history`, `smoking_history`, `smoking_pack_years`, `allergies`) VALUES
 (5, 28, 'Complaining of broken arm - fell in the street and damaged their arm.', 'N/a', '', 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 'History of heart attacks', 'N/a', 1, 0, 0, ''),
 (6, 29, 'Patient has chest pains and is on alert', 'n/a', '', 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 'n/a', 'n/a', 1, 0, 0, ''),
-(7, 31, 'ill', 'sick', '', 0, 1, 1, '', 0, 1, 0, 0, 1, 0, 1, 'Na', 'Na', 2, 1, 120, '');
+(7, 31, 'ill', 'sick', '', 0, 1, 1, '', 0, 1, 0, 0, 1, 0, 1, 'Na', 'Na', 2, 1, 120, ''),
+(8, 33, 'Can\'t breth', 'Na', 'Na', 0, 1, 1, '', 0, 0, 0, 1, 0, 0, 0, 'History of panic attacks', 'Na', 2, 0, 0, 'None');
 
 -- --------------------------------------------------------
 
@@ -396,7 +415,8 @@ INSERT INTO `observations` (`observation_id`, `bp_systolic`, `bp_diastolic`, `pu
 (17, 2, 3, 4, '5', 6, '1', 2),
 (18, 2, 3, 4, '5', 6, '7', 8),
 (26, 50, 67, 1, '56', 67, '1', 1),
-(27, NULL, 3, NULL, '5', NULL, '1', 2);
+(27, NULL, 3, NULL, '5', NULL, '1', 2),
+(28, 1, 2, 3, '4', 5, 'V', 1);
 
 -- --------------------------------------------------------
 
@@ -461,7 +481,9 @@ CREATE TABLE `problem_list` (
 --
 
 INSERT INTO `problem_list` (`problem_list_id`, `episode_id`, `working_diagnosis`, `fbc`, `biochem`, `clotting`, `d_dimer`, `trop_t`, `cx`, `blood`, `esr`, `crp`, `cxr`, `ct`, `ultrasound`, `mri`, `echo`, `svg`) VALUES
-(4, 28, 'Fractured Arm', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(4, 28, 'Fractured Arm', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 29, 'ageadgdag', 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0),
+(6, 29, 'ahlgag', 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -476,6 +498,13 @@ CREATE TABLE `treatment` (
   `information_given` varchar(522) NOT NULL,
   `follow_up` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `treatment`
+--
+
+INSERT INTO `treatment` (`treatment_id`, `episode_id`, `additional_treatments`, `information_given`, `follow_up`) VALUES
+(1, 29, 'apple', '', 1);
 
 -- --------------------------------------------------------
 
@@ -514,19 +543,17 @@ CREATE TABLE `users` (
   `firstname` varchar(255) NOT NULL,
   `surname` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `salt` varchar(255) NOT NULL,
-  `hash` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `firstname`, `surname`, `username`, `password`, `salt`, `hash`) VALUES
-(5, 'harrison', 'apple', 'apple', '$2a$08$0Hqjd4I6Cv0RLaC9krtbue/Q.ggf/4/qeBN1Qq2JSsJaE.S4Jj9KS', '', ''),
-(6, 'Harrison', 'South', 'hsouth', '$2a$08$g9OTex8snrQzIxb7L1s7P.H8IdtoHcHUR.O44bGjp0/MadfiHQjKi', '', ''),
-(7, 'Martin', 'Taylor', 'mtaylor', '$2a$08$laJRt9JbvOOf/O4FRN.ULuI0T22HrSfcrJu//QuHqF0a4uf0vR0Ga', '', '');
+INSERT INTO `users` (`user_id`, `firstname`, `surname`, `username`, `password`) VALUES
+(5, 'harrison', 'apple', 'apple', '$2a$08$0Hqjd4I6Cv0RLaC9krtbue/Q.ggf/4/qeBN1Qq2JSsJaE.S4Jj9KS'),
+(6, 'Harrison', 'South', 'hsouth', '$2a$08$g9OTex8snrQzIxb7L1s7P.H8IdtoHcHUR.O44bGjp0/MadfiHQjKi'),
+(7, 'Martin', 'Taylor', 'mtaylor', '$2a$08$laJRt9JbvOOf/O4FRN.ULuI0T22HrSfcrJu//QuHqF0a4uf0vR0Ga');
 
 --
 -- Indexes for dumped tables
@@ -565,7 +592,7 @@ ALTER TABLE `diagnosis`
 -- Indexes for table `drug_treatment`
 --
 ALTER TABLE `drug_treatment`
-  ADD PRIMARY KEY (`treatment_id`,`medication_id`),
+  ADD PRIMARY KEY (`episode_id`,`medication_id`),
   ADD KEY `medication_id` (`medication_id`);
 
 --
@@ -673,7 +700,7 @@ ALTER TABLE `blood_results`
 -- AUTO_INCREMENT for table `clinical_episode`
 --
 ALTER TABLE `clinical_episode`
-  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT for table `diagnosis`
 --
@@ -693,7 +720,7 @@ ALTER TABLE `gp`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `hospital`
 --
@@ -713,17 +740,17 @@ ALTER TABLE `medication`
 -- AUTO_INCREMENT for table `observations`
 --
 ALTER TABLE `observations`
-  MODIFY `observation_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `observation_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `problem_list`
 --
 ALTER TABLE `problem_list`
-  MODIFY `problem_list_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `problem_list_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `treatment`
 --
 ALTER TABLE `treatment`
-  MODIFY `treatment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `treatment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `urine_results`
 --
@@ -755,8 +782,8 @@ ALTER TABLE `clinical_episode`
 -- Constraints for table `drug_treatment`
 --
 ALTER TABLE `drug_treatment`
-  ADD CONSTRAINT `drug_treatment_ibfk_1` FOREIGN KEY (`medication_id`) REFERENCES `medication` (`medication_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `drug_treatment_ibfk_2` FOREIGN KEY (`treatment_id`) REFERENCES `treatment` (`treatment_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `drug_treatment_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `clinical_episode` (`episode_id`),
+  ADD CONSTRAINT `drug_treatment_ibfk_2` FOREIGN KEY (`medication_id`) REFERENCES `medication` (`medication_id`);
 
 --
 -- Constraints for table `episode_diagnosis`
