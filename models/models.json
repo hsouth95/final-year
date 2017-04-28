@@ -57,6 +57,10 @@
             "type": "i",
             "requiredCreation": true
         },
+        "user_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
         "presenting_complaint": {
             "type": "t",
             "requiredCreation": true
@@ -212,6 +216,7 @@
         },
         "news_score": {
             "type": "i",
+            "range": "1-10",
             "requiredCreation": false
         }
     },
@@ -378,7 +383,7 @@
             "requiredCreation": false,
             "maxLength": 3
         },
-        "respiratory_rate": {
+        "respiratory_rate_min": {
             "type": "i",
             "requiredCreation": false,
             "maxLength": 2
@@ -438,6 +443,88 @@
         "neutrophils": {
             "type": "de",
             "maxIntLength": 2
+        }
+    },
+    "treatment": {
+        "treatment_id": {
+            "type": "i"
+        },
+        "episode_id": {
+            "type": "i",
+            "requiredCreation": "i"
+        },
+        "user_id": {
+            "type": "i",
+            "requiredCreation": "i"
+        },
+        "additional_treatments": {
+            "type": "t"
+        },
+        "information_given": {
+            "type": "t"
+        }
+    },
+    "urine_results": {
+        "urine_result_id": {
+            "type": "i"
+        },
+        "episode_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
+        "user_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
+        "date": {
+            "type": "d",
+            "requiredCreation": true
+        },
+        "protein": {
+            "type": "t"
+        },
+        "blood": {
+            "type": "t"
+        },
+        "glucose": {
+            "type": "t"
+        },
+        "nitirites": {
+            "type": "t"
+        },
+        "msu_sent": {
+            "type": "t"
+        }
+    },
+    "imaging_results": {
+        "imaging_results_id": {
+            "type": "i"
+        },
+        "episode_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
+        "user_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
+        "date": {
+            "type": "d"
+        },
+        "cxr": {
+            "type": "t"
+        },
+        "ct_scan": {
+            "type": "t"
+        },
+        "ultrasound": {
+            "type": "t"
+        },
+        "mri": {
+            "type": "t"
+        },
+        "other": {
+            "type": "t"
         }
     }
 }

@@ -564,6 +564,7 @@ $(document).ready(function () {
             $.post(location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/complete", function () {
                 alertify.success("Episode successfully completed.");
                 FormAPI.data.clearAll();
+                FormAPI.actionBar.clear();
             }).fail(function (err) {
                 console.log(err);
             });
@@ -1323,6 +1324,13 @@ $(document).ready(function () {
             $("footer").removeClass("hidden");
         }
         $("footer #footer-patient-name").html(patientName);
+    }
+
+    FormAPI.actionBar.clear = function(){
+        $("footer #footer-patient-name").html("");
+        $("footer #footer-episode-info").html("");
+        $("footer #footer-action-submit").prop("disabled", true);
+        $("footer").addClass("hidden");
     }
 
     /**

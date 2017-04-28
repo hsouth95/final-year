@@ -7,7 +7,7 @@ models.validate = function (modelName, data, errorCallback, successCallback) {
     fs.readFile(__dirname + "/models.json", "utf8", function (err, dataModels) {
         if (err) errorCallback(err.message);
 
-        obj = JSON.parse(dataModels);
+        var obj = JSON.parse(dataModels);
 
         if (obj.hasOwnProperty(modelName)) {
             var validateFieldResponse = models.validateFields(data, obj[modelName]);
@@ -21,7 +21,7 @@ models.validate = function (modelName, data, errorCallback, successCallback) {
         }
 
     });
-}
+};
 
 models.validateFields = function (data, dataModel) {
     for (var attribute in dataModel) {
