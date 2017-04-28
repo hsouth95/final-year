@@ -7,7 +7,7 @@ $(document).ready(function () {
     var episodeId = getParameterByName("episodeid"),
         patientId = getParameterByName("patientid"),
         episodeBaseURL = location.origin + "/patients/" + patientId + "/episodes/" + episodeId;
-        
+
     episode = {};
 
     $.getJSON(episodeBaseURL, function (data) {
@@ -16,9 +16,12 @@ $(document).ready(function () {
         $("#date").html(episode.date.substring(0, 10));
 
         $.getJSON(location.origin + "/patients/" + patientId, function (data) {
-            episode.patient = data;
-            $("#patient_name").html(data.firstname + " " + data.surname);
-            $("#patient_number").html(data.patient_id);
+            if (data && data.length === 1) {
+                data = data[0];
+                episode.patient = data;
+                $("#patient_name").html(data.firstname + " " + data.surname);
+                $("#patient_number").html(data.patient_id);
+            }
         }).fail(function (err) {
             alert(err);
         });

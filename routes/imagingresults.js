@@ -36,6 +36,7 @@ routes.post("/", function (req, res) {
     var episodeId = req.params.episodeId,
         imagingResults = req.body;
     imagingResults.episode_id = episodeId;
+    imagingResults.user_id = req.user.user_id;
 
     db.add({
         tableName: "imaging_results",

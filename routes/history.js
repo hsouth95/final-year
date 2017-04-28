@@ -37,6 +37,7 @@ routes.post("/", function (req, res) {
         history = req.body;
 
     history.episode_id = episodeId;
+    history.user_id = req.user.user_id;
 
     models.validate("history", history, function (err) {
         res.status(400).send(err);

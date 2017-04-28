@@ -9,6 +9,12 @@
             </thead>
             <tbody>
                 <tr>
+                    <td>Date</td>
+                    <td>
+                        <input id="blood_results_date" class="datepicker" data-entity="blood_results" data-field="date" type="date" />
+                    </td>
+                </tr>
+                <tr>
                     <td>WBC</td>
                     <td>
                         <input id="results_wbc" data-entity="blood_results" data-field="wbc" type="number" />
@@ -196,6 +202,12 @@
             </thead>
             <tbody>
                 <tr>
+                    <td>Date</td>
+                    <td>
+                        <input id="urine_results_date" class="datepicker" data-entity="urine_results" data-field="date" type="date" />
+                    </td>
+                </tr>
+                <tr>
                     <td>Protein</td>
                     <td>
                         <select id="results_protein" data-entity="urine_results" data-field="protein" class="browser-default">
@@ -265,32 +277,43 @@
             </thead>
             <tbody>
                 <tr>
+                    <tr>
+                        <td>Date</td>
+                        <td>
+                            <input id="imaging_results_date" class="datepicker" data-entity="imaging_results" data-field="date" type="date" />
+                        </td>
+                    </tr>
                     <td>CXR</td>
                     <td class="input-field">
+                        <i class="material-icons textarea-btn right">mode_edit</i>
                         <textarea id="results_cxr" class="materialize-textarea" data-entity="imaging_results" data-field="cxr"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>CT Scan</td>
                     <td class="input-field">
+                        <i class="material-icons textarea-btn right">mode_edit</i>
                         <textarea id="results_ctscan" class="materialize-textarea" data-entity="imaging_results" data-field="ct_scan"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>Ultrasound</td>
                     <td class="input-field">
+                        <i class="material-icons textarea-btn right">mode_edit</i>
                         <textarea id="results_ultrasound" class="materialize-textarea" data-entity="imaging_results" data-field="ultrasound"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>MRI</td>
                     <td class="input-field">
+                        <i class="material-icons textarea-btn right">mode_edit</i>
                         <textarea id="results_mri" class="materialize-textarea" data-entity="imaging_results" data-field="mri"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>Other</td>
                     <td class="input-field">
+                        <i class="material-icons textarea-btn right">mode_edit</i>
                         <textarea id="results_other" class="materialize-textarea" data-entity="imaging_results" data-field="other"></textarea>
                     </td>
                 </tr>

@@ -31,10 +31,18 @@
       <tbody>
         <tr>
           <td>
+            Date
+          </td>
+          <td>
+            <input id="observations_date" class="datepicker" data-entity="observations" data-field="date" type="date">
+          </td>
+        </tr>
+        <tr>
+          <td>
             BP Systolic
           </td>
           <td>
-            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_systolic" type="number" disabled>
+            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_systolic" type="number">
           </td>
         </tr>
         <tr>
@@ -42,7 +50,7 @@
             BP Diastolic
           </td>
           <td>
-            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_diastolic" type="number" disabled>
+            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_diastolic" type="number">
           </td>
         </tr>
         <tr>
@@ -50,7 +58,7 @@
             Pulse
           </td>
           <td>
-            <input id="observations_pulse" data-entity="observations" data-field="pulse" type="number" disabled>
+            <input id="observations_pulse" data-entity="observations" data-field="pulse" type="number">
           </td>
         </tr>
         <tr>
@@ -58,7 +66,7 @@
             Temperature
           </td>
           <td>
-            <input id="observations_temperature" data-entity="observations" data-field="temperature" type="number" disabled>
+            <input id="observations_temperature" data-entity="observations" data-field="temperature" type="number">
           </td>
         </tr>
         <tr>
@@ -66,7 +74,7 @@
             Respiratory Rate
           </td>
           <td>
-            <input id="observations_respiratory_rate" data-entity="observations" data-field="respiratory_rate" type="number" disabled>
+            <input id="observations_respiratory_rate" data-entity="observations" data-field="respiratory_rate" type="number">
           </td>
         </tr>
         <tr>
@@ -74,7 +82,7 @@
             AVPU
           </td>
           <td>
-            <select id="patient_gender" data-entity="observations" data-field="avpu" class="browser-default" disabled>
+            <select id="patient_gender" data-entity="observations" data-field="avpu" class="browser-default">
               <option value="" selected>AVPU</option>
               <option value="A">A</option>
               <option value="V">V</option>
@@ -145,7 +153,7 @@
         <input type="number" id="examinations-bp-diastolic" data-entity="examination" data-field="bp_diastolic">
       </div>
       <div class="input-field">
-        <select id="soa" data-entity="examination" data-field="SOA" class="browser-default" disabled>
+        <select id="soa" data-entity="examination" data-field="SOA" class="browser-default">
           <option value="" selected>SOA</option>
           <option value="1">Yes</option>
           <option value="0">No</option>
@@ -177,9 +185,11 @@
     </div>
     <div class="col s6">
       <h4>Neuro</h4>
-      <i class="material-icons textarea-btn right">mode_edit</i>
-      <label for="neuro">Neuro</label>
-      <textarea id="neuro" data-entity="examination" data-field="neuro" class="materialize-textarea"></textarea>
+      <div class="input-field">
+         <i class="material-icons textarea-btn right">mode_edit</i>
+        <textarea id="neuro" data-entity="examination" data-field="neuro" class="materialize-textarea"></textarea>
+        <label for="neuro">Neuro</label>
+      </div>
     </div>
   </div>
   <div class="row">

@@ -126,6 +126,8 @@ models.validateDate = function (modelAttribute, dataAttribute) {
         if (modelAttribute.dateAllowed) {
             return models.isDateAllowed(moment(dataAttribute), modelAttribute.dateAllowed);
         }
+
+        return true;
     }
 }
 

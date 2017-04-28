@@ -19,6 +19,7 @@ routes.post("/", function (req, res) {
     var currentmedication = req.body,
         episodeId = req.params.episodeId;
         currentmedication.episode_id = episodeId;
+        currentmedication.user_id = req.user.user_id;
 
     db.add({
         tableName: "current_medication",

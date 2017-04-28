@@ -37,6 +37,7 @@ routes.post("/", function (req, res) {
         examination = req.body;
 
     examination.episode_id = episodeId;
+    examination.user_id = req.user.user_id;
 
     models.validate("examination", examination, function (err) {
         res.status(400).send(err);

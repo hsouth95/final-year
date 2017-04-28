@@ -20,6 +20,7 @@ routes.post("/", function (req, res) {
     var drugtreatment = req.body,
         episodeId = req.params.episodeId;
         drugtreatment.episode_id = episodeId;
+        drugtreatment.user_id = req.user.user_id;
 
     db.add({
         tableName: "drug_treatment",

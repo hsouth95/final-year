@@ -21,7 +21,8 @@ $(document).ready(function () {
             onload: function () {
                 $('.datepicker').pickadate({
                     selectMonths: true, // Creates a dropdown to control month
-                    selectYears: 200
+                    selectYears: 200,
+                    format: "yyyy-mm-dd"
                 });
                 populateHospitals();
 
@@ -45,8 +46,10 @@ $(document).ready(function () {
 
                 $('.datepicker').pickadate({
                     selectMonths: true,
-                    selectYears: 200
+                    selectYears: 200,
+                    format: "yyyy-mm-dd"
                 });
+
                 $("select").material_select();
                 $("#start-episode").click(startEpisode);
                 $("#add-observations").click(addObservations);
@@ -82,8 +85,10 @@ $(document).ready(function () {
             onload: function () {
                 $('.datepicker').pickadate({
                     selectMonths: true,
-                    selectYears: 200
+                    selectYears: 200,
+                    format: "yyyy-mm-dd"
                 });
+
                 $("select").material_select();
                 $("#add-medication").click(addCurrentMedication);
                 populateDrugs("current_medication_table");
@@ -98,6 +103,12 @@ $(document).ready(function () {
             url: location.origin + "/view/treatment",
             onload: function () {
                 $("select").material_select();
+
+                $('.datepicker').pickadate({
+                    selectMonths: true,
+                    selectYears: 2,
+                    format: "yyyy-mm-dd"
+                });
 
                 $("#add-drugtreatment").click(addDrugTreatment);
                 $("#add-treatment").click(addTreatment);
@@ -114,6 +125,12 @@ $(document).ready(function () {
             loaded: false,
             url: location.origin + "/view/results",
             onload: function () {
+                $('.datepicker').pickadate({
+                    selectMonths: true,
+                    selectYears: 2,
+                    format: "yyyy-mm-dd"
+                });
+
                 $("select").material_select();
 
                 $("#add-blood-results").click(addBloodResults);
@@ -270,6 +287,7 @@ $(document).ready(function () {
     displayObservations = function (observations) {
         // The fields added in the order they should appear vertically
         var fields = [
+            "date",
             "bp_systolic",
             "bp_diastolic",
             "pulse",
@@ -285,15 +303,20 @@ $(document).ready(function () {
         }
 
         var observationsValues = document.createElement("div");
-        observationsValues.className = "col s1";
+        observationsValues.className = "col s2";
 
         for (var attribute in fields) {
             var fieldName = fields[attribute],
                 observationProperty = document.createElement("div");
             observationProperty.className = "observation-result-element";
 
-            if (observations.hasOwnProperty(fieldName)) {
-                observationProperty.innerHTML = observations[fieldName];
+            if (observations.hasOwnProperty(fieldName) && observations[fieldName] !== null ) {
+                // Handle the date differently
+                if (fieldName === "date") {
+                    observationProperty.innerHTML = FormAPI.data.filterDate(observations[fieldName]);
+                } else {
+                    observationProperty.innerHTML = observations[fieldName];
+                }
             } else {
                 observationProperty.innerHTML = "-";
             }
@@ -310,6 +333,7 @@ $(document).ready(function () {
     displayObservationHeaders = function () {
         // The headings in the order they should appear
         var headings = [
+            "Date",
             "BP Systolic",
             "BP Diastolic",
             "Pulse",
@@ -395,6 +419,7 @@ $(document).ready(function () {
             currentMedicationToAdd.push(route);
             currentMedicationToAdd.push(medicationData.frequency);
             currentMedicationToAdd.push(medicationData.details);
+            currentMedicationToAdd.push(medicationData.date);
 
             FormAPI.data.addTableRow("current_medication_table", currentMedicationToAdd);
 
@@ -430,6 +455,7 @@ $(document).ready(function () {
             drugTreatmentToAdd.push(route);
             drugTreatmentToAdd.push(drugTreatmentData.frequency);
             drugTreatmentToAdd.push(drugTreatmentData.details);
+            drugTreatmentToAdd.push(FormAPI.data.filterDate(drugTreatmentData.date));
 
             FormAPI.data.addTableRow("drug-treatment-table", drugTreatmentToAdd);
 
@@ -676,8 +702,12 @@ $(document).ready(function () {
             });
 
             // Observations has a unique vertical table therefore fire off its own function after populating fields
-            FormAPI.data.populateData(episodeUrl + "/observations", "observations", "observations", true, function () {
-                displayAllObservations();
+            $.getJSON(episodeUrl + "/observations", function (data) {
+                if (data && data.length >= 1) {
+                    episode.observations = data;
+
+                    displayAllObservations();
+                }
             });
 
             // Below are simple input fields therefore treat generically
@@ -738,7 +768,8 @@ $(document).ready(function () {
             "dose",
             "route",
             "frequency",
-            "details"
+            "details",
+            "date"
         ];
 
         if (data && data.length >= 1) {
@@ -748,7 +779,11 @@ $(document).ready(function () {
                 for (var attribute in orderedAttributes) {
                     var fieldName = orderedAttributes[attribute];
                     if (this.hasOwnProperty(fieldName)) {
-                        convertedData.push(this[fieldName]);
+                        if (fieldName === "date") {
+                            convertedData.push(FormAPI.data.filterDate(this[fieldName]));
+                        } else {
+                            convertedData.push(this[fieldName]);
+                        }
                     } else {
                         convertedData.push("-");
                     }
@@ -1150,7 +1185,7 @@ $(document).ready(function () {
     /**
      * Updates the progress of the episode visually to the user
      */
-    FormAPI.data.updateEpisodeProgress = function() {
+    FormAPI.data.updateEpisodeProgress = function () {
         FormAPI.tabs.updateCompletion();
         FormAPI.actionBar.updateSubmitButton();
     }
@@ -1284,7 +1319,7 @@ $(document).ready(function () {
      * @argument patientName - The value to display
      */
     FormAPI.actionBar.updatePatient = function (patientName) {
-        if($("footer").hasClass("hidden")) {
+        if ($("footer").hasClass("hidden")) {
             $("footer").removeClass("hidden");
         }
         $("footer #footer-patient-name").html(patientName);

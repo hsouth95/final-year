@@ -42,6 +42,10 @@
             "minLength": 1,
             "maxLength": 1,
             "range": "0-1"
+        },
+        "completed_on": {
+            "type": "d",
+            "dateFormat": "YYYY-MM-DD"
         }
     },
     "history": {
@@ -171,6 +175,12 @@
         "observation_id": {
             "type": "i",
             "requiredCreation": false
+        },
+        "date": {
+            "type": "d",
+            "requiredCreation": true,
+            "dateFormat": "YYYY-MM-DD",
+            "dateAllowed": "{}<=(NOW)"
         },
         "bp_systolic": {
             "type": "i",
