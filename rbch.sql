@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2017 at 02:59 AM
+-- Generation Time: Apr 30, 2017 at 11:39 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -133,6 +133,7 @@ INSERT INTO `current_medication` (`episode_id`, `medication_id`, `user_id`, `fre
 (32, 1, 0, 1, '1', '2017-04-28'),
 (32, 5, 0, 1, '2', '2017-04-28'),
 (33, 5, 0, 1, 'Theksbdvmbdsvm', '2017-04-28'),
+(33, 7, 6, 0, 'agjghd', '2017-04-12'),
 (34, 5, 6, 1, '2', '2017-04-28');
 
 -- --------------------------------------------------------
@@ -399,20 +400,22 @@ CREATE TABLE `medication` (
   `name` varchar(255) NOT NULL,
   `dose` int(5) NOT NULL,
   `measure` varchar(255) NOT NULL,
-  `route` int(1) NOT NULL
+  `route` varchar(128) NOT NULL,
+  `frequency` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `medication`
 --
 
-INSERT INTO `medication` (`medication_id`, `name`, `dose`, `measure`, `route`) VALUES
-(1, 'Ibuprofen', 250, 'mg', 0),
-(2, 'Adderall', 50, 'mg', 0),
-(3, 'Codeine', 50, 'ug', 0),
-(4, 'Hydrochlorothiazide', 50, 'ug', 0),
-(5, 'Paracetamol', 250, 'mg', 0),
-(6, 'Benadryl', 50, 'ug', 0);
+INSERT INTO `medication` (`medication_id`, `name`, `dose`, `measure`, `route`, `frequency`) VALUES
+(1, 'Ibuprofen', 200, 'mg', 'O', 4),
+(2, 'Adderall', 50, 'mg', '0', 0),
+(3, 'Codeine', 60, 'mg', 'IM', 4),
+(4, 'Hydrochlorothiazide', 50, 'ug', '0', 0),
+(5, 'Paracetamol', 250, 'mg', '0', 0),
+(6, 'Benadryl', 50, 'ug', '0', 0),
+(7, 'Ibuprofen', 400, 'mg', 'IV', 4);
 
 -- --------------------------------------------------------
 
@@ -775,7 +778,7 @@ ALTER TABLE `imaging_results`
 -- AUTO_INCREMENT for table `medication`
 --
 ALTER TABLE `medication`
-  MODIFY `medication_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `medication_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `observations`
 --
