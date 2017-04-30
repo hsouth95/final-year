@@ -428,12 +428,13 @@ $(document).ready(function () {
             var drugName = $("#current_medication_table #drug-name").val(),
                 dose = $("#current_medication_table #dose").val(),
                 route = $("#current_medication_table #route").val(),
+                frequency = $("#current_medication_table #frequency").val(),
                 currentMedicationToAdd = [];
 
             currentMedicationToAdd.push(drugName);
             currentMedicationToAdd.push(dose);
             currentMedicationToAdd.push(route);
-            currentMedicationToAdd.push(medicationData.frequency);
+            currentMedicationToAdd.push(frequency);
             currentMedicationToAdd.push(medicationData.details);
             currentMedicationToAdd.push(medicationData.date);
 
@@ -467,13 +468,14 @@ $(document).ready(function () {
             var drugName = $("#drug-treatment-table #drug-name").val(),
                 dose = $("#drug-treatment-table #dose").val(),
                 route = $("#drug-treatment-table #route").val(),
+                frequency = $("#current_medication_table #frequency").val(),
                 drugTreatmentToAdd = [];
 
             // Add all the information in order it should appear to the user
             drugTreatmentToAdd.push(drugName);
             drugTreatmentToAdd.push(dose);
             drugTreatmentToAdd.push(route);
-            drugTreatmentToAdd.push(drugTreatmentData.frequency);
+            drugTreatmentToAdd.push(frequency);
             drugTreatmentToAdd.push(drugTreatmentData.details);
             drugTreatmentToAdd.push(FormAPI.data.filterDate(drugTreatmentData.date));
 
@@ -636,19 +638,25 @@ $(document).ready(function () {
      */
     populateDrugs = function (tableId) {
         $.getJSON(location.origin + "/medication").done(function (data) {
-            var drugData = convertJSONArrayToAutocomplete(data, "name");
+            var drugData = convertJSONArrayToAutocomplete(data, function (drug) {
+                return drug.name + " - " + drug.dose + drug.measure + " " + drug.route;
+            });
+
             $("#" + tableId + " input#drug-name").autocomplete({
                 data: drugData,
                 onAutocomplete: function (val) {
                     var medication = $.grep(data, function (e) {
-                        return e.name === val;
+                        // As autocomplete won't store the ID we have to compare the formatted string
+                        return e.name + " - " + e.dose + e.measure + " " + e.route === val;
                     });
 
                     // Populate the table with the values selected e.g. 500mg on selecting Paracetamol
                     if (medication) {
+                        $("#" + tableId + " #drug-name").val(medication[0].name);
                         $("#" + tableId + " #drug-id").val(medication[0].medication_id);
                         $("#" + tableId + " #route").val(medication[0].route);
                         $("#" + tableId + " #dose").val(medication[0].dose);
+                        $("#" + tableId + " #frequency").val(medication[0].frequency);
                     }
                 }
             });
@@ -783,16 +791,25 @@ $(document).ready(function () {
 
     /**
      * Due to the way that materializecss handles data for autocomplete a conversion is needed
+     * @argument data - The JSON array to parse
+     * @argument comparor - Either a attribute name or a function to retireve the value e.g. name + age
      * @see http://materializecss.com/forms.html#autocomplete
      */
-    convertJSONArrayToAutocomplete = function (data, attributeToConvert) {
+    convertJSONArrayToAutocomplete = function (data, comparor) {
         var convertedData = {};
 
+        // Materialize looks at attribute name, therefore convert array into one object
         for (var i = 0; i < data.length; i++) {
-            if (data[i].hasOwnProperty(attributeToConvert)) {
-                // Materialize looks at attribute name, therefore convert array into one object
-                convertedData[data[i][attributeToConvert]] = null;
+            var fieldName = null;
+            if (typeof comparor === "function") {
+                fieldName = comparor(data[i]);
+            } else {
+                if (data[i].hasOwnProperty(comparor)) {
+                    fieldName = data[i][comparor];
+                }
             }
+
+            convertedData[fieldName] = null;
         }
 
         return convertedData;
