@@ -67,6 +67,39 @@ models.validateFields = function (data, dataModel) {
     return { status: true };
 }
 
+models.getAbnormalValues = function (entityName, data, successCallback, errorCallback) {
+    fs.readFile(__dirname + "/normal-range.json", "utf8", function (err, dataModels) {
+        if (err) errorCallback(err.message);
+
+        var obj = JSON.parse(dataModels),
+            abnormalResults = [];
+
+        if (obj.hasOwnProperty(entityName)) {
+            var model = obj[entityName];
+            for (var attribute in model) {
+                if (data[attribute]) {
+                    if (data[attribute] > model[attribute].higherRange) {
+                        abnormalResults.push({
+                            name: attribute,
+                            isHigh: true
+                        });
+                    } else if (data[attribute] < model[attribute].lowerRange) {
+                        abnormalResults.push({
+                            name: attribute,
+                            isHigh: false
+                        });
+                    }
+                }
+            }
+
+            successCallback(abnormalResults);
+        } else {
+            errorCallback("No entity with that name");
+        }
+    });
+}
+
+
 models.validateDecimal = function (modelAttribute, dataAttribute) {
     if (dataAttribute !== NaN) {
         if (modelAttribute.maxIntLength && dataAttribute.toString().split(".").length > modelAttribute.maxIntLength) {
@@ -93,7 +126,7 @@ models.validateDecimal = function (modelAttribute, dataAttribute) {
 
         return true;
     }
-    
+
     return false;
 }
 

@@ -38,6 +38,21 @@ module.exports = function (app, passport) {
         }
     });
 
+    app.post("/abnormal", isLoggedIn, function (req, res) {
+        var data = req.body,
+            entityName = req.query.entity;
+
+        if (entityName && data) {
+            models.getAbnormalValues(entityName, data, function (abnormalResults) {
+                res.json(abnormalResults);
+            }, function (message) {
+                res.status(500).send("No entity range for that entity");
+            });
+        } else {
+            res.status(400).send("Entity name or data is not provided");
+        }
+    });
+
     app.get("/home", isLoggedIn, function (req, res) {
         res.sendFile(appDir + "/public/views/home.html");
     });

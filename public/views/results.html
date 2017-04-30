@@ -11,25 +11,25 @@
                 <tr>
                     <td>Date</td>
                     <td>
-                        <input id="blood_results_date" class="datepicker" data-entity="blood_results" data-field="date" type="date" />
+                        <input id="blood_results_date" class="datepicker" data-entity="blood_results" data-field="date" type="date" required>
                     </td>
                 </tr>
                 <tr>
                     <td>WBC</td>
                     <td>
-                        <input id="results_wbc" data-entity="blood_results" data-field="wbc" type="number" />
+                        <input id="results_wbc" data-entity="blood_results" data-field="wbc" type="number" minlength="2" maxlength="3">
                     </td>
                 </tr>
                 <tr>
                     <td>Hb</td>
                     <td>
-                        <input id="results_hb" data-entity="blood_results" data-field="hb" type="number" />
+                        <input id="results_hb" data-entity="blood_results" data-field="hb" type="number" minlength="2" maxlength="3">
                     </td>
                 </tr>
                 <tr>
                     <td>Platelets</td>
                     <td>
-                        <input id="results_platelets" data-entity="blood_results" data-field="platelets" type="number" />
+                        <input id="results_platelets" data-entity="blood_results" data-field="platelets" type="number" minlength="2" maxlength="3" />
                     </td>
                 </tr>
                 <tr>
@@ -71,7 +71,7 @@
                 <tr>
                     <td>Na+</td>
                     <td>
-                        <input id="results_na" data-entity="blood_results" data-field="na" type="number" />
+                        <input id="results_na" data-entity="blood_results" data-field="na" type="number"  />
                     </td>
                 </tr>
                 <tr>
@@ -89,7 +89,7 @@
                 <tr>
                     <td>Creatinine</td>
                     <td>
-                        <input id="results_creatinine" data-entity="blood_results" data-field="creatinine" type="number" />
+                        <input id="results_creatinine" data-entity="blood_results" data-field="creatinine" type="number" minlength="1" maxlength="3">
                     </td>
                 </tr>
                 <tr>
@@ -204,7 +204,7 @@
                 <tr>
                     <td>Date</td>
                     <td>
-                        <input id="urine_results_date" class="datepicker" data-entity="urine_results" data-field="date" type="date" />
+                        <input id="urine_results_date" class="datepicker" data-entity="urine_results" data-field="date" type="date" required>
                     </td>
                 </tr>
                 <tr>
@@ -280,7 +280,7 @@
                     <tr>
                         <td>Date</td>
                         <td>
-                            <input id="imaging_results_date" class="datepicker" data-entity="imaging_results" data-field="date" type="date" />
+                            <input id="imaging_results_date" class="datepicker" data-entity="imaging_results" data-field="date" type="date" required>
                         </td>
                     </tr>
                     <td>CXR</td>

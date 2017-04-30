@@ -1,0 +1,54 @@
+{
+    "observations": {
+        "bp_systolic": {
+            "lowerRange": 100,
+            "higherRange": 160
+        },
+        "bp_diastolic": {
+            "lowerRange": 70,
+            "higherRange": 95
+        },
+        "pulse": {
+            "lowerRange": 60,
+            "higherRange": 100
+        },
+        "temperature": {
+            "lowerRange": 36,
+            "higherRange": 37
+        },
+        "respiratory_rate": {
+            "lowerRange": 10,
+            "higherRange": 16
+        }
+    },
+    "blood_results": {
+        "hb": {
+            "lowerRange": 115,
+            "higherRange": 180
+        },
+        "platelets": {
+            "lowerRange": 140,
+            "higherRange": 400
+        },
+        "wbc": {
+            "lowerRange": 3.6,
+            "higherRange": 11.0
+        },
+        "na": {
+            "lowerRange": 133,
+            "higherRange": 146
+        },
+        "k": {
+            "lowerRange": 3.4,
+            "higherRange": 4.5
+        },
+        "urea": {
+            "lowerRange": 2.5,
+            "higherRange": 7.8
+        },
+        "creatinine": {
+            "lowerRange": 45,
+            "higherRange": 104
+        }
+    }
+}

@@ -12,7 +12,7 @@
 
   </div>
   <div class="input-field col s6">
-    <input id="observations_referral_reason" data-entity="clinical_episode" data-field="reason_referral" type="text">
+    <input id="observations_referral_reason" data-entity="clinical_episode" data-field="reason_referral" type="text" required>
     <label for="observations_referral_reason">Reason for AEC Referral</label>
   </div>
   <div class="col s2">
@@ -34,7 +34,7 @@
             Date
           </td>
           <td>
-            <input id="observations_date" class="datepicker" data-entity="observations" data-field="date" type="date">
+            <input id="observations_date" class="datepicker" data-entity="observations" data-field="date" type="date" required>
           </td>
         </tr>
         <tr>
@@ -42,7 +42,7 @@
             BP Systolic
           </td>
           <td>
-            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_systolic" type="number">
+            <input id="observations_bp_systolic" class="validate" data-entity="observations" data-field="bp_systolic" type="number" minlength="2" max="999">
           </td>
         </tr>
         <tr>
@@ -50,7 +50,7 @@
             BP Diastolic
           </td>
           <td>
-            <input id="observations_bp_systolic" data-entity="observations" data-field="bp_diastolic" type="number">
+            <input id="observations_bp_systolic" class="validate" data-entity="observations" data-field="bp_diastolic" type="number" minlength="2" maxlength="3">
           </td>
         </tr>
         <tr>
@@ -58,7 +58,7 @@
             Pulse
           </td>
           <td>
-            <input id="observations_pulse" data-entity="observations" data-field="pulse" type="number">
+            <input id="observations_pulse" class="validate" data-entity="observations" data-field="pulse" type="number" minlength="2" maxlength="3">
           </td>
         </tr>
         <tr>
@@ -66,7 +66,7 @@
             Temperature
           </td>
           <td>
-            <input id="observations_temperature" data-entity="observations" data-field="temperature" type="number">
+            <input id="observations_temperature" class="validate" data-entity="observations" data-field="temperature" type="number" minlength="2" maxlength="2">
           </td>
         </tr>
         <tr>
@@ -74,7 +74,7 @@
             Respiratory Rate
           </td>
           <td>
-            <input id="observations_respiratory_rate" data-entity="observations" data-field="respiratory_rate" type="number">
+            <input id="observations_respiratory_rate" class="validate" data-entity="observations" data-field="respiratory_rate" type="number" minlength="1" maxlength="2">
           </td>
         </tr>
         <tr>
@@ -96,7 +96,7 @@
             NEWS Score
           </td>
           <td>
-            <input id="observations_news_score" data-entity="observations" data-field="news_score" type="number" disabled>
+            <input id="observations_news_score" class="validate" data-entity="observations" data-field="news_score" type="number" max="10" disabled>
           </td>
     </table>
     <div class="col s6 row" id="observations-results">
@@ -106,31 +106,31 @@
   <button class="btn waves-effect waves-light right" type="button" id="add-examination" name="action">Add Examination</button>
   <div class="row">
     <div class="col s2">
-      <input type="checkbox" id="anaemia" data-entity="examination" data-field="anaemia" disabled>
+      <input type="checkbox" id="anaemia" data-entity="examination" data-field="anaemia">
       <label for="anaemia">Anaemia</label>
     </div>
     <div class="col s2">
-      <input type="checkbox" id="jaundice" data-entity="examination" data-field="jaundice" disabled>
+      <input type="checkbox" id="jaundice" data-entity="examination" data-field="jaundice">
       <label for="jaundice">Jaundice</label>
     </div>
     <div class="col s2">
-      <input type="checkbox" id="cyanosis" data-entity="examination" data-field="cyanosis" disabled>
+      <input type="checkbox" id="cyanosis" data-entity="examination" data-field="cyanosis">
       <label for="cyanosis">Cyanosis</label>
     </div>
     <div class="col s2">
-      <input type="checkbox" id="clubbing" data-entity="examination" data-field="clubbing" disabled>
+      <input type="checkbox" id="clubbing" data-entity="examination" data-field="clubbing">
       <label for="clubbing">Clubbing</label>
     </div>
     <div class="col s2">
-      <input type="checkbox" id="lymphnodes" data-entity="examination" data-field="lymphnodes" disabled>
+      <input type="checkbox" id="lymphnodes" data-entity="examination" data-field="lymphnodes">
       <label for="lymphnodes">Lymph Nodes</label>
     </div>
     <div class="col s2">
-      <input type="checkbox" id="dehydration" data-entity="examination" data-field="dehydration" disabled>
+      <input type="checkbox" id="dehydration" data-entity="examination" data-field="dehydration">
       <label for="dehydration">Dehydration</label>
     </div>
     <div class="col s2">
-      <input type="checkbox" id="drowsy" data-entity="examination" data-field="drowsy" disabled>
+      <input type="checkbox" id="drowsy" data-entity="examination" data-field="drowsy">
       <label for="drowsy">Drowsy</label>
     </div>
   </div>
@@ -142,15 +142,15 @@
       <h4>Cardiovascular</h4>
       <div class="input-field inline">
         <label for="examinations-pulse">Pulse</label>
-        <input type="number" id="examinations-pulse" data-entity="examination" data-field="pulse">
+        <input type="number" id="examinations-pulse" data-entity="examination" data-field="pulse" maxlength="2">
       </div>
       <div class="input-field inline">
         <label for="examinations-bp-systolic">BP Systolic</label>
-        <input type="number" id="examinations-bp-systolic" data-entity="examination" data-field="bp_systolic">
+        <input type="number" id="examinations-bp-systolic" data-entity="examination" data-field="bp_systolic" maxlength="3" minlength="2">
       </div>
       <div class="input-field inline">
         <label for="examinations-bp-diastolic">BP Diastolic</label>
-        <input type="number" id="examinations-bp-diastolic" data-entity="examination" data-field="bp_diastolic">
+        <input type="number" id="examinations-bp-diastolic" data-entity="examination" data-field="bp_diastolic" maxlength="3" minlength="2">
       </div>
       <div class="input-field">
         <select id="soa" data-entity="examination" data-field="SOA" class="browser-default">
@@ -166,11 +166,11 @@
       <h4>Respiratory</h4>
       <div class="input-field inline">
         <label for="examinations-respiratory-rate">Respiratory Rate/min</label>
-        <input type="number" id="examinations-respiratory-rate" data-entity="examination" data-field="respiratory_rate_min">
+        <input type="number" id="examinations-respiratory-rate" data-entity="examination" data-field="respiratory_rate_min" minlength="1" maxlength="2">
       </div>
       <div class="input-field inline">
         <label for="examinations-respiratory-sats">Sats %</label>
-        <input type="number" id="examinations-respiratory-sats" data-entity="examination" data-field="respiratory_sats">
+        <input type="number" id="examinations-respiratory-sats" data-entity="examination" data-field="respiratory_sats" minlength="1" maxlength="3" max="100">
       </div>
       <img class="drawing-image" src="images/lungs.PNG" data-original-src="images/lungs.PNG" id="lungs-drawing" data-entity="examination"
         data-field="respiratory_diagram">

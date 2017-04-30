@@ -249,6 +249,10 @@ $(document).ready(function () {
      * Handles the adding of a set of observations
      */
     addObservations = function () {
+        if (!FormAPI.data.isInputEntityValid("observations")) {
+            return;
+        }
+
         var observations = FormAPI.data.getDataFromForm("observations"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/observations";
         $.post(url, observations, function (data) {
@@ -310,7 +314,7 @@ $(document).ready(function () {
                 observationProperty = document.createElement("div");
             observationProperty.className = "observation-result-element";
 
-            if (observations.hasOwnProperty(fieldName) && observations[fieldName] !== null ) {
+            if (observations.hasOwnProperty(fieldName) && observations[fieldName] !== null) {
                 // Handle the date differently
                 if (fieldName === "date") {
                     observationProperty.innerHTML = FormAPI.data.filterDate(observations[fieldName]);
@@ -361,6 +365,10 @@ $(document).ready(function () {
      * Handles the adding of the examinations to the database
      */
     addExamination = function () {
+        if (!FormAPI.data.isInputEntityValid("examination")) {
+            return;
+        }
+
         var examinations = FormAPI.data.getDataFromForm("examination"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/examinations";
 
@@ -385,6 +393,10 @@ $(document).ready(function () {
      * Handles the adding of the history to the database
      */
     addHistory = function () {
+        if (!FormAPI.data.isInputEntityValid("history")) {
+            return;
+        }
+
         var history = FormAPI.data.getDataFromForm("history"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/history";
 
@@ -400,6 +412,10 @@ $(document).ready(function () {
      * Handles the adding of the current medication to the database
      */
     addCurrentMedication = function () {
+        if (!FormAPI.data.isInputEntityValid("current_medication")) {
+            return;
+        }
+
         var medicationData = FormAPI.data.getDataFromForm("current_medication"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/currentmedication";
 
@@ -435,6 +451,10 @@ $(document).ready(function () {
      * Handles the adding of a selected medication to the patients drug treatment list
      */
     addDrugTreatment = function () {
+        if (!FormAPI.data.isInputEntityValid("drug_treatment")) {
+            return;
+        }
+
         var drugTreatmentData = FormAPI.data.getDataFromForm("drug_treatment"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/drugtreatment";
 
@@ -471,6 +491,10 @@ $(document).ready(function () {
      * Handles the adding of the treatment information
      */
     addTreatment = function () {
+        if (!FormAPI.data.isInputEntityValid("treatment")) {
+            return;
+        }
+
         var treatment = FormAPI.data.getDataFromForm("treatment"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/treatment";
 
@@ -486,6 +510,10 @@ $(document).ready(function () {
      * Handles the adding of the blood results to the database
      */
     addBloodResults = function () {
+        if (!FormAPI.data.isInputEntityValid("blood_results")) {
+            return;
+        }
+
         var bloodResults = FormAPI.data.getDataFromForm("blood_results"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/bloodresults";
 
@@ -502,6 +530,10 @@ $(document).ready(function () {
      * Handles the adding of the urine results to the database
      */
     addUrineResults = function () {
+        if (!FormAPI.data.isInputEntityValid("urine_results")) {
+            return;
+        }
+
         var urineResults = FormAPI.data.getDataFromForm("urine_results"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/urineresults";
 
@@ -518,6 +550,10 @@ $(document).ready(function () {
      * Handles the adding of the imaging results to the database
      */
     addImagingResults = function () {
+        if (!FormAPI.data.isInputEntityValid("imaging_results")) {
+            return;
+        }
+
         var imagingResults = FormAPI.data.getDataFromForm("imaging_results"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/imagingresults";
 
@@ -534,6 +570,10 @@ $(document).ready(function () {
      * Handles the adding of the diagnosis values to the database
      */
     addDiagnosis = function () {
+        if (!FormAPI.data.isInputEntityValid("problem_list")) {
+            return;
+        }
+
         var diagnosis = FormAPI.data.getDataFromForm("problem_list"),
             url = location.origin + "/patients/" + episode.patient_id + "/episodes/" + episode.episode_id + "/problemlist";
 
@@ -1183,6 +1223,27 @@ $(document).ready(function () {
         }
     }
 
+    FormAPI.data.isInputEntityValid = function (entityName) {
+        var fields = $("input[data-entity=" + entityName + "]"),
+            isEntityValid = true;
+
+        $.each(fields, function () {
+            if (!this.validity.valid) {
+                var label = $("label[for='" + this.id + "']"),
+                    labelName = label && label.length >= 1 ? label[0].text() : this.dataset.field,
+                    // Default html5 validation uses the name 'Value', replace this with a friendlier name
+                    errorMessage = this.validationMessage.replace("Value", labelName);
+
+                FormAPI.error.showErrorDialog(errorMessage);
+
+                isEntityValid = false;
+                return false;
+            }
+        });
+
+        return isEntityValid;
+    }
+
     /**
      * Updates the progress of the episode visually to the user
      */
@@ -1326,7 +1387,7 @@ $(document).ready(function () {
         $("footer #footer-patient-name").html(patientName);
     }
 
-    FormAPI.actionBar.clear = function(){
+    FormAPI.actionBar.clear = function () {
         $("footer #footer-patient-name").html("");
         $("footer #footer-episode-info").html("");
         $("footer #footer-action-submit").prop("disabled", true);

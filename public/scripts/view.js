@@ -37,7 +37,7 @@ $(document).ready(function () {
         $.getJSON(episodeBaseURL + "/history", function (data) {
             episode.history = data[0];
 
-            $("#presenting_complaint").html(episode.history.presenting_complaint);
+            //$("#presenting_complaint").html(episode.history.presenting_complaint);
         });
 
         $.getJSON(episodeBaseURL + "/history", function (data) {
@@ -46,6 +46,11 @@ $(document).ready(function () {
 
         $.getJSON(episodeBaseURL + "/observations", function (data) {
             episode.observations = data;
+            data[0].bp_diastolic = 65;
+            $("body").append(JSON.stringify(data[0]));
+            $.post(location.origin + "/abnormal?entity=observations", data[0], function (data) {
+                $("#abnormal-results").html(JSON.stringify(data));
+            });
         });
 
         $.getJSON(episodeBaseURL + "/bloodresults", function (data) {
@@ -70,7 +75,7 @@ $(document).ready(function () {
         $.getJSON(episodeBaseURL + "/problemlist", function (data) {
             episode.examinations = data[0];
 
-            $("#working_diagnosis").html(episode.examinations.working_diagnosis);
+            //$("#working_diagnosis").html(episode.examinations.working_diagnosis);
         });
     });
 
