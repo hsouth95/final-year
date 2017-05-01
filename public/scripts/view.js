@@ -19,8 +19,8 @@ $(document).ready(function () {
             if (data && data.length === 1) {
                 data = data[0];
                 episode.patient = data;
-                $("#patient_name").html(data.firstname + " " + data.surname);
-                $("#patient_number").html(data.patient_id);
+
+                populateEntityFields("patient", data);
             }
         }).fail(function (err) {
             alert(err);
@@ -35,13 +35,12 @@ $(document).ready(function () {
         });
 
         $.getJSON(episodeBaseURL + "/history", function (data) {
-            episode.history = data[0];
+            if (data && data.length === 1) {
 
-            //$("#presenting_complaint").html(episode.history.presenting_complaint);
-        });
+                episode.history = data[0];
 
-        $.getJSON(episodeBaseURL + "/history", function (data) {
-            episode.history = data[0];
+                populateEntityFields("history", data[0]);
+            }
         });
 
         $.getJSON(episodeBaseURL + "/observations", function (data) {
@@ -54,30 +53,60 @@ $(document).ready(function () {
         });
 
         $.getJSON(episodeBaseURL + "/bloodresults", function (data) {
-            episode.bloodresults = data[0];
+            if (data && data.length === 1) {
+
+                episode.bloodresults = data[0];
+            }
         });
 
         $.getJSON(episodeBaseURL + "/imagingresults", function (data) {
-            episode.imagingresults = data[0];
+            if (data && data.length === 1) {
+                episode.imagingresults = data[0];
+            }
         });
+
         $.getJSON(episodeBaseURL + "/urineresults", function (data) {
-            episode.urineresults = data[0];
+            if (data && data.length === 1) {
+                episode.urineresults = data[0];
+            }
         });
 
         $.getJSON(episodeBaseURL + "/currentmedication", function (data) {
-            episode.currentmedication = data;
+            if (data && data.length === 1) {
+                episode.currentmedication = data;
+            }
         });
 
         $.getJSON(episodeBaseURL + "/examinations", function (data) {
-            episode.examinations = data[0];
+            if (data && data.length === 1) {
+                episode.examinations = data[0];
+            }
         });
 
         $.getJSON(episodeBaseURL + "/problemlist", function (data) {
-            episode.examinations = data[0];
+            if (data && data.length === 1) {
+                episode.problemlist = data[0];
 
-            //$("#working_diagnosis").html(episode.examinations.working_diagnosis);
+                populateEntityFields("problem_list", data[0]);
+            }
+        });
+
+        $.getJSON(location.origin + "/users/" + episode.completed_by, function (data) {
+            if (data && data.length === 1) {
+                populateEntityFields("users", data[0]);
+            }
         });
     });
+
+    populateEntityFields = function (entityName, data) {
+        var fields = $("div[data-entity='" + entityName + "']");
+
+        $.each(fields, function () {
+            if (data.hasOwnProperty(this.dataset.field)) {
+                this.innerHTML = data[this.dataset.field];
+            }
+        });
+    }
 
     function getParameterByName(name, url) {
         if (!url) {

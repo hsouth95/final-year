@@ -65,9 +65,10 @@ routes.post("/", function (req, res) {
 });
 
 routes.post("/:episodeId/complete", function (req, res) {
-    var episodeId = req.params.episodeId;
+    var episodeId = req.params.episodeId,
+        userId = req.user.user_id;
 
-    db.query("UPDATE clinical_episode SET completed = 1, completed_on = NOW() WHERE episode_id = ?", [episodeId], function (err, results) {
+    db.query("UPDATE clinical_episode SET completed = 1, completed_on = NOW(), completed_by = ? WHERE episode_id = ?", [userId, episodeId], function (err, results) {
         if (err) {
             res.status(400).send("Failed to update the episode");
         } else {

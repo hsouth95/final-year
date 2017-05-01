@@ -5,6 +5,7 @@ var routes = require("express").Router(),
     medications = require("./medication.js"),
     gp = require("./gp.js"),
     diagnosis = require("./diagnosis.js"),
+    users = require("./users.js"),
     models = require("../models"),
     path = require("path"),
     fs = require("fs");
@@ -82,6 +83,7 @@ module.exports = function (app, passport) {
     app.use("/patients", patients);
     app.use("/gp", gp);
     app.use("/diagnosis", diagnosis);
+    app.use("/users", users);
 
     function isLoggedIn(req, res, next) {
         if (req.isAuthenticated()) return next();
