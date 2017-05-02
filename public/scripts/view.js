@@ -14,7 +14,6 @@ $(document).ready(function () {
         episode = data[0];
 
         populateEntityFields("clinical_episode", episode);
-        //$("#date").html(episode.date.substring(0, 10));
 
         $.getJSON(location.origin + "/patients/" + patientId, function (data) {
             if (data && data.length === 1) {
@@ -49,11 +48,6 @@ $(document).ready(function () {
             episode.observations = data;
 
             populateObservations(data);
-
-            //$("body").append(JSON.stringify(data[0]));
-            $.post(location.origin + "/abnormal?entity=observations", data[0], function (data) {
-                //$("#abnormal-results").html(JSON.stringify(data));
-            });
         });
 
         $.getJSON(episodeBaseURL + "/bloodresults", function (data) {
@@ -79,6 +73,12 @@ $(document).ready(function () {
         $.getJSON(episodeBaseURL + "/currentmedication", function (data) {
             if (data && data.length === 1) {
                 episode.currentmedication = data;
+            }
+        });
+
+        $.getJSON(episodeBaseURL + "/drugtreatment", function (data) {
+            if (data && data.length >= 1) {
+                populateMedications(data);
             }
         });
 
@@ -108,7 +108,11 @@ $(document).ready(function () {
 
         $.each(fields, function () {
             if (data.hasOwnProperty(this.dataset.field)) {
-                this.innerHTML = data[this.dataset.field];
+                if (this.dataset.field === "date") {
+                    this.innerHTML = data[this.dataset.field].substring(0, 10);
+                } else {
+                    this.innerHTML = data[this.dataset.field];
+                }
             }
         });
     }
@@ -150,8 +154,11 @@ $(document).ready(function () {
                         element.className = abnormalResult.isHigh ? "high-result" : "low-result";
                     }
 
-                    element.innerHTML = observation[fieldName];
-
+                    if (fieldName === "date") {
+                        element.innerHTML = observation[fieldName].substring(0, 10);
+                    } else {
+                        element.innerHTML = observation[fieldName];
+                    }
                 } else {
                     element.innerHTML = "-";
                 }
@@ -206,6 +213,48 @@ $(document).ready(function () {
         });
     }
 
+    populateMedications = function (drugTreatments) {
+        if (drugTreatments && drugTreatments.length >= 1) {
+            $.each(drugTreatments, function () {
+                addTableRow("drugtreatments", getMedicationElements(this));
+            });
+        }
+    }
+
+    getMedicationElements = function (medication) {
+        var fields = [
+            "date",
+            "name",
+            "dose",
+            "measure",
+            "route",
+            "frequency",
+            "details"
+        ];
+
+        filteredMedication = [];
+
+        for (var attribute in fields) {
+            var fieldName = fields[attribute],
+                element = document.createElement("div");
+
+            if (medication.hasOwnProperty(fieldName)) {
+
+                if (fieldName === "date") {
+                    element.innerHTML = medication[fieldName].substring(0, 10);
+                } else {
+                    element.innerHTML = medication[fieldName]
+                }
+            } else {
+                element.innerHTML = "-";
+            }
+
+            filteredMedication.push(element);
+        }
+
+        return filteredMedication;
+    }
+
     populateAbnormalBloodResults = function (results) {
         getAbnormalResults("blood_results", results).done(function (abnormalResults) {
             var container = document.getElementById("abnormal-results");
@@ -215,9 +264,9 @@ $(document).ready(function () {
                     var element = document.createElement("div");
 
                     if (this.isHigh) {
-                        element.className = "chip red lighten-3";
+                        element.className = "chip result-chip red lighten-3";
                     } else {
-                        element.className = "chip cyan lighten-3";
+                        element.className = "chip result-chip cyan lighten-3";
                     }
 
                     element.innerHTML = toTitleCase(this.name) + ": " + results[this.name];

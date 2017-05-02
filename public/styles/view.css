@@ -3,7 +3,8 @@
 }
 
 main {
-    padding: 50px;
+    font-size: 18px;
+    padding: 0 50px;
 }
 
 .view-value {
@@ -29,4 +30,12 @@ label {
 
 .high-result {
     background-color: #ef9a9a;
+}
+
+.result-chip {
+    font-size: 32px;
+}
+
+.section {
+    margin-bottom: 50px;
 }

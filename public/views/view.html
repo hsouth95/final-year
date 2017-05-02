@@ -27,7 +27,7 @@
     <main>
         <div class="row">
             <div class="col s12">
-                <ul class="tabs">
+                <ul class="tabs z-depth-1">
                     <li class="tab col s6"><a class="active" href="#presentation">Presentation</a></li>
                     <li class="tab col s6">
                         <a href="#observations-results">Observations + Results</a>
@@ -35,7 +35,7 @@
                 </ul>
             </div>
             <div id="presentation">
-                <div class="row">
+                <div class="row section">
                     <div class="col s3">
                         <label for="patient_name">Patient Name</label>
                         <div class="view-value" data-entity="patient" data-field="firstname" id="patient_name"></div>
@@ -53,22 +53,22 @@
                         <div class="view-value" data-entity="users" data-field="firstname" id="completed_by"></div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row section">
                     <div class="col s12">
                         <label for="presenting_complaint">Presenting Complaint</label>
                         <div class="view-value" data-entity="history" data-field="presenting_complaint" id="presenting_complaint"></div>
                     </div>
                 </div>
-                <div id="problem_list">
+                <div class="row section" id="problem_list">
 
                 </div>
-                <div class="row">
+                <div class="row section">
                     <div class="col s12">
                         <label for="working_diagnosis">Working Diagnosis</label>
                         <div class="view-value" data-entity="problem_list" data-field="working_diagnosis" id="working_diagnosis"></div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row section">
                     <div class="col s12">
                         <label for="past_medical_history">Past Medical History</label>
                         <div id="past_medical_history">
@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div id="observations-results">
-                <div class="row">
+                <div class="row section">
                     <div class="col s3">
                         <label for="patient_name">Patient Name</label>
                         <div class="view-value" data-entity="patient" data-field="firstname" id="patient_name"></div>
@@ -96,7 +96,7 @@
                         <div class="view-value" data-entity="users" data-field="firstname" id="completed_by"></div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row section">
                     <div class="col s12">
                         <label for="observations">Observations</label>
                         <table id="observations">
@@ -119,11 +119,32 @@
                         </table>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row section">
                     <div class="col s12">
                         <label for="abnormal-results">Abnormal Results</label>
                         <div id="abnormal-results">
                         </div>
+                    </div>
+                </div>
+                <div class="row section">
+                    <div class="col s12">
+                        <label for="drugtreatments">Prescribed Medication</label>
+                        <table id="drugtreatments">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Drug Name</th>
+                                    <th>Dose</th>
+                                    <th>Measure</th>
+                                    <th>Route</th>
+                                    <th>Frequency</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
