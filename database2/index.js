@@ -4,7 +4,8 @@ var mysql = require("mysql"),
         host: "127.0.0.1",
         user: "root",
         password: "",
-        database: "rbch"
+        database: "rbch",
+        dateStrings: 'date'
     }),
     isTransactionPending = false,
     transactionConnection = null;

@@ -101,6 +101,12 @@ $(document).ready(function () {
                 populateEntityFields("users", data[0]);
             }
         });
+
+        $.getJSON(episodeBaseURL + "/treatment", function (data) {
+            if (data && data.length === 1) {
+                populateTreatment(data[0]);
+            }
+        });
     });
 
     populateEntityFields = function (entityName, data) {
@@ -108,13 +114,24 @@ $(document).ready(function () {
 
         $.each(fields, function () {
             if (data.hasOwnProperty(this.dataset.field)) {
-                if (this.dataset.field === "date") {
-                    this.innerHTML = data[this.dataset.field].substring(0, 10);
-                } else {
-                    this.innerHTML = data[this.dataset.field];
-                }
+                this.innerHTML = data[this.dataset.field];
             }
         });
+    }
+
+    populateTreatment = function (data) {
+        var optionSet = {
+            0: "2 Weeks",
+            1: "4 Weeks",
+            2: "6 Weeks",
+            3: "GP Follow-up"
+        };
+
+        if (data.hasOwnProperty("follow_up_when") && optionSet.hasOwnProperty(data.follow_up_when)) {
+            $("div[data-field='follow_up_when']").html(optionSet[data.follow_up_when]);
+        }
+
+        $("div[data-field='follow_up_where']").html(data.follow_up_where);
     }
 
     populateObservations = function (observations) {

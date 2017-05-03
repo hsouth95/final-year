@@ -1,5 +1,6 @@
 var routes = require("express").Router({ mergeParams: true }),
     db = require("../database2"),
+    moment = require("moment"),
     models = require("../models");
 
 routes.get("/", function (req, res) {
@@ -36,6 +37,9 @@ routes.post("/", function (req, res) {
         observation = req.body;
 
     observation.user_id = req.user.user_id;
+
+    observation.date = moment().format("YYYY-MM-DD").toString();
+    observation.time = moment().format("kk:mm:ss").toString();
 
     models.validate("observations", observation, function (err) {
         res.status(400).send(err);

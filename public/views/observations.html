@@ -31,18 +31,11 @@
       <tbody>
         <tr>
           <td>
-            Date
-          </td>
-          <td>
-            <input id="observations_date" class="datepicker" data-entity="observations" data-field="date" type="date" required>
-          </td>
-        </tr>
-        <tr>
-          <td>
             BP Systolic
           </td>
           <td>
-            <input id="observations_bp_systolic" class="validate" data-entity="observations" data-field="bp_systolic" type="number" minlength="2" max="999">
+            <input id="observations_bp_systolic" class="validate" data-entity="observations" data-field="bp_systolic" type="number" minlength="2"
+              max="999">
           </td>
         </tr>
         <tr>
@@ -50,7 +43,8 @@
             BP Diastolic
           </td>
           <td>
-            <input id="observations_bp_systolic" class="validate" data-entity="observations" data-field="bp_diastolic" type="number" minlength="2" maxlength="3">
+            <input id="observations_bp_systolic" class="validate" data-entity="observations" data-field="bp_diastolic" type="number"
+              minlength="2" maxlength="3">
           </td>
         </tr>
         <tr>
@@ -58,7 +52,8 @@
             Pulse
           </td>
           <td>
-            <input id="observations_pulse" class="validate" data-entity="observations" data-field="pulse" type="number" minlength="2" maxlength="3">
+            <input id="observations_pulse" class="validate" data-entity="observations" data-field="pulse" type="number" minlength="2"
+              maxlength="3">
           </td>
         </tr>
         <tr>
@@ -66,7 +61,8 @@
             Temperature
           </td>
           <td>
-            <input id="observations_temperature" class="validate" data-entity="observations" data-field="temperature" type="number" minlength="2" maxlength="2">
+            <input id="observations_temperature" class="validate" data-entity="observations" data-field="temperature" type="number" minlength="2"
+              maxlength="2">
           </td>
         </tr>
         <tr>
@@ -74,7 +70,8 @@
             Respiratory Rate
           </td>
           <td>
-            <input id="observations_respiratory_rate" class="validate" data-entity="observations" data-field="respiratory_rate" type="number" minlength="1" maxlength="2">
+            <input id="observations_respiratory_rate" class="validate" data-entity="observations" data-field="respiratory_rate" type="number"
+              minlength="1" maxlength="2">
           </td>
         </tr>
         <tr>
@@ -96,7 +93,8 @@
             NEWS Score
           </td>
           <td>
-            <input id="observations_news_score" class="validate" data-entity="observations" data-field="news_score" type="number" max="10" disabled>
+            <input id="observations_news_score" class="validate" data-entity="observations" data-field="news_score" type="number" max="10"
+              disabled>
           </td>
     </table>
     <div class="col s6 row" id="observations-results">
@@ -166,11 +164,13 @@
       <h4>Respiratory</h4>
       <div class="input-field inline">
         <label for="examinations-respiratory-rate">Respiratory Rate/min</label>
-        <input type="number" id="examinations-respiratory-rate" data-entity="examination" data-field="respiratory_rate_min" minlength="1" maxlength="2">
+        <input type="number" id="examinations-respiratory-rate" data-entity="examination" data-field="respiratory_rate_min" minlength="1"
+          maxlength="2">
       </div>
       <div class="input-field inline">
         <label for="examinations-respiratory-sats">Sats %</label>
-        <input type="number" id="examinations-respiratory-sats" data-entity="examination" data-field="respiratory_sats" minlength="1" maxlength="3" max="100">
+        <input type="number" id="examinations-respiratory-sats" data-entity="examination" data-field="respiratory_sats" minlength="1"
+          maxlength="3" max="100">
       </div>
       <img class="drawing-image" src="images/lungs.PNG" data-original-src="images/lungs.PNG" id="lungs-drawing" data-entity="examination"
         data-field="respiratory_diagram">
@@ -186,9 +186,19 @@
     <div class="col s6">
       <h4>Neuro</h4>
       <div class="input-field">
-         <i class="material-icons textarea-btn right">mode_edit</i>
-        <textarea id="neuro" data-entity="examination" data-field="neuro" class="materialize-textarea"></textarea>
-        <label for="neuro">Neuro</label>
+        <i class="material-icons textarea-btn right">mode_edit</i>
+        <textarea id="neuro_nerves" data-entity="examination" data-field="cranium_nerves" class="materialize-textarea"></textarea>
+        <label for="neuro_nerves">Cranium Nerves</label>
+      </div>
+      <div class="input-field">
+        <i class="material-icons textarea-btn right">mode_edit</i>
+        <textarea id="neuro_power" data-entity="examination" data-field="power" class="materialize-textarea"></textarea>
+        <label for="neuro_power">Power</label>
+      </div>
+      <div class="input-field">
+        <i class="material-icons textarea-btn right">mode_edit</i>
+        <textarea id="neuro_reflexes" data-entity="examination" data-field="reflexes" class="materialize-textarea"></textarea>
+        <label for="neuro_reflexes">Reflexes</label>
       </div>
     </div>
   </div>

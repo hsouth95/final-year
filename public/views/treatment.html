@@ -1,4 +1,5 @@
 <div class="row">
+    <h4>Prescribed Medication</h4>
     <table id="drug-treatment-table">
         <thead>
             <tr>
@@ -57,11 +58,15 @@
 </div>
 
 <div class="input-field">
-    <select id="follow_up" data-entity="treatment" data-field="follow_up" class="browser-default">
+    <select id="follow_up" data-entity="treatment" data-field="follow_up_when" class="browser-default">
         <option value="" selected>Choose Follow-up Arrangement</option>
         <option value="0">2 Weeks</option>
         <option value="1">4 Weeks</option>
         <option value="2">6 Weeks</option>
         <option value="3">GP Follow-up</option>
     </select>
+</div>
+<div class="input-field">
+    <label for="follow_up_where">Location of Follow-up</label>
+    <input type="text" data-entity="treatment" data-field="follow_up_where" id="follow_up_where">
 </div>

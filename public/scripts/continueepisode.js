@@ -71,8 +71,6 @@ $(document).ready(function () {
             onload: function () {
                 $("#add-history").click(addHistory);
                 $("select").material_select();
-
-                FormAPI.handwriting.setupHandwritingButtons();
             },
             completedAttributes: [
                 "history_id"
@@ -148,11 +146,7 @@ $(document).ready(function () {
             loaded: false,
             url: location.origin + "/view/diagnosis",
             onload: function () {
-                // populate diagnosis list
-                populateDiagnosis();
-
                 $("#add-diagnosis").click(addDiagnosis);
-                $("#complete-episode").click(completeEpisode);
             },
             completedAttributes: [
                 "problem_list_id",
@@ -260,6 +254,8 @@ $(document).ready(function () {
             if (!episode.observations) {
                 episode.observations = [];
             }
+
+            observations.date = moment().format("YYYY-MM-DD");
 
             displayObservations(observations);
 
@@ -664,23 +660,6 @@ $(document).ready(function () {
             FormAPI.error.showErrorDialog("Cannot populate the medication");
         })
     };
-
-    /**
-     * Populates the list of diagnosis' on the results tab
-     */
-    populateDiagnosis = function () {
-        $.getJSON(location.origin + "/diagnosis").done(function (data) {
-            var diagnosisData = convertJSONArrayToAutocomplete(data, "name");
-            $("input#problemlist").autocomplete({
-                data: diagnosisData,
-                multiple: {
-                    enable: true
-                }
-            });
-        }).fail(function () {
-            FormAPI.error.showErrorDialog("Cannot populate the diagnosis list");
-        });
-    }
 
     /**
      * Retrieves and populates both the previous and current episode of a patient
@@ -1544,6 +1523,7 @@ $(document).ready(function () {
         getFormHtml(tab.url).done(function (data) {
             $("#" + tab.name + "-form").append(data);
             tab.onload();
+            FormAPI.handwriting.setupHandwritingButtons();
             TABS[i].loaded = true;
         });
     });

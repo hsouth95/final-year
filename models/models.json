@@ -186,6 +186,14 @@
             "dateFormat": "YYYY-MM-DD",
             "dateAllowed": "{}<=(NOW)"
         },
+        "time": {
+            "type": "t",
+            "requiredCreation": true
+        },
+        "user_id": {
+            "type": "i",
+            "requiredCreation": true
+        },
         "bp_systolic": {
             "type": "i",
             "requiredCreation": false,
@@ -405,7 +413,13 @@
         "heart_sound_diagram": {
             "type": "t"
         },
-        "neuro": {
+        "reflexes": {
+            "type": "t"
+        },
+        "cranium_nerves": {
+            "type": "t"
+        },
+        "power": {
             "type": "t"
         }
     },

@@ -25,7 +25,7 @@
         </nav>
     </header>
     <main>
-        <div class="row">
+        <div class="row section">
             <div class="col s12">
                 <ul class="tabs z-depth-1">
                     <li class="tab col s6"><a class="active" href="#presentation">Presentation</a></li>
@@ -59,8 +59,11 @@
                         <div class="view-value" data-entity="history" data-field="presenting_complaint" id="presenting_complaint"></div>
                     </div>
                 </div>
-                <div class="row section" id="problem_list">
-
+                <div class="row section">
+                    <div class="col s12">
+                        <label for="problem_list">Problem List</label>
+                        <div class="view-value" data-entity="problem_list" data-field="problem_list" id="problem_list"></div>
+                    </div>
                 </div>
                 <div class="row section">
                     <div class="col s12">
@@ -72,7 +75,6 @@
                     <div class="col s12">
                         <label for="past_medical_history">Past Medical History</label>
                         <div id="past_medical_history">
-
                         </div>
                     </div>
                 </div>
@@ -145,6 +147,18 @@
 
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="row section">
+                    <div class="col s6">
+                        <label for="follow_up_when">Follow-up When</label>
+                        <div class="view-value" data-entity="treatment" data-field="follow_up_when" id="follow_up_when"></div>
+                    </div>
+                </div>
+                <div class="row section">
+                    <div class="col s6">
+                        <label for="follow_up_where">Follow-up Where</label>
+                        <div class="view-value" data-entity="treatment" data-field="follow_up_where" id="follow_up_where"></div>
                     </div>
                 </div>
             </div>
