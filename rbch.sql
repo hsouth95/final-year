@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 02, 2017 at 02:56 PM
+-- Generation Time: May 03, 2017 at 01:59 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -102,9 +102,10 @@ INSERT INTO `clinical_episode` (`episode_id`, `patient_id`, `gp_id`, `hospital_i
 (29, 111111111, 3, 1, '2017-04-05', '00:00:00', 'ED', 'Chest pains', 1, NULL, 6),
 (30, 123456789, 2, 1, '2017-04-20', '17:04:04', 'GP', 'Apples', 0, NULL, 6),
 (31, 555555555, 3, 2, '2017-04-23', '17:04:26', 'Speciality Clinic', 'Test', 1, NULL, 6),
-(32, 555555555, 2, 1, '2017-04-24', '00:04:07', 'GP', 'Ill', 0, NULL, 6),
+(32, 555555555, 2, 1, '2017-04-24', '00:04:07', 'GP', 'Ill', 1, '2017-05-02', 6),
 (33, 111111111, 2, 1, '2017-04-27', '00:00:00', 'GP', 'Panic attack', 0, '2017-04-27', 6),
-(34, 999999999, 2, 2, '2017-04-28', '00:00:00', 'ED', 'Test', 1, '2017-04-28', 6);
+(34, 999999999, 2, 2, '2017-04-28', '00:00:00', 'ED', 'Test', 1, '2017-04-28', 6),
+(35, 555555555, 2, 1, '2017-05-02', '14:05:06', 'GP', 'test', 0, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -222,7 +223,8 @@ INSERT INTO `episode_observations` (`episode_id`, `observation_id`) VALUES
 (32, 28),
 (32, 29),
 (32, 30),
-(34, 31);
+(34, 31),
+(35, 32);
 
 -- --------------------------------------------------------
 
@@ -247,7 +249,9 @@ CREATE TABLE `examination` (
   `bp_diastolic` int(3) NOT NULL,
   `respiratory_rate_min` int(3) NOT NULL,
   `respiratory_sats` int(4) NOT NULL,
-  `neuro` varchar(1024) NOT NULL,
+  `reflexes` varchar(1024) NOT NULL,
+  `cranium_nerves` varchar(512) NOT NULL,
+  `power` varchar(512) NOT NULL,
   `respiratory_diagram` varchar(512) NOT NULL,
   `gastro_diagram` varchar(255) NOT NULL,
   `other_diagram` varchar(512) NOT NULL,
@@ -258,18 +262,19 @@ CREATE TABLE `examination` (
 -- Dumping data for table `examination`
 --
 
-INSERT INTO `examination` (`examination_id`, `episode_id`, `user_id`, `anaemia`, `jaundice`, `cyanosis`, `clubbing`, `lymphnodes`, `dehydration`, `drowsy`, `pulse`, `SOA`, `bp_systolic`, `bp_diastolic`, `respiratory_rate_min`, `respiratory_sats`, `neuro`, `respiratory_diagram`, `gastro_diagram`, `other_diagram`, `heart_sound_diagram`) VALUES
-(10, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
-(12, 30, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
-(13, 30, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
-(14, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
-(15, 30, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', '', ''),
-(16, 30, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', 'lungs-30.jpg', '', '', ''),
-(25, 29, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', 'respiratory_diagram-29.jpg', '', '', ''),
-(26, 29, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', 'respiratory_diagram-29.jpg', 'gastro_diagram-29.jpg', '', ''),
-(27, 31, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', 'respiratory_diagram-31.jpg', 'gastro_diagram-31.jpg', 'other_diagram-31.jpg', ''),
-(28, 32, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 2, 3, 0, 98, 'hjahgljkahgljkhag', 'respiratory_diagram-32.jpg', 'gastro_diagram-32.jpg', 'other_diagram-32.jpg', 'heart_sound_diagram-32.jpg'),
-(29, 34, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', '', '');
+INSERT INTO `examination` (`examination_id`, `episode_id`, `user_id`, `anaemia`, `jaundice`, `cyanosis`, `clubbing`, `lymphnodes`, `dehydration`, `drowsy`, `pulse`, `SOA`, `bp_systolic`, `bp_diastolic`, `respiratory_rate_min`, `respiratory_sats`, `reflexes`, `cranium_nerves`, `power`, `respiratory_diagram`, `gastro_diagram`, `other_diagram`, `heart_sound_diagram`) VALUES
+(10, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', ''),
+(12, 30, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', ''),
+(13, 30, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', ''),
+(14, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', ''),
+(15, 30, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', ''),
+(16, 30, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', 'lungs-30.jpg', '', '', ''),
+(25, 29, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', 'respiratory_diagram-29.jpg', '', '', ''),
+(26, 29, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', 'respiratory_diagram-29.jpg', 'gastro_diagram-29.jpg', '', ''),
+(27, 31, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, '', '', '', 'respiratory_diagram-31.jpg', 'gastro_diagram-31.jpg', 'other_diagram-31.jpg', ''),
+(28, 32, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 2, 3, 0, 98, 'hjahgljkahgljkhag', '', '', 'respiratory_diagram-32.jpg', 'gastro_diagram-32.jpg', 'other_diagram-32.jpg', 'heart_sound_diagram-32.jpg'),
+(29, 34, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', ''),
+(32, 35, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 'gadggdgad', 'aadgfgdg', 'gadgdgad', 'respiratory_diagram-35.jpg', 'gastro_diagram-35.jpg', 'other_diagram-35.jpg', 'heart_sound_diagram-35.jpg');
 
 -- --------------------------------------------------------
 
@@ -429,6 +434,7 @@ CREATE TABLE `observations` (
   `observation_id` int(9) NOT NULL,
   `user_id` int(9) NOT NULL,
   `date` date DEFAULT NULL,
+  `time` time NOT NULL,
   `bp_systolic` int(11) DEFAULT NULL,
   `bp_diastolic` int(11) DEFAULT NULL,
   `pulse` int(11) DEFAULT NULL,
@@ -442,17 +448,18 @@ CREATE TABLE `observations` (
 -- Dumping data for table `observations`
 --
 
-INSERT INTO `observations` (`observation_id`, `user_id`, `date`, `bp_systolic`, `bp_diastolic`, `pulse`, `temperature`, `respiratory_rate`, `avpu`, `news_score`) VALUES
-(15, 0, '0000-00-00', NULL, NULL, 65, '37', 18, NULL, NULL),
-(16, 0, '0000-00-00', 130, 85, 120, '37', 12, NULL, NULL),
-(17, 0, '0000-00-00', 2, 3, 4, '5', 6, '1', 2),
-(18, 0, '0000-00-00', 2, 3, 4, '5', 6, '7', 8),
-(26, 6, '2017-05-02', 89, 85, 75, '36', 17, '1', 1),
-(27, 0, '0000-00-00', NULL, 3, NULL, '5', NULL, '1', 2),
-(28, 0, '0000-00-00', 1, 2, 3, '4', 5, 'V', 1),
-(29, 0, '2017-04-19', 1, NULL, NULL, NULL, NULL, 'V', NULL),
-(30, 0, '2017-04-29', NULL, NULL, NULL, NULL, NULL, 'V', NULL),
-(31, 0, '2017-04-12', 54, 32, 1, '1', 2, NULL, 1);
+INSERT INTO `observations` (`observation_id`, `user_id`, `date`, `time`, `bp_systolic`, `bp_diastolic`, `pulse`, `temperature`, `respiratory_rate`, `avpu`, `news_score`) VALUES
+(15, 0, '0000-00-00', '00:00:00', NULL, NULL, 65, '37', 18, NULL, NULL),
+(16, 0, '0000-00-00', '00:00:00', 130, 85, 120, '37', 12, NULL, NULL),
+(17, 0, '0000-00-00', '00:00:00', 2, 3, 4, '5', 6, '1', 2),
+(18, 0, '0000-00-00', '00:00:00', 2, 3, 4, '5', 6, '7', 8),
+(26, 6, '2017-05-02', '00:00:00', 89, 85, 75, '36', 17, '1', 1),
+(27, 0, '0000-00-00', '00:00:00', NULL, 3, NULL, '5', NULL, '1', 2),
+(28, 0, '0000-00-00', '00:00:00', 1, 2, 3, '4', 5, 'V', 1),
+(29, 0, '2017-04-19', '00:00:00', 1, NULL, NULL, NULL, NULL, 'V', NULL),
+(30, 0, '2017-04-29', '00:00:00', NULL, NULL, NULL, NULL, NULL, 'V', NULL),
+(31, 0, '2017-04-12', '00:00:00', 54, 32, 1, '1', 2, NULL, 1),
+(32, 6, '2017-05-02', '05:49:35', 55, 66, 55, '44', 88, 'V', 3);
 
 -- --------------------------------------------------------
 
@@ -497,6 +504,7 @@ CREATE TABLE `problem_list` (
   `episode_id` int(9) NOT NULL,
   `user_id` int(9) NOT NULL,
   `working_diagnosis` varchar(512) NOT NULL,
+  `problem_list` varchar(512) NOT NULL,
   `fbc` tinyint(1) NOT NULL,
   `biochem` tinyint(1) NOT NULL,
   `clotting` tinyint(1) NOT NULL,
@@ -518,11 +526,14 @@ CREATE TABLE `problem_list` (
 -- Dumping data for table `problem_list`
 --
 
-INSERT INTO `problem_list` (`problem_list_id`, `episode_id`, `user_id`, `working_diagnosis`, `fbc`, `biochem`, `clotting`, `d_dimer`, `trop_t`, `cx`, `blood`, `esr`, `crp`, `cxr`, `ct`, `ultrasound`, `mri`, `echo`, `svg`) VALUES
-(4, 28, 0, 'Fractured Arm', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(5, 29, 0, 'ageadgdag', 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0),
-(6, 29, 0, 'ahlgag', 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(7, 34, 6, 'adggdag', 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+INSERT INTO `problem_list` (`problem_list_id`, `episode_id`, `user_id`, `working_diagnosis`, `problem_list`, `fbc`, `biochem`, `clotting`, `d_dimer`, `trop_t`, `cx`, `blood`, `esr`, `crp`, `cxr`, `ct`, `ultrasound`, `mri`, `echo`, `svg`) VALUES
+(4, 28, 0, 'Fractured Arm', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 29, 0, 'ageadgdag', '', 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0),
+(6, 29, 0, 'ahlgag', '', 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(7, 34, 6, 'adggdag', 'test', 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(8, 31, 6, 'Testing working diagnosis', 'test', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(10, 32, 6, 'test', 'kfghdrsdfg', 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0),
+(11, 35, 6, 'adgdagdagadg', '', 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -536,17 +547,19 @@ CREATE TABLE `treatment` (
   `user_id` int(9) NOT NULL,
   `additional_treatments` varchar(522) NOT NULL,
   `information_given` varchar(522) NOT NULL,
-  `follow_up` int(1) NOT NULL
+  `follow_up_when` int(1) NOT NULL,
+  `follow_up_where` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `treatment`
 --
 
-INSERT INTO `treatment` (`treatment_id`, `episode_id`, `user_id`, `additional_treatments`, `information_given`, `follow_up`) VALUES
-(1, 29, 0, 'apple', '', 1),
-(2, 32, 6, 'adgadgdg', 'daggdag', 1),
-(3, 34, 6, 'aggdadg', 'dggadgagdg', 1);
+INSERT INTO `treatment` (`treatment_id`, `episode_id`, `user_id`, `additional_treatments`, `information_given`, `follow_up_when`, `follow_up_where`) VALUES
+(1, 29, 0, 'apple', '', 1, ''),
+(2, 32, 6, 'adgadgdg', 'daggdag', 1, 'gagdgdgas'),
+(3, 34, 6, 'aggdadg', 'dggadgagdg', 1, 'gfagdgag'),
+(4, 35, 6, 'agdgdagga', 'dagadgdg', 1, 'RBCH');
 
 -- --------------------------------------------------------
 
@@ -745,7 +758,7 @@ ALTER TABLE `blood_results`
 -- AUTO_INCREMENT for table `clinical_episode`
 --
 ALTER TABLE `clinical_episode`
-  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `episode_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 --
 -- AUTO_INCREMENT for table `diagnosis`
 --
@@ -755,7 +768,7 @@ ALTER TABLE `diagnosis`
 -- AUTO_INCREMENT for table `examination`
 --
 ALTER TABLE `examination`
-  MODIFY `examination_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `examination_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `gp`
 --
@@ -785,17 +798,17 @@ ALTER TABLE `medication`
 -- AUTO_INCREMENT for table `observations`
 --
 ALTER TABLE `observations`
-  MODIFY `observation_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `observation_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `problem_list`
 --
 ALTER TABLE `problem_list`
-  MODIFY `problem_list_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `problem_list_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `treatment`
 --
 ALTER TABLE `treatment`
-  MODIFY `treatment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `treatment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `urine_results`
 --
