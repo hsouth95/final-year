@@ -423,12 +423,14 @@ $(document).ready(function () {
 
             var drugName = $("#current_medication_table #drug-name").val(),
                 dose = $("#current_medication_table #dose").val(),
+                measure = $("#current_medication_table #measure").val(),
                 route = $("#current_medication_table #route").val(),
-                frequency = $("#current_medication_table #frequency").val(),
+                frequency = $("#current_medication_table #frequency").find(":selected").text(),
                 currentMedicationToAdd = [];
 
             currentMedicationToAdd.push(drugName);
             currentMedicationToAdd.push(dose);
+            currentMedicationToAdd.push(measure);
             currentMedicationToAdd.push(route);
             currentMedicationToAdd.push(frequency);
             currentMedicationToAdd.push(medicationData.details);
@@ -437,6 +439,7 @@ $(document).ready(function () {
             FormAPI.data.addTableRow("current_medication_table", currentMedicationToAdd);
 
             $("#current_medication_table input").val("");
+            $("#current_medication_table select").prop("selectedIndex", 0);
 
             FormAPI.data.updateEpisodeProgress();
         }).fail(function (err) {
@@ -463,17 +466,19 @@ $(document).ready(function () {
 
             var drugName = $("#drug-treatment-table #drug-name").val(),
                 dose = $("#drug-treatment-table #dose").val(),
+                measure = $("#drug-treatment-table #measure").val(),
                 route = $("#drug-treatment-table #route").val(),
-                frequency = $("#current_medication_table #frequency").val(),
+                frequency = $("#current_medication_table #frequency").find(":selected").text(),
                 drugTreatmentToAdd = [];
 
             // Add all the information in order it should appear to the user
             drugTreatmentToAdd.push(drugName);
             drugTreatmentToAdd.push(dose);
+            drugTreatmentToAdd.push(measure);
             drugTreatmentToAdd.push(route);
             drugTreatmentToAdd.push(frequency);
             drugTreatmentToAdd.push(drugTreatmentData.details);
-            drugTreatmentToAdd.push(FormAPI.data.filterDate(drugTreatmentData.date));
+            drugTreatmentToAdd.push(drugTreatmentData.date);
 
             FormAPI.data.addTableRow("drug-treatment-table", drugTreatmentToAdd);
 
@@ -650,9 +655,10 @@ $(document).ready(function () {
                     if (medication) {
                         $("#" + tableId + " #drug-name").val(medication[0].name);
                         $("#" + tableId + " #drug-id").val(medication[0].medication_id);
+                        $("#" + tableId + " #measure").val(medication[0].measure);
                         $("#" + tableId + " #route").val(medication[0].route);
                         $("#" + tableId + " #dose").val(medication[0].dose);
-                        $("#" + tableId + " #frequency").val(medication[0].frequency);
+                        $("#" + tableId + " #frequency option[value='" + medication[0].frequency + "']").prop("selected", true);
                     }
                 }
             });
@@ -803,6 +809,7 @@ $(document).ready(function () {
         var orderedAttributes = [
             "name",
             "dose",
+            "measure",
             "route",
             "frequency",
             "details",
@@ -816,8 +823,8 @@ $(document).ready(function () {
                 for (var attribute in orderedAttributes) {
                     var fieldName = orderedAttributes[attribute];
                     if (this.hasOwnProperty(fieldName)) {
-                        if (fieldName === "date") {
-                            convertedData.push(FormAPI.data.filterDate(this[fieldName]));
+                        if (fieldName === "frequency") {
+                            convertedData.push(getMedicationFrequencyValue(this[fieldName]));
                         } else {
                             convertedData.push(this[fieldName]);
                         }
@@ -828,6 +835,23 @@ $(document).ready(function () {
 
                 FormAPI.data.addTableRow(elementId, convertedData)
             });
+        }
+    }
+
+    getMedicationFrequencyValue = function (value) {
+        var values = [
+            null,
+            "Once Daily",
+            "Twice Daily",
+            "Three Times Daily",
+            "Four Times Daily",
+            "PRN"
+        ];
+
+        if (value <= values.length - 1 && value > 0) {
+            return values[value];
+        } else {
+            return null;
         }
     }
 

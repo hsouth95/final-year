@@ -5,6 +5,7 @@
             <tr>
                 <th data-field="drug-name">Drug Name</th>
                 <th data-field="dose">Dose</th>
+                <th data-field="measure">Measure</th>
                 <th data-field="route">Route</th>
                 <th data-field="frequency">Frequency</th>
                 <th data-field="details">Details</th>
@@ -19,13 +20,23 @@
                     <input id="drug-id" data-entity="drug_treatment" data-field="medication_id" type="hidden">
                 </td>
                 <td>
-                    <input type="number" id="dose">
+                    <input type="number" id="dose" disabled>
                 </td>
                 <td>
-                    <input type="text" id="route">
+                    <input type="text" id="measure" disabled>
                 </td>
                 <td>
-                    <input type="text" id="frequency">
+                    <input type="text" id="route" disabled>
+                </td>
+                <td>
+                    <select id="frequency" class="browser-default" disabled>
+                        <option value="" selected></option>
+                        <option value="1">Once Daily</option>
+                        <option value="2">Twice Daily</option>
+                        <option value="3">Three Times Daily</option>
+                        <option value="4">Four Times Daily</option>
+                        <option value="5">PRN</option>
+                    </select>
                 </td>
                 <td>
                     <input type="text" id="details" data-entity="drug_treatment" data-field="details">

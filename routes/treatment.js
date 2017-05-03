@@ -44,8 +44,8 @@ routes.post("/", function (req, res) {
         error: function (err) {
             res.status(400).send(err);
         },
-        success: function (data) {
-            res.json(data);
+        success: function (treatment_id) {
+            res.json({ treatment_id: treatment_id });
         }
     });
 });

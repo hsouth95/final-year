@@ -20,6 +20,7 @@ $(document).ready(function () {
                 data = data[0];
                 episode.patient = data;
 
+                $("div[data-entity='patient'][data-field='name']").html(data.firstname + " " + data.surname);
                 populateEntityFields("patient", data);
             }
         }).fail(function (err) {
@@ -98,6 +99,7 @@ $(document).ready(function () {
 
         $.getJSON(location.origin + "/users/" + episode.completed_by, function (data) {
             if (data && data.length === 1) {
+                $("div[data-entity='users'][data-field='name']").html(data[0].firstname + " " + data[0].surname);
                 populateEntityFields("users", data[0]);
             }
         });
@@ -257,11 +259,13 @@ $(document).ready(function () {
 
             if (medication.hasOwnProperty(fieldName)) {
 
-                if (fieldName === "date") {
-                    element.innerHTML = medication[fieldName].substring(0, 10);
+                if (fieldName === "frequency") {
+                    element.innerHTML = getMedicationFrequencyValue(medication[fieldName]);
                 } else {
+
                     element.innerHTML = medication[fieldName]
                 }
+
             } else {
                 element.innerHTML = "-";
             }
@@ -270,6 +274,23 @@ $(document).ready(function () {
         }
 
         return filteredMedication;
+    }
+
+    getMedicationFrequencyValue = function (value) {
+        var values = [
+            null,
+            "Once Daily",
+            "Twice Daily",
+            "Three Times Daily",
+            "Four Times Daily",
+            "PRN"
+        ];
+
+        if (value <= values.length - 1 && value > 0) {
+            return values[value];
+        } else {
+            return null;
+        }
     }
 
     populateAbnormalBloodResults = function (results) {
